@@ -21,21 +21,21 @@ class Scene {
         sprites.clear();
     }
 
-    void Add(Sprite sprite) {
-        sprite.SetRenderer(renderer);
+    void Add(Sprite *sprite) {
+        sprite->SetRenderer(renderer);
         sprites.push_back(sprite);        
     }
 
     // Draw all visible sprites in the scene
     void Draw() {
-        //SDL_RenderClear(renderer);
+        SDL_RenderClear(renderer);
 
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
         for (int i = 0; i < sprites.size(); i++) {
 
-            if (sprites.at(i).IsVisible(win_w, win_h)) {
-                sprites.at(i).Draw();
+            if (sprites.at(i)->IsVisible(win_w, win_h)) {
+                sprites.at(i)->Draw();
             }
         }
 
@@ -43,7 +43,7 @@ class Scene {
     }
 
   private:
-    std::vector<Sprite> sprites;
+    std::vector<Sprite*> sprites;
     int win_w;
     int win_h;
 };

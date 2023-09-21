@@ -69,7 +69,7 @@ class Sprite {
 
     // Checks if sprite is visible on screen at it's current coordinates
     bool IsVisible(int win_w, int win_h) {
-        if (x + w > 0 && y + w > 0 && (x < win_w || y < win_h)) {
+        if (x + w > 0 && y + w > 0 && x < win_w && y < win_h) {
             return true;
         } else {
             return false;
