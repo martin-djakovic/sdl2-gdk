@@ -11,7 +11,9 @@ class Sprite {
   public:
     int x = 0;
     int y = 0;
+    // Width
     int w = 0;
+    // Height
     int h = 0;
 
     Sprite(int x_init, int y_init, int width, int height,

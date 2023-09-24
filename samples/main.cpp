@@ -23,15 +23,16 @@ int main(int argc, char *argv[]) {
     bool running = true;
     SDL_Event event;
 
-    Scene scene(window, -1, SDL_RENDERER_ACCELERATED);
+    Sprite player(500, 500, 50, 50, RED_SQR_PATH);
+    Camera camera(nullptr);
+
+    Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
 
     Sprite s1(100, 100, 50, 50, WHITE_SQR_PATH);         // Center sprite
     Sprite s2(100, -200, 50, 50, WHITE_SQR_PATH);        // Top sprite
     Sprite s3(-200, 100, 50, 50, WHITE_SQR_PATH);        // Left sprite
     Sprite s4(WIN_W + 100, 300, 50, 50, WHITE_SQR_PATH); // Right sprite
     Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH); // Bottom sprite
-
-    Sprite player(500, 500, 50, 50, RED_SQR_PATH);
 
     scene.Add(&s1);
     scene.Add(&s2);
@@ -72,8 +73,30 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        SDL_Delay(1000 / display.refresh_rate);
+        if (!player.IsVisible(WIN_W, WIN_H)) {
+            // Out of bounds right
+            if (player.x >= WIN_W) {
+                camera.x -= WIN_W;
+            }
+
+            // Out of bounds left
+            else if (player.x + player.w <= 0) {
+                camera.x += WIN_W;
+            }
+
+            // Out of bounds top
+            else if (player.y + player.h <= 0) {
+                camera.y += WIN_H;
+            }
+
+            else if (player.y >= WIN_H) {
+                camera.y -= WIN_H;
+            }
+        }
     }
+
+    // Lock refresh rate
+    SDL_Delay(1000 / 60);
 
     SDL_DestroyWindow(window);
     SDL_Quit();
