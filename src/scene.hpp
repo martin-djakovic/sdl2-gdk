@@ -8,7 +8,8 @@
 // Camera affects the view
 // All sprites in the scene are offset by camera x and y
 // focused_sprite is not offset
-// Pass nullptr as focused_sprite if you want all sprites in scene to be affected by the camera
+// Pass nullptr as focused_sprite if you want all sprites in scene to be
+// affected by the camera
 class Camera {
   public:
     // Camera x gets reset every frame
@@ -55,8 +56,8 @@ class Scene {
 
         for (int i = 0; i < sprites.size(); i++) {
             if (camera->focused_sprite != sprites.at(i)) {
-                sprites.at(i)->x += camera->x;
-                sprites.at(i)->y += camera->y;
+                sprites.at(i)->SetX(sprites.at(i)->GetX() + camera->x);
+                sprites.at(i)->SetY(sprites.at(i)->GetY() + camera->y);
             }
 
             if (sprites.at(i)->IsVisible(win_w, win_h)) {
@@ -68,6 +69,10 @@ class Scene {
         camera->y = 0;
 
         SDL_RenderPresent(renderer);
+    }
+
+    std::vector<Sprite *> *GetAllSprites() {
+        return &sprites;
     }
 
   private:

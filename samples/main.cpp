@@ -5,7 +5,7 @@
 #define RED_SQR_PATH "res/redsqr.png"
 #define WIN_W 1280
 #define WIN_H 720
-#define PLAYER_SPEED 3
+#define PLAYER_SPEED 7
 
 int main(int argc, char *argv[]) {
 
@@ -28,11 +28,11 @@ int main(int argc, char *argv[]) {
 
     Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
 
-    Sprite s1(100, 100, 50, 50, WHITE_SQR_PATH);         // Center sprite
-    Sprite s2(100, -200, 50, 50, WHITE_SQR_PATH);        // Top sprite
-    Sprite s3(-200, 100, 50, 50, WHITE_SQR_PATH);        // Left sprite
-    Sprite s4(WIN_W + 100, 300, 50, 50, WHITE_SQR_PATH); // Right sprite
-    Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH); // Bottom sprite
+    Sprite s1(100, 100, 50, 150, WHITE_SQR_PATH);         // Center sprite
+    Sprite s2(100, -200, 100, 50, WHITE_SQR_PATH);        // Top sprite
+    Sprite s3(-200, 100, 50, 70, WHITE_SQR_PATH);         // Left sprite
+    Sprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
+    Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH);  // Bottom sprite
 
     scene.Add(&s1);
     scene.Add(&s2);
@@ -41,28 +41,34 @@ int main(int argc, char *argv[]) {
     scene.Add(&s5);
     scene.Add(&player);
 
+    int player_x;
+    int player_y;
+
     // Main game loop
     while (running) {
 
         scene.Draw();
 
+        player_x = player.GetX();
+        player_y = player.GetY();
+
         while (SDL_PollEvent(&event)) {
 
             switch (event.key.keysym.sym) {
             case SDLK_w:
-                player.y -= PLAYER_SPEED;
+                player.SetY(player_y - PLAYER_SPEED, scene.GetAllSprites());
                 break;
 
             case SDLK_a:
-                player.x -= PLAYER_SPEED;
+                player.SetX(player_x - PLAYER_SPEED, scene.GetAllSprites());
                 break;
 
             case SDLK_s:
-                player.y += PLAYER_SPEED;
+                player.SetY(player_y + PLAYER_SPEED, scene.GetAllSprites());
                 break;
 
             case SDLK_d:
-                player.x += PLAYER_SPEED;
+                player.SetX(player_x + PLAYER_SPEED, scene.GetAllSprites());
                 break;
 
             default:
@@ -73,30 +79,31 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        // Check if player is out of bounds and move camera to player
         if (!player.IsVisible(WIN_W, WIN_H)) {
             // Out of bounds right
-            if (player.x >= WIN_W) {
+            if (player_x >= WIN_W) {
                 camera.x -= WIN_W;
             }
 
             // Out of bounds left
-            else if (player.x + player.w <= 0) {
+            else if (player_x + player.w <= 0) {
                 camera.x += WIN_W;
             }
 
             // Out of bounds top
-            else if (player.y + player.h <= 0) {
+            else if (player_y + player.h <= 0) {
                 camera.y += WIN_H;
             }
 
-            else if (player.y >= WIN_H) {
+            else if (player_y >= WIN_H) {
                 camera.y -= WIN_H;
             }
         }
-    }
 
-    // Lock refresh rate
-    SDL_Delay(1000 / 60);
+        // Lock refresh rate
+        SDL_Delay(1000 / 60);
+    }
 
     SDL_DestroyWindow(window);
     SDL_Quit();
