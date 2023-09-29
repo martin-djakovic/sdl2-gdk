@@ -34,14 +34,12 @@ class Sprite {
     //}
 
     int GetX() { return x; }
-    // Should only be used when collision detection is not intended
-    void SetX(int x) { this->x = x; }
 
-    // Set x position if sprite does not collide at that position
-    void SetX(int x, std::vector<Sprite *> *colliders) {
+    // Set x position of sprite
+    void SetX(int x, bool check_collision = true) {
         this->x = x;
 
-        if (this->is_collider) {
+        if (this->is_collider && check_collision) {
             for (int i = 0; i < colliders->size(); i++) {
                 int collider_x = colliders->at(i)->GetX();
                 int collider_w = colliders->at(i)->w;
@@ -62,14 +60,12 @@ class Sprite {
     }
 
     int GetY() { return y; }
-    // Should only be used when collision detection is not intended
-    void SetY(int y) { this->y = y; }
 
-    // Set y position if sprite does not collide at that position
-    void SetY(int y, std::vector<Sprite *> *colliders) {
+    // Set y position of sprite
+    void SetY(int y, bool check_collision = true) {
         this->y = y;
 
-        if (this->is_collider) {
+        if (this->is_collider && check_collision) {
             for (int i = 0; i < colliders->size(); i++) {
                 int collider_y = colliders->at(i)->GetY();
                 int collider_h = colliders->at(i)->h;
@@ -106,6 +102,14 @@ class Sprite {
         }
     }
 
+    // Set pointer to vector containing all sprites for which collisions should
+    // be checked
+    // Automatically set when sprite is added to scene
+    // is_collider has no effect on this
+    void SetColliders(std::vector<Sprite *> *colliders) {
+        this->colliders = colliders;
+    }
+
     // Change sprite image after an image has already been set with SetImg()
     void ChangeImg(const char *img_path, bool param_auto_set_size = false) {
         hitbox.w = w;
@@ -138,28 +142,58 @@ class Sprite {
 
     // Returns true if this sprite and collide_sprite collided
     // Does not check if collide_sprite is visible
-    bool Collided(Sprite *collide_sprite) {
+    bool Collided(Sprite *collide_sprite, bool check_is_collider = true) {
         int sprite_x = collide_sprite->GetX();
         int sprite_y = collide_sprite->GetY();
         int sprite_w = collide_sprite->w;
         int sprite_h = collide_sprite->h;
 
-        if (x + w > sprite_x && x < sprite_x + sprite_w && y + h > sprite_y &&
-            y < sprite_y + sprite_h) {
-            return true;
+        if (bool check_is_collider = true) {
+            if (x + w > sprite_x && x < sprite_x + sprite_w &&
+                y + h > sprite_y && y < sprite_y + sprite_h &&
+                collide_sprite->is_collider) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            if (x + w > sprite_x && x < sprite_x + sprite_w &&
+                y + h > sprite_y && y < sprite_y + sprite_h) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
-    // Returns true if this sprite and any sprite from vector colliders collided
+    // Returns true if sprite collided with any other sprite from vector set
+    // with SetColliders()
     // Does not check if colliders are visible
-    bool Collided(std::vector<Sprite *> *colliders) {
-        for (int i = 0; i < colliders->size(); i++) {
+    // Will return false on collision if check_is_collider = true and sprite
+    // is_collider = false
+    // Does not check sprite visibility
+    bool Collided(bool check_is_collider = true) {
+        if (check_is_collider) {
+            for (int i = 0; i < colliders->size(); i++) {
 
-            if (colliders->at(i) != this && Collided(colliders->at(i))) {
-                return true;
+                if (colliders->at(i) != this &&
+                    colliders->at(i)->is_collider == true &&
+                    Collided(colliders->at(i))) {
+
+                    return true;
+                }
             }
+
+            return false;
+        } else {
+            for (int i = 0; i < colliders->size(); i++) {
+
+                if (colliders->at(i) != this && Collided(colliders->at(i))) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         return false;
@@ -173,6 +207,7 @@ class Sprite {
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Rect hitbox;
+    std::vector<Sprite *> *colliders;
     bool auto_set_size;
 };
 

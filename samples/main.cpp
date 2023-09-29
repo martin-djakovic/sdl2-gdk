@@ -41,8 +41,32 @@ int main(int argc, char *argv[]) {
     scene.Add(&s5);
     scene.Add(&player);
 
+    std::vector<Sprite *> moving_sprites;
+
+    for (int i = 0; i < 50; i++) {
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 50, 50, 50, WHITE_SQR_PATH, false));
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 150, 50, 50, WHITE_SQR_PATH, false));
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 250, 50, 50, WHITE_SQR_PATH, false));
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 350, 50, 50, WHITE_SQR_PATH));
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 450, 50, 50, WHITE_SQR_PATH));
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 550, 50, 50, WHITE_SQR_PATH));
+        moving_sprites.push_back(
+            new Sprite(1280 + 80 * i, 650, 50, 50, WHITE_SQR_PATH));
+    }
+
+    for (int i = 0; i < moving_sprites.size(); i++) {
+        scene.Add(moving_sprites.at(i));
+    }
+
     int player_x;
     int player_y;
+    int moving_sprite_x;
 
     // Main game loop
     while (running) {
@@ -52,23 +76,28 @@ int main(int argc, char *argv[]) {
         player_x = player.GetX();
         player_y = player.GetY();
 
+        for (int i = 0; i < moving_sprites.size(); i++) {
+            moving_sprite_x = moving_sprites.at(i)->GetX();
+            moving_sprites.at(i)->SetX(moving_sprite_x - 1);
+        }
+
         while (SDL_PollEvent(&event)) {
 
             switch (event.key.keysym.sym) {
             case SDLK_w:
-                player.SetY(player_y - PLAYER_SPEED, scene.GetAllSprites());
+                player.SetY(player_y - PLAYER_SPEED);
                 break;
 
             case SDLK_a:
-                player.SetX(player_x - PLAYER_SPEED, scene.GetAllSprites());
+                player.SetX(player_x - PLAYER_SPEED);
                 break;
 
             case SDLK_s:
-                player.SetY(player_y + PLAYER_SPEED, scene.GetAllSprites());
+                player.SetY(player_y + PLAYER_SPEED);
                 break;
 
             case SDLK_d:
-                player.SetX(player_x + PLAYER_SPEED, scene.GetAllSprites());
+                player.SetX(player_x + PLAYER_SPEED);
                 break;
 
             default:

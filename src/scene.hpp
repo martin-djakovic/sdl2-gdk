@@ -38,12 +38,13 @@ class Scene {
         this->camera = camera;
     }
 
-    ~Scene() {
+    void Destroy() {
         SDL_DestroyRenderer(renderer);
         sprites.clear();
     }
 
     void Add(Sprite *sprite) {
+        sprite->SetColliders(&sprites);
         sprite->SetRenderer(renderer);
         sprites.push_back(sprite);
     }
@@ -56,8 +57,8 @@ class Scene {
 
         for (int i = 0; i < sprites.size(); i++) {
             if (camera->focused_sprite != sprites.at(i)) {
-                sprites.at(i)->SetX(sprites.at(i)->GetX() + camera->x);
-                sprites.at(i)->SetY(sprites.at(i)->GetY() + camera->y);
+                sprites.at(i)->SetX(sprites.at(i)->GetX() + camera->x, false);
+                sprites.at(i)->SetY(sprites.at(i)->GetY() + camera->y, false);
             }
 
             if (sprites.at(i)->IsVisible(win_w, win_h)) {
