@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "sprite.hpp"
+#include "text.hpp"
 
 // Camera affects the view
 // All sprites in the scene are offset by camera x and y
@@ -73,12 +74,18 @@ class Scene {
         sprites.push_back(sprite);
     }
 
+    void Add(Text *text) {
+        text->SetRenderer(renderer);
+        texts.push_back(text);
+    }
+
     // Draw all visible sprites in the scene
     void Draw() {
         SDL_RenderClear(renderer);
 
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
+        // Draw sprites
         for (int i = 0; i < sprites.size(); i++) {
             if (std::find(camera->focused_sprites.begin(),
                           camera->focused_sprites.end(),
@@ -93,6 +100,11 @@ class Scene {
             }
         }
 
+        // Draw texts
+        for (int i = 0; i < texts.size(); i++) {
+            texts.at(i)->Draw();
+        }
+
         camera->x = 0;
         camera->y = 0;
 
@@ -103,6 +115,7 @@ class Scene {
 
   private:
     std::vector<Sprite *> sprites;
+    std::vector<Text *> texts;
     int win_w;
     int win_h;
 };

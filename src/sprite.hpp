@@ -28,10 +28,9 @@ class Sprite {
         this->is_collider = is_collider;
     }
 
-    //~Sprite() {
-    //    SDL_DestroyTexture(texture);
-    //    delete this;
-    //}
+    void Destroy() {
+        SDL_DestroyTexture(texture);
+    }
 
     int GetX() { return x; }
 
@@ -96,7 +95,7 @@ class Sprite {
     }
 
 
-    // Set spite renderer and create image passed in constructor
+    // Set sprite renderer and create image passed in constructor
     // Renderer will be automatically set when sprite is added to a scene
     void SetRenderer(SDL_Renderer *renderer) {
         sprite_renderer = renderer;

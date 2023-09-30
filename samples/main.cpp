@@ -4,15 +4,14 @@
 #define WHITE_SQR_PATH "res/whitesqr.png"
 #define RED_SQR_PATH "res/redsqr.png"
 #define BG_PATH "res/bg.png"
+#define FONT_PATH "res/mechanical.otf"
 #define WIN_W 1280
 #define WIN_H 720
 #define PLAYER_SPEED 7
 
 int main(int argc, char *argv[]) {
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        printf("Fatal error initializing SDL: %s\n", SDL_GetError());
-    }
+    SDL2_GDK_Init();
 
     SDL_DisplayMode display;
     SDL_GetCurrentDisplayMode(0, &display);
@@ -34,6 +33,8 @@ int main(int argc, char *argv[]) {
 
     Sprite background(0, 0, 1280, 720, BG_PATH, false);
 
+    Text text("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
+
     Camera camera(&background);
 
     Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
@@ -45,6 +46,7 @@ int main(int argc, char *argv[]) {
     scene.Add(&s4);
     scene.Add(&s5);
     scene.Add(&player);
+    scene.Add(&text);
 
     std::vector<Sprite *> moving_sprites;
 
@@ -122,7 +124,7 @@ int main(int argc, char *argv[]) {
     }
 
     SDL_DestroyWindow(window);
-    SDL_Quit();
+    SDL2_GDK_Quit();
 
     return 0;
 }
