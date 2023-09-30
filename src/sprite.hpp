@@ -59,6 +59,11 @@ class Sprite {
         }
     }
 
+    // Move sprite along x axis
+    void MoveX(int x, bool check_collision = true){
+        SetX(this->x + x, check_collision);
+    }
+
     int GetY() { return y; }
 
     // Set y position of sprite
@@ -84,6 +89,12 @@ class Sprite {
             }
         }
     }
+
+    // Move sprite along y axis
+    void MoveY(int y, bool check_collision = true){
+        SetY(this->y + y, check_collision);
+    }
+
 
     // Set spite renderer and create image passed in constructor
     // Renderer will be automatically set when sprite is added to a scene

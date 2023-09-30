@@ -24,15 +24,16 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
 
     Sprite player(500, 500, 50, 50, RED_SQR_PATH);
-    Camera camera(nullptr);
-
-    Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
 
     Sprite s1(100, 100, 50, 150, WHITE_SQR_PATH);         // Center sprite
     Sprite s2(100, -200, 100, 50, WHITE_SQR_PATH);        // Top sprite
     Sprite s3(-200, 100, 50, 70, WHITE_SQR_PATH);         // Left sprite
     Sprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
     Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH);  // Bottom sprite
+
+    Camera camera(&s1);
+
+    Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
 
     scene.Add(&s1);
     scene.Add(&s2);
@@ -64,40 +65,32 @@ int main(int argc, char *argv[]) {
         scene.Add(moving_sprites.at(i));
     }
 
-    int player_x;
-    int player_y;
-    int moving_sprite_x;
-
     // Main game loop
     while (running) {
 
         scene.Draw();
 
-        player_x = player.GetX();
-        player_y = player.GetY();
-
         for (int i = 0; i < moving_sprites.size(); i++) {
-            moving_sprite_x = moving_sprites.at(i)->GetX();
-            moving_sprites.at(i)->SetX(moving_sprite_x - 1);
+            moving_sprites.at(i)->MoveX(-1);
         }
 
         while (SDL_PollEvent(&event)) {
 
             switch (event.key.keysym.sym) {
             case SDLK_w:
-                player.SetY(player_y - PLAYER_SPEED);
+                player.MoveY(-PLAYER_SPEED);
                 break;
 
             case SDLK_a:
-                player.SetX(player_x - PLAYER_SPEED);
+                player.MoveX(-PLAYER_SPEED);
                 break;
 
             case SDLK_s:
-                player.SetY(player_y + PLAYER_SPEED);
+                player.MoveY(PLAYER_SPEED);
                 break;
 
             case SDLK_d:
-                player.SetX(player_x + PLAYER_SPEED);
+                player.MoveX(PLAYER_SPEED);
                 break;
 
             default:
@@ -111,21 +104,21 @@ int main(int argc, char *argv[]) {
         // Check if player is out of bounds and move camera to player
         if (!player.IsVisible(WIN_W, WIN_H)) {
             // Out of bounds right
-            if (player_x >= WIN_W) {
+            if (player.GetX() >= WIN_W) {
                 camera.x -= WIN_W;
             }
 
             // Out of bounds left
-            else if (player_x + player.w <= 0) {
+            else if (player.GetX() + player.w <= 0) {
                 camera.x += WIN_W;
             }
 
             // Out of bounds top
-            else if (player_y + player.h <= 0) {
+            else if (player.GetY() + player.h <= 0) {
                 camera.y += WIN_H;
             }
 
-            else if (player_y >= WIN_H) {
+            else if (player.GetY() >= WIN_H) {
                 camera.y -= WIN_H;
             }
         }

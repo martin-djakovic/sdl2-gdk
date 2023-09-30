@@ -1,6 +1,8 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+#include <algorithm>
+#include <iostream>
 #include <vector>
 
 #include "sprite.hpp"
@@ -18,10 +20,20 @@ class Camera {
     int y;
     Sprite *focused_sprite;
 
-    Camera(Sprite *focused_sprite, int start_x = 0, int start_y = 0) {
-        this->focused_sprite = focused_sprite;
+    Camera() {
+        x = 0;
+        y = 0;
+    }
+
+    Camera(int start_x, int start_y) {
         x = start_x;
         y = start_y;
+    }
+
+    Camera(Sprite *focused_sprite, int x = 0, int y = 0) {
+        this->focused_sprite = focused_sprite;
+        this->x = x;
+        this->y = y;
     }
 };
 
@@ -56,9 +68,10 @@ class Scene {
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
         for (int i = 0; i < sprites.size(); i++) {
-            if (camera->focused_sprite != sprites.at(i)) {
-                sprites.at(i)->SetX(sprites.at(i)->GetX() + camera->x, false);
-                sprites.at(i)->SetY(sprites.at(i)->GetY() + camera->y, false);
+            if (sprites.at(i) != camera->focused_sprite) {
+                
+                sprites.at(i)->MoveX(camera->x, false);
+                sprites.at(i)->MoveY(camera->y, false);
             }
 
             if (sprites.at(i)->IsVisible(win_w, win_h)) {
@@ -72,9 +85,7 @@ class Scene {
         SDL_RenderPresent(renderer);
     }
 
-    std::vector<Sprite *> *GetAllSprites() {
-        return &sprites;
-    }
+    std::vector<Sprite *> *GetAllSprites() { return &sprites; }
 
   private:
     std::vector<Sprite *> sprites;
