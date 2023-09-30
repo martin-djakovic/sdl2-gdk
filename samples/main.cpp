@@ -3,6 +3,7 @@
 
 #define WHITE_SQR_PATH "res/whitesqr.png"
 #define RED_SQR_PATH "res/redsqr.png"
+#define BG_PATH "res/bg.png"
 #define WIN_W 1280
 #define WIN_H 720
 #define PLAYER_SPEED 7
@@ -31,10 +32,13 @@ int main(int argc, char *argv[]) {
     Sprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
     Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH);  // Bottom sprite
 
-    Camera camera(&s1);
+    Sprite background(0, 0, 1280, 720, BG_PATH, false);
+
+    Camera camera(&background);
 
     Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
 
+    scene.Add(&background);
     scene.Add(&s1);
     scene.Add(&s2);
     scene.Add(&s3);
@@ -45,20 +49,10 @@ int main(int argc, char *argv[]) {
     std::vector<Sprite *> moving_sprites;
 
     for (int i = 0; i < 50; i++) {
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 50, 50, 50, WHITE_SQR_PATH, false));
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 150, 50, 50, WHITE_SQR_PATH, false));
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 250, 50, 50, WHITE_SQR_PATH, false));
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 350, 50, 50, WHITE_SQR_PATH));
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 450, 50, 50, WHITE_SQR_PATH));
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 550, 50, 50, WHITE_SQR_PATH));
-        moving_sprites.push_back(
-            new Sprite(1280 + 80 * i, 650, 50, 50, WHITE_SQR_PATH));
+        for (int j = 0; j < 7; j++) {
+            moving_sprites.push_back(new Sprite(1280 + 80 * i, j * 100 + 50, 50,
+                                                50, WHITE_SQR_PATH));
+        }
     }
 
     for (int i = 0; i < moving_sprites.size(); i++) {

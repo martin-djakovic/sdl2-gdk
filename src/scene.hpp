@@ -18,7 +18,7 @@ class Camera {
     int x;
     // Camera y gets reset every frame
     int y;
-    Sprite *focused_sprite;
+    std::vector<Sprite *> focused_sprites;
 
     Camera() {
         x = 0;
@@ -31,7 +31,19 @@ class Camera {
     }
 
     Camera(Sprite *focused_sprite, int x = 0, int y = 0) {
-        this->focused_sprite = focused_sprite;
+        focused_sprites.push_back(focused_sprite);
+        this->x = x;
+        this->y = y;
+    }
+
+    Camera(std::vector<Sprite *> focused_sprites, int x = 0, int y = 0) {
+        this->focused_sprites = focused_sprites;
+        this->x = x;
+        this->y = y;
+    }
+
+    Camera(std::vector<Sprite *> *focused_sprites, int x = 0, int y = 0) {
+        this->focused_sprites = *focused_sprites;
         this->x = x;
         this->y = y;
     }
@@ -68,8 +80,10 @@ class Scene {
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
         for (int i = 0; i < sprites.size(); i++) {
-            if (sprites.at(i) != camera->focused_sprite) {
-                
+            if (std::find(camera->focused_sprites.begin(),
+                          camera->focused_sprites.end(),
+                          sprites.at(i)) == camera->focused_sprites.end()) {
+
                 sprites.at(i)->MoveX(camera->x, false);
                 sprites.at(i)->MoveY(camera->y, false);
             }
