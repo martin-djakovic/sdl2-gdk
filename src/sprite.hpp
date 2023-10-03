@@ -28,9 +28,7 @@ class Sprite {
         this->is_collider = is_collider;
     }
 
-    void Destroy() {
-        SDL_DestroyTexture(texture);
-    }
+    void Destroy() { SDL_DestroyTexture(texture); }
 
     int GetX() { return x; }
 
@@ -59,7 +57,7 @@ class Sprite {
     }
 
     // Move sprite along x axis
-    void MoveX(int x, bool check_collision = true){
+    void MoveX(int x, bool check_collision = true) {
         SetX(this->x + x, check_collision);
     }
 
@@ -90,10 +88,9 @@ class Sprite {
     }
 
     // Move sprite along y axis
-    void MoveY(int y, bool check_collision = true){
+    void MoveY(int y, bool check_collision = true) {
         SetY(this->y + y, check_collision);
     }
-
 
     // Set sprite renderer and create image passed in constructor
     // Renderer will be automatically set when sprite is added to a scene
@@ -159,9 +156,11 @@ class Sprite {
         int sprite_h = collide_sprite->h;
 
         if (bool check_is_collider = true) {
-            if (x + w > sprite_x && x < sprite_x + sprite_w &&
-                y + h > sprite_y && y < sprite_y + sprite_h &&
+            if (x + w >= sprite_x && x <= sprite_x + sprite_w &&
+                y + h >= sprite_y && y <= sprite_y + sprite_h &&
                 collide_sprite->is_collider) {
+
+                this->collide_sprite = collide_sprite;
                 return true;
             } else {
                 return false;
@@ -169,6 +168,8 @@ class Sprite {
         } else {
             if (x + w > sprite_x && x < sprite_x + sprite_w &&
                 y + h > sprite_y && y < sprite_y + sprite_h) {
+
+                this->collide_sprite = collide_sprite;
                 return true;
             } else {
                 return false;
@@ -183,31 +184,23 @@ class Sprite {
     // is_collider = false
     // Does not check sprite visibility
     bool Collided(bool check_is_collider = true) {
-        if (check_is_collider) {
-            for (int i = 0; i < colliders->size(); i++) {
+        for (int i = 0; i < colliders->size(); i++) {
 
-                if (colliders->at(i) != this &&
-                    colliders->at(i)->is_collider == true &&
-                    Collided(colliders->at(i))) {
+            if (colliders->at(i) != this &&
+                colliders->at(i)->is_collider == true &&
+                Collided(colliders->at(i), check_is_collider)) {
 
-                    return true;
-                }
+                return true;
             }
-
-            return false;
-        } else {
-            for (int i = 0; i < colliders->size(); i++) {
-
-                if (colliders->at(i) != this && Collided(colliders->at(i))) {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         return false;
     }
+
+    // Returns the last sprite this sprite collided with
+    // The collide sprite is only set when Collided() returns true, so it is
+    // important to check for collisions first before calling GetCollideSprite()
+    Sprite *GetCollideSprite() { return collide_sprite; }
 
   private:
     int x;
@@ -218,6 +211,7 @@ class Sprite {
     SDL_Texture *texture;
     SDL_Rect hitbox;
     std::vector<Sprite *> *colliders;
+    Sprite *collide_sprite;
     bool auto_set_size;
 };
 
