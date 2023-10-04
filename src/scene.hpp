@@ -76,7 +76,7 @@ class Scene {
 
     void Add(Text *text) {
         text->SetRenderer(renderer);
-        texts.push_back(text);
+        ui.push_back(text);
     }
 
     // Draw all visible sprites in the scene
@@ -100,9 +100,9 @@ class Scene {
             }
         }
 
-        // Draw texts
-        for (int i = 0; i < texts.size(); i++) {
-            texts.at(i)->Draw();
+        // Draw ui
+        for (int i = 0; i < ui.size(); i++) {
+            ui.at(i)->Draw();
         }
 
         camera->x = 0;
@@ -115,7 +115,7 @@ class Scene {
 
   private:
     std::vector<Sprite *> sprites;
-    std::vector<Text *> texts;
+    std::vector<Text *> ui;
     int win_w;
     int win_h;
 };

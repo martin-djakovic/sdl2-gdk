@@ -42,7 +42,7 @@ class Sprite {
                 int collider_w = colliders->at(i)->w;
 
                 if (colliders->at(i) != this && colliders->at(i)->is_collider &&
-                    Collided(colliders->at(i))) {
+                    MovementCollided(colliders->at(i))) {
 
                     if (collider_x > x) {
                         this->x = collider_x - w;
@@ -73,7 +73,7 @@ class Sprite {
                 int collider_h = colliders->at(i)->h;
 
                 if (colliders->at(i) != this && colliders->at(i)->is_collider &&
-                    Collided(colliders->at(i))) {
+                    MovementCollided(colliders->at(i))) {
 
                     if (collider_y > y) {
                         this->y = collider_y - h;
@@ -166,8 +166,8 @@ class Sprite {
                 return false;
             }
         } else {
-            if (x + w > sprite_x && x < sprite_x + sprite_w &&
-                y + h > sprite_y && y < sprite_y + sprite_h) {
+            if (x + w >= sprite_x && x <= sprite_x + sprite_w &&
+                y + h >= sprite_y && y <= sprite_y + sprite_h) {
 
                 this->collide_sprite = collide_sprite;
                 return true;
@@ -198,11 +198,30 @@ class Sprite {
     }
 
     // Returns the last sprite this sprite collided with
-    // The collide sprite is only set when Collided() returns true, so it is
-    // important to check for collisions first before calling GetCollideSprite()
+    // It is a good idea to only call GetCollideSprite() after checking for
+    // collision with Collided() to make sure collision sprite is not outdated
     Sprite *GetCollideSprite() { return collide_sprite; }
 
   private:
+    // MovementCollided() is only used to check for collisions when updating
+    // sprite x and y. Does not return true on surface collision (when 2 sprites
+    // are touching, but not overlapping)
+    bool MovementCollided(Sprite *collide_sprite) {
+        int sprite_x = collide_sprite->GetX();
+        int sprite_y = collide_sprite->GetY();
+        int sprite_w = collide_sprite->w;
+        int sprite_h = collide_sprite->h;
+
+        if (x + w > sprite_x && x < sprite_x + sprite_w &&
+            y + h > sprite_y && y < sprite_y + sprite_h &&
+            collide_sprite->is_collider) {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     int x;
     int y;
     std::string img_path;
