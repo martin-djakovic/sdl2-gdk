@@ -64,19 +64,43 @@ class Scene {
     }
 
     void Destroy() {
-        SDL_DestroyRenderer(renderer);
+        for (int i = 0; i < ui.size(); i++) {
+            ui.at(i)->Destroy();
+        }
+
+        for (int i = 0; i < sprites.size(); i++) {
+            sprites.at(i)->Destroy();
+        }
+
         sprites.clear();
+        ui.clear();
     }
 
-    void Add(Sprite *sprite) {
+    void AddSprite(Sprite *sprite) {
         sprite->SetColliders(&sprites);
         sprite->SetRenderer(renderer);
         sprites.push_back(sprite);
     }
 
-    void Add(Text *text) {
+    void RemoveSprite(Sprite *sprite, bool destroy = true){
+        sprites.erase(std::remove(sprites.begin(), sprites.end(), sprite), sprites.end());
+        
+        if(destroy){
+            sprite->Destroy();
+        }
+    }
+
+    void AddUI(UIText *text) {
         text->SetRenderer(renderer);
         ui.push_back(text);
+    }
+
+    void RemoveUI(UIText *text, bool destroy = true){
+        ui.erase(std::remove(ui.begin(), ui.end(), text), ui.end());
+
+        if(destroy){
+            text->Destroy();
+        }
     }
 
     // Draw all visible sprites in the scene
@@ -100,7 +124,7 @@ class Scene {
             }
         }
 
-        // Draw ui
+        // Draw UI
         for (int i = 0; i < ui.size(); i++) {
             ui.at(i)->Draw();
         }
@@ -115,7 +139,7 @@ class Scene {
 
   private:
     std::vector<Sprite *> sprites;
-    std::vector<Text *> ui;
+    std::vector<UIText *> ui;
     int win_w;
     int win_h;
 };

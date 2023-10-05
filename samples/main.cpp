@@ -31,22 +31,24 @@ int main(int argc, char *argv[]) {
     Sprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
     Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH);  // Bottom sprite
 
+    Sprite *tobedeleted = new Sprite(100, 100, 50, 150, WHITE_SQR_PATH);
+
     Sprite background(0, 0, 1280, 720, BG_PATH, false);
 
-    Text text("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
+    UIText text("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
 
     Camera camera(&background);
 
     Scene scene(window, -1, SDL_RENDERER_ACCELERATED, &camera);
 
-    scene.Add(&background);
-    scene.Add(&s1);
-    scene.Add(&s2);
-    scene.Add(&s3);
-    scene.Add(&s4);
-    scene.Add(&s5);
-    scene.Add(&player);
-    scene.Add(&text);
+    scene.AddSprite(&background);
+    scene.AddSprite(&s1);
+    scene.AddSprite(&s2);
+    scene.AddSprite(&s3);
+    scene.AddSprite(&s4);
+    scene.AddSprite(&s5);
+    scene.AddSprite(&player);
+    scene.AddUI(&text);
 
     std::vector<Sprite *> moving_sprites;
 
@@ -58,7 +60,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < moving_sprites.size(); i++) {
-        scene.Add(moving_sprites.at(i));
+        scene.AddSprite(moving_sprites.at(i));
     }
 
     // Main game loop
@@ -119,10 +121,15 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        if(player.Collided()){
+            scene.RemoveSprite(player.GetCollideSprite());
+        }
+
         // Lock refresh rate
         SDL_Delay(1000 / 60);
     }
 
+    scene.Destroy();
     SDL_DestroyWindow(window);
     SDL2_GDK_Quit();
 

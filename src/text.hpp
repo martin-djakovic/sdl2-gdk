@@ -6,13 +6,13 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 
-class Text {
+class UIText {
   public:
     int x = 0;
     int y = 0;
     SDL_Rect hitbox;
 
-    Text(const char *text, const char *font_path, int font_size, SDL_Color color, int x, int y){
+    UIText(const char *text, const char *font_path, int font_size, SDL_Color color, int x, int y){
         this->text = text;
         this->font_path = font_path;
         this->font_size = font_size;
