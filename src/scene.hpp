@@ -37,14 +37,8 @@ class Camera {
         this->y = y;
     }
 
-    Camera(std::vector<Sprite *> focused_sprites, int x = 0, int y = 0) {
+    Camera(const std::vector<Sprite *> focused_sprites, int x = 0, int y = 0) {
         this->focused_sprites = focused_sprites;
-        this->x = x;
-        this->y = y;
-    }
-
-    Camera(std::vector<Sprite *> *focused_sprites, int x = 0, int y = 0) {
-        this->focused_sprites = *focused_sprites;
         this->x = x;
         this->y = y;
     }
@@ -82,11 +76,32 @@ class Scene {
         sprites.push_back(sprite);
     }
 
-    void RemoveSprite(Sprite *sprite, bool destroy = true){
-        sprites.erase(std::remove(sprites.begin(), sprites.end(), sprite), sprites.end());
-        
-        if(destroy){
+    void AddSprite(const std::vector<Sprite *> sprites) {
+        for (int i = 0; i < sprites.size(); i++) {
+
+            sprites.at(i)->SetColliders(&(this->sprites));
+            sprites.at(i)->SetRenderer(renderer);
+            this->sprites.push_back(sprites.at(i));
+        }
+    }
+
+    void RemoveSprite(Sprite *sprite, bool destroy = true) {
+        sprites.erase(std::remove(sprites.begin(), sprites.end(), sprite),
+                      sprites.end());
+
+        if (destroy) {
             sprite->Destroy();
+        }
+    }
+
+    void RemoveSprite(const std::vector<Sprite *> sprites, bool destroy = true) {
+        for (int i = 0; i < sprites.size(); i++) {
+            this->sprites.erase(std::remove(this->sprites.begin(), this->sprites.end(), sprites.at(i)),
+                          this->sprites.end());
+
+            if (destroy) {
+                sprites.at(i)->Destroy();
+            }
         }
     }
 
@@ -95,11 +110,20 @@ class Scene {
         ui.push_back(text);
     }
 
-    void RemoveUI(UIText *text, bool destroy = true){
-        ui.erase(std::remove(ui.begin(), ui.end(), text), ui.end());
+    void AddUI(const std::vector<UIText *> texts) {
+        for (int i = 0; i < texts.size(); i++) {
+            texts.at(i)->SetRenderer(renderer);
+            this->ui.push_back(texts.at(i));
+        }
+    }
 
-        if(destroy){
-            text->Destroy();
+    void RemoveUI(const std::vector<UIText *> texts, bool destroy = true) {
+        for (int i = 0; i < texts.size(); i++) {
+            ui.erase(std::remove(ui.begin(), ui.end(), texts.at(i)), ui.end());
+
+            if (destroy) {
+                texts.at(i)->Destroy();
+            }
         }
     }
 

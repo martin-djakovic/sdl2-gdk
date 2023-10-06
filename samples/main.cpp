@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     SDL_Window *window = SDL_CreateWindow(
         "sdl2-gdk test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_W,
         WIN_H, SDL_WINDOW_INPUT_FOCUS);
-    
+
     SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     bool running = true;
@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
     Sprite background(0, 0, 1280, 720, BG_PATH, false);
 
     UIText hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
-    UIText main_menu_text("PRESS SPACE TO START", FONT_PATH, 32,
-                          {100, 50, 100}, WIN_W / 2, WIN_H / 2);
+    UIText main_menu_text("PRESS SPACE TO START", FONT_PATH, 32, {100, 50, 100},
+                          WIN_W / 2, WIN_H / 2);
 
     Camera game_camera(&background);
     Camera main_menu_camera;
@@ -45,13 +45,7 @@ int main(int argc, char *argv[]) {
     Scene game_scene(window, &game_camera);
     Scene main_menu(window, &main_menu_camera);
 
-    game_scene.AddSprite(&background);
-    game_scene.AddSprite(&s1);
-    game_scene.AddSprite(&s2);
-    game_scene.AddSprite(&s3);
-    game_scene.AddSprite(&s4);
-    game_scene.AddSprite(&s5);
-    game_scene.AddSprite(&player);
+    game_scene.AddSprite({&background, &s1, &s2, &s3, &s4, &s5, &player});
     game_scene.AddUI(&hud);
 
     main_menu.AddUI(&main_menu_text);
