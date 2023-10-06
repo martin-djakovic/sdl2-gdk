@@ -212,9 +212,8 @@ class Sprite {
         int sprite_w = collide_sprite->w;
         int sprite_h = collide_sprite->h;
 
-        if (x + w > sprite_x && x < sprite_x + sprite_w &&
-            y + h > sprite_y && y < sprite_y + sprite_h &&
-            collide_sprite->is_collider) {
+        if (x + w > sprite_x && x < sprite_x + sprite_w && y + h > sprite_y &&
+            y < sprite_y + sprite_h && collide_sprite->is_collider) {
 
             return true;
         } else {

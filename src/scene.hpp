@@ -58,8 +58,8 @@ class Scene {
     SDL_Renderer *renderer;
     Camera *camera;
 
-    Scene(SDL_Window *window, int index, Uint32 flags, Camera *camera) {
-        renderer = SDL_CreateRenderer(window, index, flags);
+    Scene(SDL_Window *window, Camera *camera) {
+        renderer = SDL_GetRenderer(window);
         this->camera = camera;
     }
 
