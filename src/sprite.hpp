@@ -18,7 +18,8 @@ class Sprite {
     bool is_collider;
 
     Sprite(int x, int y, int width, int height, const char *img_path,
-           bool is_collider = true, bool auto_set_size = false) {
+           bool is_collider = true, bool auto_set_size = false,
+           double rotation_angle = 0, SDL_RendererFlip flip = SDL_FLIP_NONE) {
         this->x = x;
         this->y = y;
         this->w = width;
@@ -26,6 +27,8 @@ class Sprite {
         this->img_path = img_path;
         this->auto_set_size = auto_set_size;
         this->is_collider = is_collider;
+        this->rotation_angle = rotation_angle;
+        this->flip = flip;
     }
 
     void Destroy() { SDL_DestroyTexture(texture); }
@@ -131,11 +134,21 @@ class Sprite {
         }
     }
 
+    // Set sprite flip to SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL or SDL_FLIP_VERTICAL
+    void SetFlip(SDL_RendererFlip flip) { this->flip = flip; }
+
+    // Sets sprite rotation to angle
+    void SetRotation(double angle) { rotation_angle = angle; }
+
+    // Changes sprite rotation by angle
+    void Rotate(double angle) { SetRotation(rotation_angle + angle); }
+
     void Draw() {
         hitbox.x = x;
         hitbox.y = y;
 
-        SDL_RenderCopy(sprite_renderer, texture, NULL, &hitbox);
+        SDL_RenderCopyEx(sprite_renderer, texture, NULL, &hitbox,
+                         rotation_angle, NULL, flip);
     }
 
     // Checks if sprite is in window bounds
@@ -203,6 +216,19 @@ class Sprite {
     Sprite *GetCollideSprite() { return collide_sprite; }
 
   private:
+    int x;
+    int y;
+    double rotation_angle;
+    std::string img_path;
+    SDL_RendererFlip flip;
+    SDL_Renderer *sprite_renderer;
+    SDL_Surface *surface;
+    SDL_Texture *texture;
+    SDL_Rect hitbox;
+    std::vector<Sprite *> *colliders;
+    Sprite *collide_sprite;
+    bool auto_set_size;
+
     // MovementCollided() is only used to check for collisions when updating
     // sprite x and y. Does not return true on surface collision (when 2 sprites
     // are touching, but not overlapping)
@@ -220,17 +246,6 @@ class Sprite {
             return false;
         }
     }
-
-    int x;
-    int y;
-    std::string img_path;
-    SDL_Renderer *sprite_renderer;
-    SDL_Surface *surface;
-    SDL_Texture *texture;
-    SDL_Rect hitbox;
-    std::vector<Sprite *> *colliders;
-    Sprite *collide_sprite;
-    bool auto_set_size;
 };
 
 #endif

@@ -136,6 +136,8 @@ int main(int argc, char *argv[]) {
             game_scene.RemoveSprite(player.GetCollideSprite());
         }
 
+        player.Rotate(1);
+
         // Lock refresh rate
         SDL_Delay(1000 / 60);
     }
