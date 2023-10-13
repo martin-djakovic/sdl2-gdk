@@ -117,6 +117,15 @@ class Scene {
         }
     }
 
+    void RemoveUI(UIText *text, bool destroy = true) {
+        ui.erase(std::remove(ui.begin(), ui.end(), text),
+                      ui.end());
+
+        if (destroy) {
+            text->Destroy();
+        }
+    }
+
     void RemoveUI(const std::vector<UIText *> texts, bool destroy = true) {
         for (int i = 0; i < texts.size(); i++) {
             ui.erase(std::remove(ui.begin(), ui.end(), texts.at(i)), ui.end());
