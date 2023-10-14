@@ -134,7 +134,8 @@ class Sprite {
         }
     }
 
-    // Set sprite flip to SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL or SDL_FLIP_VERTICAL
+    // Set sprite flip to SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL or
+    // SDL_FLIP_VERTICAL
     void SetFlip(SDL_RendererFlip flip) { this->flip = flip; }
 
     // Sets sprite rotation to angle
@@ -142,6 +143,13 @@ class Sprite {
 
     // Changes sprite rotation by angle
     void Rotate(double angle) { SetRotation(rotation_angle + angle); }
+
+    double GetAngle(Sprite *sprite) {
+        int x1 = sprite->GetX();
+        int y1 = sprite->GetY();
+
+        return atan2(y1 - y, x1 - x) * (180 / M_PI);
+    }
 
     void Draw() {
         hitbox.x = x;

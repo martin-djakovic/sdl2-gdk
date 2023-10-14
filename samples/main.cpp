@@ -1,5 +1,6 @@
 #include "../src/sdl2-gdk.hpp"
 #include <iostream>
+#include <sstream>
 
 #define WHITE_SQR_PATH "res/whitesqr.png"
 #define RED_SQR_PATH "res/redsqr.png"
@@ -8,6 +9,13 @@
 #define WIN_W 1280
 #define WIN_H 720
 #define PLAYER_SPEED 7
+
+std::string ConvertDoubleToStr(double value) {
+    std::stringstream ss;
+    ss << value;
+    std::string str = ss.str();
+    return str;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -132,9 +140,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (player.Collided()) {
-            game_scene.RemoveSprite(player.GetCollideSprite());
-        }
+        hud.SetText(("ANGLE TO S1: " + ConvertDoubleToStr(player.GetAngle(&s1))).c_str());
 
         player.Rotate(1);
 
