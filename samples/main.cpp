@@ -60,6 +60,8 @@ int main(int argc, char *argv[]) {
 
     std::vector<Sprite *> moving_sprites;
 
+    int mousex, mousey;
+
     for (int i = 0; i < 50; i++) {
         for (int j = 0; j < 7; j++) {
             moving_sprites.push_back(new Sprite(1280 + 80 * i, j * 100 + 50, 50,
@@ -112,6 +114,12 @@ int main(int argc, char *argv[]) {
             default:
                 break;
             }
+
+            if (event.type == SDL_MOUSEBUTTONDOWN) {
+                SDL_GetMouseState(&mousex, &mousey);
+                player.MoveTo(mousex, mousey, PLAYER_SPEED);
+            }
+
             if (event.type == SDL_QUIT) {
                 running = false;
             }
@@ -140,9 +148,11 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        hud.SetText(("ANGLE TO S1: " + ConvertDoubleToStr(player.GetAngle(&s1))).c_str());
+        hud.SetText(("X: " + ConvertDoubleToStr(player.GetX()) +
+                     " Y: " + ConvertDoubleToStr(player.GetY()))
+                        .c_str());
 
-        player.Rotate(1);
+        //player.Rotate(1);
 
         // Lock refresh rate
         SDL_Delay(1000 / 60);

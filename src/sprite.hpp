@@ -33,16 +33,16 @@ class Sprite {
 
     void Destroy() { SDL_DestroyTexture(texture); }
 
-    int GetX() { return x; }
+    int GetX() { return round(x); }
 
     // Set x position of sprite
-    void SetX(int x, bool check_collision = true) {
+    void SetX(double x, bool check_collision = true) {
         this->x = x;
 
         if (this->is_collider && check_collision) {
             for (int i = 0; i < colliders->size(); i++) {
-                int collider_x = colliders->at(i)->GetX();
-                int collider_w = colliders->at(i)->w;
+                double collider_x = colliders->at(i)->GetX();
+                double collider_w = colliders->at(i)->w;
 
                 if (colliders->at(i) != this && colliders->at(i)->is_collider &&
                     MovementCollided(colliders->at(i))) {
@@ -60,20 +60,20 @@ class Sprite {
     }
 
     // Move sprite along x axis
-    void MoveX(int x, bool check_collision = true) {
+    void MoveX(double x, bool check_collision = true) {
         SetX(this->x + x, check_collision);
     }
 
-    int GetY() { return y; }
+    int GetY() { return round(y); }
 
     // Set y position of sprite
-    void SetY(int y, bool check_collision = true) {
+    void SetY(double y, bool check_collision = true) {
         this->y = y;
 
         if (this->is_collider && check_collision) {
             for (int i = 0; i < colliders->size(); i++) {
-                int collider_y = colliders->at(i)->GetY();
-                int collider_h = colliders->at(i)->h;
+                double collider_y = colliders->at(i)->GetY();
+                double collider_h = colliders->at(i)->h;
 
                 if (colliders->at(i) != this && colliders->at(i)->is_collider &&
                     MovementCollided(colliders->at(i))) {
@@ -91,8 +91,29 @@ class Sprite {
     }
 
     // Move sprite along y axis
-    void MoveY(int y, bool check_collision = true) {
+    void MoveY(double y, bool check_collision = true) {
         SetY(this->y + y, check_collision);
+    }
+
+    // Moves sprite to given point
+    // Evenly changes sprite x and y by given speed
+    // until point is reached
+    void MoveTo(int x, int y, int speed) {
+        grad_mvmt_goalx = x;
+        grad_mvmt_goaly = y;
+
+        int xdif = this->x - x;
+        int ydif = this->y - y;
+        // Movement iterations along line between this position and given
+        // position
+        grad_mvmt_iter = sqrt(xdif * xdif + ydif * ydif) / speed;
+
+        if (grad_mvmt_iter == 0) {
+            return;
+        }
+
+        grad_mvmt_speedx = -((double)xdif / grad_mvmt_iter);
+        grad_mvmt_speedy = -((double)ydif / grad_mvmt_iter);
     }
 
     // Set sprite renderer and create image passed in constructor
@@ -155,6 +176,8 @@ class Sprite {
         hitbox.x = x;
         hitbox.y = y;
 
+        GradualMovementIterator();
+
         SDL_RenderCopyEx(sprite_renderer, texture, NULL, &hitbox,
                          rotation_angle, NULL, flip);
     }
@@ -175,6 +198,11 @@ class Sprite {
         int sprite_y = collide_sprite->GetY();
         int sprite_w = collide_sprite->w;
         int sprite_h = collide_sprite->h;
+        // Sprite x and y are doubles,
+        // but collisions need to be calculated with ints because sprite is
+        // drawn at a whole number coordinate
+        int x = GetX();
+        int y = GetY();
 
         if (bool check_is_collider = true) {
             if (x + w >= sprite_x && x <= sprite_x + sprite_w &&
@@ -224,8 +252,8 @@ class Sprite {
     Sprite *GetCollideSprite() { return collide_sprite; }
 
   private:
-    int x;
-    int y;
+    double x;
+    double y;
     double rotation_angle;
     std::string img_path;
     SDL_RendererFlip flip;
@@ -236,6 +264,13 @@ class Sprite {
     std::vector<Sprite *> *colliders;
     Sprite *collide_sprite;
     bool auto_set_size;
+
+    // Variables used for gradual movement across multiple frames
+    int grad_mvmt_iter = 0;
+    double grad_mvmt_speedx;
+    double grad_mvmt_speedy;
+    double grad_mvmt_goalx;
+    double grad_mvmt_goaly;
 
     // MovementCollided() is only used to check for collisions when updating
     // sprite x and y. Does not return true on surface collision (when 2 sprites
@@ -252,6 +287,28 @@ class Sprite {
             return true;
         } else {
             return false;
+        }
+    }
+
+    // Used to gradually move sprite according to data from MoveTo()
+    // Needed when movement is to be made across multiple frames
+    // Is called on every draw
+    void GradualMovementIterator() {
+        if (grad_mvmt_iter > 0) {
+            this->MoveX(grad_mvmt_speedx);
+            this->MoveY(grad_mvmt_speedy);
+
+            if (Collided()) {
+                grad_mvmt_iter = 0;
+            }
+
+            grad_mvmt_iter--;
+
+            if (grad_mvmt_iter == 0 && x != grad_mvmt_goalx &&
+                y != grad_mvmt_goalx) {
+                this->SetX(grad_mvmt_goalx);
+                this->SetY(grad_mvmt_goaly);
+            }
         }
     }
 };
