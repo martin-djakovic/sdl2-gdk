@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
                      " Y: " + ConvertDoubleToStr(player.GetY()))
                         .c_str());
 
-        //player.Rotate(1);
+        player.Rotate(1);
 
         // Lock refresh rate
         SDL_Delay(1000 / 60);

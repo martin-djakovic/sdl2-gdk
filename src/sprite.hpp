@@ -16,6 +16,7 @@ class Sprite {
     int h;
     // If true, sprite cannot move past other colliders when setting x and y
     bool is_collider;
+    SDL_Point rotation_center;
 
     Sprite(int x, int y, int width, int height, const char *img_path,
            bool is_collider = true, bool auto_set_size = false,
@@ -29,6 +30,7 @@ class Sprite {
         this->is_collider = is_collider;
         this->rotation_angle = rotation_angle;
         this->flip = flip;
+        rotation_center = {w / 2, h / 2};
     }
 
     void Destroy() { SDL_DestroyTexture(texture); }
@@ -179,7 +181,7 @@ class Sprite {
         GradualMovementIterator();
 
         SDL_RenderCopyEx(sprite_renderer, texture, NULL, &hitbox,
-                         rotation_angle, NULL, flip);
+                         rotation_angle, &rotation_center, flip);
     }
 
     // Checks if sprite is in window bounds
