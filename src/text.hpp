@@ -10,9 +10,11 @@ class UIText {
   public:
     int x = 0;
     int y = 0;
-    SDL_Rect hitbox;
+    int w;
+    int h;
 
-    UIText(const char *text, const char *font_path, int font_size, SDL_Color color, int x, int y){
+    UIText(const char *text, const char *font_path, int font_size,
+           SDL_Color color, int x, int y) {
         this->text = text;
         this->font_path = font_path;
         this->font_size = font_size;
@@ -28,31 +30,34 @@ class UIText {
     void SetRenderer(SDL_Renderer *renderer) {
         text_renderer = renderer;
 
-        font = TTF_OpenFont(font_path, font_size);
-        surface = TTF_RenderText_Solid(font, text, color);
-        texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-        SDL_QueryTexture(texture, NULL, NULL, &hitbox.w, &hitbox.h);
-
-        SDL_FreeSurface(surface);
+        MakeTexture(font_path, font_size, text, color);
     }
 
     void SetText(const char *text) {
+        this->text = text;
+        MakeTexture(font_path, font_size, text, color);
+    }
 
-        font = TTF_OpenFont(font_path, font_size);
-        surface = TTF_RenderText_Solid(font, text, color);
-        texture = SDL_CreateTextureFromSurface(text_renderer, surface);
+    void SetColor(SDL_Color color) {
+        this->color = color;
+        MakeTexture(font_path, font_size, text, color);
+    }
 
-        SDL_QueryTexture(texture, NULL, NULL, &hitbox.w, &hitbox.h);
+    void SetSize(int font_size) {
+        this->font_size = font_size;
+        MakeTexture(font_path, font_size, text, color);
+    }
 
-        SDL_FreeSurface(surface);
+    void SetFont(const char *font_path) {
+        this->font_path = font_path;
+        MakeTexture(font_path, font_size, text, color);
     }
 
     void Draw() {
-        hitbox.x = x;
-        hitbox.y = y;
+        rect.x = x;
+        rect.y = y;
 
-        SDL_RenderCopy(text_renderer, texture, NULL, &hitbox);
+        SDL_RenderCopy(text_renderer, texture, NULL, &rect);
     }
 
   private:
@@ -61,9 +66,25 @@ class UIText {
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Color color;
+    SDL_Rect rect;
     const char *font_path;
     int font_size;
     const char *text;
+
+    // Create texture of text based on given arguements
+    void MakeTexture(const char *font_path, int font_size, const char *text,
+                     SDL_Color color) {
+        font = TTF_OpenFont(font_path, font_size);
+        surface = TTF_RenderText_Solid(font, text, color);
+        texture = SDL_CreateTextureFromSurface(text_renderer, surface);
+
+        SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+
+        w = rect.w;
+        h = rect.h;
+
+        SDL_FreeSurface(surface);
+    }
 };
 
 #endif

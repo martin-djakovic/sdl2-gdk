@@ -83,6 +83,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    hud.SetColor({255, 50, 100});
+    hud.SetSize(35);
+
     // Main game loop
     while (running) {
 
