@@ -54,10 +54,10 @@ class UIText {
     }
 
     void Draw() {
-        rect.x = x;
-        rect.y = y;
+        img_rect.x = x;
+        img_rect.y = y;
 
-        SDL_RenderCopy(text_renderer, texture, NULL, &rect);
+        SDL_RenderCopy(text_renderer, texture, NULL, &img_rect);
     }
 
   private:
@@ -66,7 +66,7 @@ class UIText {
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Color color;
-    SDL_Rect rect;
+    SDL_Rect img_rect;
     const char *font_path;
     int font_size;
     const char *text;
@@ -78,10 +78,10 @@ class UIText {
         surface = TTF_RenderText_Solid(font, text, color);
         texture = SDL_CreateTextureFromSurface(text_renderer, surface);
 
-        SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+        SDL_QueryTexture(texture, NULL, NULL, &img_rect.w, &img_rect.h);
 
-        w = rect.w;
-        h = rect.h;
+        w = img_rect.w;
+        h = img_rect.h;
 
         SDL_FreeSurface(surface);
     }

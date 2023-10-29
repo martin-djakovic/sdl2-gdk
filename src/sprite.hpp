@@ -123,8 +123,8 @@ class Sprite {
     void SetRenderer(SDL_Renderer *renderer) {
         sprite_renderer = renderer;
 
-        hitbox.w = w;
-        hitbox.h = h;
+        img_rect.w = w;
+        img_rect.h = h;
 
         surface = IMG_Load(img_path.c_str());
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
@@ -145,8 +145,8 @@ class Sprite {
 
     // Change sprite image after an image has already been set with SetImg()
     void ChangeImg(const char *img_path, bool param_auto_set_size = false) {
-        hitbox.w = w;
-        hitbox.h = h;
+        img_rect.w = w;
+        img_rect.h = h;
 
         surface = IMG_Load(img_path);
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
@@ -167,20 +167,15 @@ class Sprite {
     // Changes sprite rotation by angle
     void Rotate(double angle) { SetRotation(rotation_angle + angle); }
 
-    double GetAngle(Sprite *sprite) {
-        int x1 = sprite->GetX();
-        int y1 = sprite->GetY();
-
-        return atan2(y1 - y, x1 - x) * (180 / M_PI);
-    }
-
     void Draw() {
-        hitbox.x = x;
-        hitbox.y = y;
+        img_rect.x = x;
+        img_rect.y = y;
+        img_rect.w = w;
+        img_rect.h = h;
 
         GradualMovementIterator();
 
-        SDL_RenderCopyEx(sprite_renderer, texture, NULL, &hitbox,
+        SDL_RenderCopyEx(sprite_renderer, texture, NULL, &img_rect,
                          rotation_angle, &rotation_center, flip);
     }
 
@@ -262,7 +257,7 @@ class Sprite {
     SDL_Renderer *sprite_renderer;
     SDL_Surface *surface;
     SDL_Texture *texture;
-    SDL_Rect hitbox;
+    SDL_Rect img_rect;
     std::vector<Sprite *> *colliders;
     Sprite *collide_sprite;
     bool auto_set_size;

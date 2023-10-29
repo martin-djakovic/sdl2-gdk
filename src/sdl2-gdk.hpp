@@ -2,3 +2,4 @@
 #include "scene.hpp"
 #include "text.hpp"
 #include "init.hpp"
+#include "gamemath.hpp"
