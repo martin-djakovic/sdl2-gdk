@@ -8,7 +8,7 @@
 #define FONT_PATH "res/mechanical.otf"
 #define WIN_W 1280
 #define WIN_H 720
-#define PLAYER_SPEED 7
+#define PLAYER_SPEED 3
 
 std::string ConvertDoubleToStr(double value) {
     std::stringstream ss;
@@ -34,9 +34,12 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
 
     Sprite player(500, 500, 50, 50, RED_SQR_PATH);
+    Sprite player_hitbox(100, 100, 100, 100, BG_PATH, false);
+    player.SetHitboxParams(10, 10, 30, 39);
 
     Sprite s1(100, 100, 50, 150, WHITE_SQR_PATH);         // Center sprite
     Sprite s2(100, -200, 100, 50, WHITE_SQR_PATH);        // Top sprite
+    s2.SetHitboxParams(50, 50, 50, 50);
     Sprite s3(-200, 100, 50, 70, WHITE_SQR_PATH);         // Left sprite
     Sprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
     Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH);  // Bottom sprite
@@ -53,7 +56,8 @@ int main(int argc, char *argv[]) {
     Scene game_scene(window, &game_camera);
     Scene main_menu(window, &main_menu_camera);
 
-    game_scene.AddSprite({&background, &s1, &s2, &s3, &s4, &s5, &player});
+    game_scene.AddSprite(
+        {&background, &s1, &s2, &s3, &s4, &s5, &player, &player_hitbox});
     game_scene.AddUI(&hud);
 
     main_menu.AddUI(&main_menu_text);
@@ -88,6 +92,10 @@ int main(int argc, char *argv[]) {
 
     // Main game loop
     while (running) {
+        player_hitbox.SetX(player.GetHitbox()->x);
+        player_hitbox.SetY(player.GetHitbox()->y);
+        player_hitbox.w = player.GetHitbox()->w;
+        player_hitbox.h = player.GetHitbox()->h;
 
         game_scene.Draw();
 
@@ -151,11 +159,16 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        hud.SetText(("X: " + ConvertDoubleToStr(player.GetX()) +
-                     " Y: " + ConvertDoubleToStr(player.GetY()))
-                        .c_str());
+        if (player.Collided(false)){
+            hud.SetColor({255, 0, 0});
+            hud.SetText("COLLIDED!");
+        }
+        else {
+            hud.SetColor({255, 255, 255});
+            hud.SetText("NOT COLLIDED!");
+        }
 
-        player.Rotate(1);
+        // player.Rotate(1);
 
         // Lock refresh rate
         SDL_Delay(1000 / 60);

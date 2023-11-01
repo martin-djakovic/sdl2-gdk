@@ -31,6 +31,7 @@ class Sprite {
         this->rotation_angle = rotation_angle;
         this->flip = flip;
         rotation_center = {w / 2, h / 2};
+        SetHitboxParams(0, 0, w, h);
     }
 
     void Destroy() { SDL_DestroyTexture(texture); }
@@ -40,19 +41,22 @@ class Sprite {
     // Set x position of sprite
     void SetX(double x, bool check_collision = true) {
         this->x = x;
+        UpdateHitboxCoords();
 
         if (this->is_collider && check_collision) {
             for (int i = 0; i < colliders->size(); i++) {
-                double collider_x = colliders->at(i)->GetX();
-                double collider_w = colliders->at(i)->w;
+                double collider_x = colliders->at(i)->GetHitbox()->x;
+                double collider_w = colliders->at(i)->GetHitbox()->w;
 
                 if (colliders->at(i) != this && colliders->at(i)->is_collider &&
                     MovementCollided(colliders->at(i))) {
 
-                    if (collider_x > x) {
-                        this->x = collider_x - w;
+                    if (collider_x > hitbox.x) {
+                        this->x = collider_x - hitbox.w - hitbox_xoffset;
+                        UpdateHitboxCoords();
                     } else {
-                        this->x = collider_x + collider_w;
+                        this->x = collider_x + collider_w - hitbox_xoffset;
+                        UpdateHitboxCoords();
                     }
 
                     return;
@@ -71,19 +75,22 @@ class Sprite {
     // Set y position of sprite
     void SetY(double y, bool check_collision = true) {
         this->y = y;
+        UpdateHitboxCoords();
 
         if (this->is_collider && check_collision) {
             for (int i = 0; i < colliders->size(); i++) {
-                double collider_y = colliders->at(i)->GetY();
-                double collider_h = colliders->at(i)->h;
+                double collider_y = colliders->at(i)->GetHitbox()->y;
+                double collider_h = colliders->at(i)->GetHitbox()->h;
 
                 if (colliders->at(i) != this && colliders->at(i)->is_collider &&
                     MovementCollided(colliders->at(i))) {
 
-                    if (collider_y > y) {
-                        this->y = collider_y - h;
+                    if (collider_y > hitbox.y) {
+                        this->y = collider_y - hitbox.h - hitbox_yoffset;
+                        UpdateHitboxCoords();
                     } else {
-                        this->y = collider_y + collider_h;
+                        this->y = collider_y + collider_h - hitbox_yoffset;
+                        UpdateHitboxCoords();
                     }
 
                     return;
@@ -143,6 +150,20 @@ class Sprite {
         this->colliders = colliders;
     }
 
+    // Sets hitbox x, y, width and height
+    // x_offset and y_offset are hitbox coordinates relative to sprite x and y
+    void SetHitboxParams(double x_offset, double y_offset, int width,
+                         int height) {
+        hitbox_xoffset = x_offset;
+        hitbox_yoffset = y_offset;
+        hitbox.x = x + x_offset;
+        hitbox.y = y + y_offset;
+        hitbox.w = width;
+        hitbox.h = height;
+    }
+
+    SDL_Rect *GetHitbox() { return &hitbox; }
+
     // Change sprite image after an image has already been set with SetImg()
     void ChangeImg(const char *img_path, bool param_auto_set_size = false) {
         img_rect.w = w;
@@ -191,19 +212,14 @@ class Sprite {
     // Returns true if this sprite and collide_sprite collided
     // Does not check if collide_sprite is visible
     bool Collided(Sprite *collide_sprite, bool check_is_collider = true) {
-        int sprite_x = collide_sprite->GetX();
-        int sprite_y = collide_sprite->GetY();
-        int sprite_w = collide_sprite->w;
-        int sprite_h = collide_sprite->h;
-        // Sprite x and y are doubles,
-        // but collisions need to be calculated with ints because sprite is
-        // drawn at a whole number coordinate
-        int x = GetX();
-        int y = GetY();
+        int collider_hbx = collide_sprite->GetHitbox()->x;
+        int collider_hby = collide_sprite->GetHitbox()->y;
+        int collider_hbw = collide_sprite->GetHitbox()->w;
+        int collider_hbh = collide_sprite->GetHitbox()->h;
 
         if (bool check_is_collider = true) {
-            if (x + w >= sprite_x && x <= sprite_x + sprite_w &&
-                y + h >= sprite_y && y <= sprite_y + sprite_h &&
+            if (hitbox.x + hitbox.w >= collider_hbx && hitbox.x <= collider_hbx + collider_hbw &&
+                hitbox.y + hitbox.h >= collider_hby && hitbox.y <= collider_hby + collider_hbh &&
                 collide_sprite->is_collider) {
 
                 this->collide_sprite = collide_sprite;
@@ -212,8 +228,10 @@ class Sprite {
                 return false;
             }
         } else {
-            if (x + w >= sprite_x && x <= sprite_x + sprite_w &&
-                y + h >= sprite_y && y <= sprite_y + sprite_h) {
+            if (hitbox.x + hitbox.w >= collider_hbx &&
+                hitbox.x <= collider_hbx + collider_hbw &&
+                hitbox.y + hitbox.h >= collider_hby &&
+                hitbox.y <= collider_hby + collider_hbh) {
 
                 this->collide_sprite = collide_sprite;
                 return true;
@@ -258,6 +276,9 @@ class Sprite {
     SDL_Surface *surface;
     SDL_Texture *texture;
     SDL_Rect img_rect;
+    SDL_Rect hitbox;
+    double hitbox_xoffset;
+    double hitbox_yoffset;
     std::vector<Sprite *> *colliders;
     Sprite *collide_sprite;
     bool auto_set_size;
@@ -273,13 +294,14 @@ class Sprite {
     // sprite x and y. Does not return true on surface collision (when 2 sprites
     // are touching, but not overlapping)
     bool MovementCollided(Sprite *collide_sprite) {
-        int sprite_x = collide_sprite->GetX();
-        int sprite_y = collide_sprite->GetY();
-        int sprite_w = collide_sprite->w;
-        int sprite_h = collide_sprite->h;
+        int collider_hbx = collide_sprite->GetHitbox()->x;
+        int collider_hby = collide_sprite->GetHitbox()->y;
+        int collider_hbw = collide_sprite->GetHitbox()->w;
+        int collider_hbh = collide_sprite->GetHitbox()->h;
 
-        if (x + w > sprite_x && x < sprite_x + sprite_w && y + h > sprite_y &&
-            y < sprite_y + sprite_h && collide_sprite->is_collider) {
+        if (hitbox.x + hitbox.w > collider_hbx && hitbox.x < collider_hbx + collider_hbw &&
+            hitbox.y + hitbox.h > collider_hby && hitbox.y < collider_hby + collider_hbh &&
+            collide_sprite->is_collider) {
 
             return true;
         } else {
@@ -307,6 +329,12 @@ class Sprite {
                 this->SetY(grad_mvmt_goaly);
             }
         }
+    }
+
+    // Update hitbox x and y to match offset when moving sprite
+    void UpdateHitboxCoords() {
+        hitbox.x = x + hitbox_xoffset;
+        hitbox.y = y + hitbox_yoffset;
     }
 };
 
