@@ -1,19 +1,19 @@
-#ifndef TEXT_HPP
-#define TEXT_HPP
+#ifndef TEXT_SPRITE_HPP
+#define TEXT_SPRITE_HPP
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 
-class UIText {
+class Text {
   public:
     int x = 0;
     int y = 0;
     int w;
     int h;
 
-    UIText(const char *text, const char *font_path, int font_size,
+    Text(const char *text, const char *font_path, int font_size,
            SDL_Color color, int x, int y) {
         this->text = text;
         this->font_path = font_path;

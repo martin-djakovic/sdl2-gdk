@@ -1,7 +1,7 @@
 #ifndef GAMEMATH_HPP
 #define GAMEMATH_HPP
 
-#include "sprite.hpp"
+#include "collidesprite.hpp"
 
 // Return angle in degrees between two points
 double GetAngle(int x1, int y1, int x2, int y2) {
@@ -9,7 +9,7 @@ double GetAngle(int x1, int y1, int x2, int y2) {
 }
 
 // Return angle in degrees between two sprites
-double GetAngle(Sprite *s1, Sprite *s2) {
+double GetAngle(CollideSprite *s1, CollideSprite *s2) {
     int x1 = s1->GetX();
     int y1 = s1->GetY();
     int x2 = s2->GetX();
@@ -19,7 +19,7 @@ double GetAngle(Sprite *s1, Sprite *s2) {
 }
 
 // Return angle in degrees between sprite and point
-double GetAngle(Sprite *s, int x2, int y2) {
+double GetAngle(CollideSprite *s, int x2, int y2) {
     int x1 = s->GetX();
     int y1 = s->GetY();
 
@@ -32,7 +32,7 @@ double GetDistance(int x1, int y1, int x2, int y2) {
 }
 
 // Get distance between two sprites
-double GetDistance(Sprite *s1, Sprite *s2) {
+double GetDistance(CollideSprite *s1, CollideSprite *s2) {
     int x1 = s1->GetX();
     int y1 = s1->GetY();
     int x2 = s2->GetX();
@@ -42,7 +42,7 @@ double GetDistance(Sprite *s1, Sprite *s2) {
 }
 
 // Get distance between sprite and point
-double GetDistance(Sprite *s, int x2, int y2) {
+double GetDistance(CollideSprite *s, int x2, int y2) {
     int x1 = s->GetX();
     int y1 = s->GetY();
 

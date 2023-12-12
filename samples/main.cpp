@@ -33,21 +33,21 @@ int main(int argc, char *argv[]) {
     bool running = true;
     SDL_Event event;
 
-    Sprite player(500, 500, 50, 50, RED_SQR_PATH);
-    Sprite player_hitbox(100, 100, 100, 100, BG_PATH, false);
+    CollideSprite player(500, 500, 50, 50, RED_SQR_PATH, PLAYER_SPEED);
+    BasicSprite player_hitbox(100, 100, 100, 100, BG_PATH);
     player.SetHitboxParams(10, 10, 30, 39);
 
-    Sprite s1(100, 100, 50, 150, WHITE_SQR_PATH);         // Center sprite
-    Sprite s2(100, -200, 100, 50, WHITE_SQR_PATH);        // Top sprite
+    CollideSprite s1(100, 100, 50, 150, WHITE_SQR_PATH);  // Center sprite
+    CollideSprite s2(100, -200, 100, 50, WHITE_SQR_PATH); // Top sprite
     s2.SetHitboxParams(50, 50, 50, 50);
-    Sprite s3(-200, 100, 50, 70, WHITE_SQR_PATH);         // Left sprite
-    Sprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
-    Sprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH);  // Bottom sprite
+    CollideSprite s3(-200, 100, 50, 70, WHITE_SQR_PATH);         // Left sprite
+    CollideSprite s4(WIN_W + 100, 300, 80, 150, WHITE_SQR_PATH); // Right sprite
+    CollideSprite s5(100, WIN_H + 100, 50, 50, WHITE_SQR_PATH); // Bottom sprite
 
-    Sprite background(0, 0, 1280, 720, BG_PATH, false);
+    BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
-    UIText hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
-    UIText main_menu_text("PRESS SPACE TO START", FONT_PATH, 32, {100, 50, 100},
+    Text hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
+    Text main_menu_text("PRESS SPACE TO START", FONT_PATH, 32, {100, 50, 100},
                           WIN_W / 2, WIN_H / 2);
 
     Camera game_camera(&background);
@@ -56,25 +56,26 @@ int main(int argc, char *argv[]) {
     Scene game_scene(window, &game_camera);
     Scene main_menu(window, &main_menu_camera);
 
-    game_scene.AddSprite(
-        {&background, &s1, &s2, &s3, &s4, &s5, &player, &player_hitbox});
+    game_scene.AddBasicSprite(&background);
+    game_scene.AddCollideSprite({&s1, &s2, &s3, &s4, &s5, &player});
+    game_scene.AddBasicSprite(&player_hitbox);
     game_scene.AddUI(&hud);
 
     main_menu.AddUI(&main_menu_text);
 
-    std::vector<Sprite *> moving_sprites;
+    std::vector<CollideSprite *> moving_sprites;
 
     int mousex, mousey;
 
     for (int i = 0; i < 50; i++) {
         for (int j = 0; j < 7; j++) {
-            moving_sprites.push_back(new Sprite(1280 + 80 * i, j * 100 + 50, 50,
-                                                50, WHITE_SQR_PATH));
+            moving_sprites.push_back(new CollideSprite(
+                1280 + 80 * i, j * 100 + 50, 50, 50, WHITE_SQR_PATH, 1));
         }
     }
 
     for (int i = 0; i < moving_sprites.size(); i++) {
-        game_scene.AddSprite(moving_sprites.at(i));
+        game_scene.AddCollideSprite(moving_sprites.at(i));
     }
 
     main_menu.Draw();
@@ -94,8 +95,8 @@ int main(int argc, char *argv[]) {
     while (running) {
         player_hitbox.SetX(player.GetHitbox()->x);
         player_hitbox.SetY(player.GetHitbox()->y);
-        player_hitbox.w = player.GetHitbox()->w;
-        player_hitbox.h = player.GetHitbox()->h;
+        player_hitbox.SetW(player.GetHitbox()->w);
+        player_hitbox.SetH(player.GetHitbox()->h);
 
         game_scene.Draw();
 
@@ -107,19 +108,19 @@ int main(int argc, char *argv[]) {
 
             switch (event.key.keysym.sym) {
             case SDLK_w:
-                player.MoveY(-PLAYER_SPEED);
+                player.MoveY(Direction::UP);
                 break;
 
             case SDLK_a:
-                player.MoveX(-PLAYER_SPEED);
+                player.MoveX(Direction::LEFT);
                 break;
 
             case SDLK_s:
-                player.MoveY(PLAYER_SPEED);
+                player.MoveY(Direction::DOWN);
                 break;
 
             case SDLK_d:
-                player.MoveX(PLAYER_SPEED);
+                player.MoveX(Direction::RIGHT);
                 break;
 
             default:
@@ -128,7 +129,7 @@ int main(int argc, char *argv[]) {
 
             if (event.type == SDL_MOUSEBUTTONDOWN) {
                 SDL_GetMouseState(&mousex, &mousey);
-                player.MoveTo(mousex, mousey, PLAYER_SPEED);
+                player.MoveTo(mousex, mousey);
             }
 
             if (event.type == SDL_QUIT) {
@@ -144,12 +145,12 @@ int main(int argc, char *argv[]) {
             }
 
             // Out of bounds left
-            else if (player.GetX() + player.w <= 0) {
+            else if (player.GetX() + player.GetW() <= 0) {
                 game_camera.x += WIN_W;
             }
 
             // Out of bounds top
-            else if (player.GetY() + player.h <= 0) {
+            else if (player.GetY() + player.GetH() <= 0) {
                 game_camera.y += WIN_H;
             }
 
@@ -159,16 +160,15 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (player.Collided(false)){
+        if (player.Collided()) {
             hud.SetColor({255, 0, 0});
             hud.SetText("COLLIDED!");
-        }
-        else {
+        } else {
             hud.SetColor({255, 255, 255});
             hud.SetText("NOT COLLIDED!");
         }
 
-        // player.Rotate(1);
+        //player.Rotate(0.5);
 
         // Lock refresh rate
         SDL_Delay(1000 / 60);
