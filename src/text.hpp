@@ -6,15 +6,33 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 
-class Text {
-  public:
-    int x = 0;
-    int y = 0;
-    int w;
-    int h;
+#include "basicsprite.hpp"
 
+class Text : public BasicSprite {
+  protected:
+    TTF_Font *font;
+    SDL_Color color;
+    const char *font_path;
+    int font_size;
+    const char *text;
+
+    void UpdateTexture() {
+        font = TTF_OpenFont(font_path, font_size);
+        surface = TTF_RenderText_Solid(font, text, color);
+        texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
+
+        SDL_QueryTexture(texture, NULL, NULL, &img_rect.w, &img_rect.h);
+
+        w = img_rect.w;
+        h = img_rect.h;
+
+        SDL_FreeSurface(surface);
+    }
+
+  public:
     Text(const char *text, const char *font_path, int font_size,
-           SDL_Color color, int x, int y) {
+         SDL_Color color, double x, double y)
+        : BasicSprite() {
         this->text = text;
         this->font_path = font_path;
         this->font_size = font_size;
@@ -23,67 +41,35 @@ class Text {
         this->y = y;
     }
 
-    void Destroy() { SDL_DestroyTexture(texture); }
+    void ChangeImg(const char *img_path,
+                   bool param_auto_set_size = false) override {
+        throw "Text can't call BasicSprite::ChangeImg()";
+    }
 
-    // Set text renderer and create image passed in constructor
-    // Renderer will be automatically set when text is added to a scene
     void SetRenderer(SDL_Renderer *renderer) {
-        text_renderer = renderer;
+        sprite_renderer = renderer;
 
-        MakeTexture(font_path, font_size, text, color);
+        UpdateTexture();
     }
 
     void SetText(const char *text) {
         this->text = text;
-        MakeTexture(font_path, font_size, text, color);
+        UpdateTexture();
     }
 
     void SetColor(SDL_Color color) {
         this->color = color;
-        MakeTexture(font_path, font_size, text, color);
+        UpdateTexture();
     }
 
     void SetSize(int font_size) {
         this->font_size = font_size;
-        MakeTexture(font_path, font_size, text, color);
+        UpdateTexture();
     }
 
     void SetFont(const char *font_path) {
         this->font_path = font_path;
-        MakeTexture(font_path, font_size, text, color);
-    }
-
-    void Draw() {
-        img_rect.x = x;
-        img_rect.y = y;
-
-        SDL_RenderCopy(text_renderer, texture, NULL, &img_rect);
-    }
-
-  private:
-    TTF_Font *font;
-    SDL_Renderer *text_renderer;
-    SDL_Surface *surface;
-    SDL_Texture *texture;
-    SDL_Color color;
-    SDL_Rect img_rect;
-    const char *font_path;
-    int font_size;
-    const char *text;
-
-    // Create texture of text based on given arguements
-    void MakeTexture(const char *font_path, int font_size, const char *text,
-                     SDL_Color color) {
-        font = TTF_OpenFont(font_path, font_size);
-        surface = TTF_RenderText_Solid(font, text, color);
-        texture = SDL_CreateTextureFromSurface(text_renderer, surface);
-
-        SDL_QueryTexture(texture, NULL, NULL, &img_rect.w, &img_rect.h);
-
-        w = img_rect.w;
-        h = img_rect.h;
-
-        SDL_FreeSurface(surface);
+        UpdateTexture();
     }
 };
 

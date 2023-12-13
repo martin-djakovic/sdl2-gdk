@@ -57,6 +57,19 @@ class BasicSprite {
     }
 
   public:
+    BasicSprite() {
+        this->x = 0;
+        this->y = 0;
+        SetW(0);
+        SetH(0);
+        this->speed = 0;
+        this->img_path = "";
+        this->auto_set_size = false;
+        this->rotation_angle = 0;
+        this->flip = SDL_FLIP_NONE;
+        rotation_center = {w / 2, h / 2};
+    }
+
     BasicSprite(double x, double y, int width, int height, const char *img_path,
                 double speed = 0, bool auto_set_size = false,
                 double rotation_angle = 0,
@@ -104,7 +117,7 @@ class BasicSprite {
         if (w >= 0) {
             this->w = w;
         } else {
-            throw std::invalid_argument("Width cannot be less than 0");
+            throw "Width cannot be less than 0";
         }
     }
     // Get width
@@ -115,7 +128,7 @@ class BasicSprite {
         if (h >= 0) {
             this->h = h;
         } else {
-            throw std::invalid_argument("Height cannot be less than 0");
+            throw "Height cannot be less than 0";
         }
     }
     // Get height
@@ -147,14 +160,14 @@ class BasicSprite {
 
     // Set sprite renderer and create image passed in constructor
     // Renderer will be automatically set when sprite is added to a scene
-    void SetRenderer(SDL_Renderer *renderer) {
+    virtual void SetRenderer(SDL_Renderer *renderer) {
         sprite_renderer = renderer;
 
         ChangeImg(img_path.c_str(), auto_set_size);
     }
 
     // Change sprite image after an image has already been set with SetImg()
-    void ChangeImg(const char *img_path, bool param_auto_set_size = false) {
+    virtual void ChangeImg(const char *img_path, bool param_auto_set_size = false) {
         img_rect.w = w;
         img_rect.h = h;
 

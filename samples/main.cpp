@@ -48,9 +48,9 @@ int main(int argc, char *argv[]) {
 
     Text hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
     Text main_menu_text("PRESS SPACE TO START", FONT_PATH, 32, {100, 50, 100},
-                          WIN_W / 2, WIN_H / 2);
+                        WIN_W / 2, WIN_H / 2);
 
-    Camera game_camera(&background);
+    Camera game_camera({&background, &hud});
     Camera main_menu_camera;
 
     Scene game_scene(window, &game_camera);
@@ -59,9 +59,9 @@ int main(int argc, char *argv[]) {
     game_scene.AddBasicSprite(&background);
     game_scene.AddCollideSprite({&s1, &s2, &s3, &s4, &s5, &player});
     game_scene.AddBasicSprite(&player_hitbox);
-    game_scene.AddUI(&hud);
+    game_scene.AddBasicSprite(&hud);
 
-    main_menu.AddUI(&main_menu_text);
+    main_menu.AddBasicSprite(&main_menu_text);
 
     std::vector<CollideSprite *> moving_sprites;
 
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
             hud.SetText("NOT COLLIDED!");
         }
 
-        //player.Rotate(0.5);
+        // player.Rotate(0.5);
 
         // Lock refresh rate
         SDL_Delay(1000 / 60);

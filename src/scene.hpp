@@ -14,8 +14,7 @@
 class Scene {
   private:
     std::vector<CollideSprite *> collide_sprites;
-    std::vector<BasicSprite *> render_objects;
-    std::vector<Text *> ui;
+    std::vector<BasicSprite *> basic_sprites;
     int win_w;
     int win_h;
 
@@ -29,16 +28,12 @@ class Scene {
     }
 
     void Destroy() {
-        for (int i = 0; i < ui.size(); i++) {
-            ui.at(i)->Destroy();
+        for (int i = 0; i < basic_sprites.size(); i++) {
+            basic_sprites.at(i)->Destroy();
         }
 
-        for (int i = 0; i < render_objects.size(); i++) {
-            render_objects.at(i)->Destroy();
-        }
-
-        render_objects.clear();
-        ui.clear();
+        basic_sprites.clear();
+        collide_sprites.clear();
     }
 
     void AddCollideSprite(CollideSprite *sprite) {
@@ -55,7 +50,7 @@ class Scene {
 
     void AddBasicSprite(BasicSprite *sprite) {
         sprite->SetRenderer(renderer);
-        render_objects.push_back(sprite);
+        basic_sprites.push_back(sprite);
     }
 
     void AddBasicSprite(const std::vector<BasicSprite *> sprites) {
@@ -80,9 +75,9 @@ class Scene {
     }
 
     void RemoveBasicSprite(BasicSprite *sprite, bool destroy = true) {
-        render_objects.erase(
-            std::remove(render_objects.begin(), render_objects.end(), sprite),
-            render_objects.end());
+        basic_sprites.erase(
+            std::remove(basic_sprites.begin(), basic_sprites.end(), sprite),
+            basic_sprites.end());
 
         if (destroy) {
             sprite->Destroy();
@@ -96,61 +91,26 @@ class Scene {
         }
     }
 
-    void AddUI(Text *text) {
-        text->SetRenderer(renderer);
-        ui.push_back(text);
-    }
-
-    void AddUI(const std::vector<Text *> texts) {
-        for (int i = 0; i < texts.size(); i++) {
-            texts.at(i)->SetRenderer(renderer);
-            this->ui.push_back(texts.at(i));
-        }
-    }
-
-    void RemoveUI(Text *text, bool destroy = true) {
-        ui.erase(std::remove(ui.begin(), ui.end(), text), ui.end());
-
-        if (destroy) {
-            text->Destroy();
-        }
-    }
-
-    void RemoveUI(const std::vector<Text *> texts, bool destroy = true) {
-        for (int i = 0; i < texts.size(); i++) {
-            ui.erase(std::remove(ui.begin(), ui.end(), texts.at(i)), ui.end());
-
-            if (destroy) {
-                texts.at(i)->Destroy();
-            }
-        }
-    }
-
-    // Draw all visible sprites and ui in scene
+    // Draw all visible sprites in scene
     void Draw() {
         SDL_RenderClear(renderer);
 
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
-        // Draw all render objects (basic sprites)
-        for (int i = 0; i < render_objects.size(); i++) {
+        // Draw all basic sprites
+        for (int i = 0; i < basic_sprites.size(); i++) {
             if (std::find(camera->GetFocusedSprites()->begin(),
                           camera->GetFocusedSprites()->end(),
-                          render_objects.at(i)) ==
+                          basic_sprites.at(i)) ==
                 camera->GetFocusedSprites()->end()) {
 
-                render_objects.at(i)->MoveX(camera->x);
-                render_objects.at(i)->MoveY(camera->y);
+                basic_sprites.at(i)->MoveX(camera->x);
+                basic_sprites.at(i)->MoveY(camera->y);
             }
 
-            if (render_objects.at(i)->IsVisible(win_w, win_h)) {
-                render_objects.at(i)->Draw();
+            if (basic_sprites.at(i)->IsVisible(win_w, win_h)) {
+                basic_sprites.at(i)->Draw();
             }
-        }
-
-        // Draw UI
-        for (int i = 0; i < ui.size(); i++) {
-            ui.at(i)->Draw();
         }
 
         camera->x = 0;
@@ -162,7 +122,7 @@ class Scene {
     std::vector<CollideSprite *> *GetAllCollideSprites() {
         return &collide_sprites;
     }
-    std::vector<BasicSprite *> *GetAllBasicSprites() { return &render_objects; }
+    std::vector<BasicSprite *> *GetAllBasicSprites() { return &basic_sprites; }
 };
 
 #endif
