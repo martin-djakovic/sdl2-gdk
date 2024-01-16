@@ -120,8 +120,8 @@ class Scene {
                           camera->GetFocusedSprites()->end(),
                           basic_sprites.at(i)) ==
                         camera->GetFocusedSprites()->end() &&
-                    camera->x != 0 ||
-                camera->y != 0) {
+                    (camera->x != 0 ||
+                camera->y != 0)) {
 
                 basic_sprites.at(i)->MoveX(camera->x);
                 basic_sprites.at(i)->MoveY(camera->y);
@@ -136,8 +136,8 @@ class Scene {
                           camera->GetFocusedSprites()->end(),
                           collide_sprites.at(i)) ==
                         camera->GetFocusedSprites()->end() &&
-                    camera->x != 0 ||
-                camera->y != 0) {
+                    (camera->x != 0 ||
+                camera->y != 0)) {
 
                 collide_sprites.at(i)->MoveX(camera->x, false);
                 collide_sprites.at(i)->MoveY(camera->y, false);
