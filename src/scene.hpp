@@ -5,9 +5,9 @@
 #include <iostream>
 #include <vector>
 
+#include "camera.hpp"
 #include "collidesprite.hpp"
 #include "text.hpp"
-#include "camera.hpp"
 
 // Scene is used to group multiple sprites and draw them to the screen
 // Only one scene at a time should be drawn in any single window
@@ -15,8 +15,25 @@ class Scene {
   private:
     std::vector<CollideSprite *> collide_sprites;
     std::vector<BasicSprite *> basic_sprites;
+    // Every sprite that should be drawn in the scene
+    std::vector<BasicSprite *> render_objects;
     int win_w;
     int win_h;
+
+    void AddRenderObject(BasicSprite *sprite) {
+        sprite->SetRenderer(renderer);
+        render_objects.push_back(sprite);
+    }
+
+    void RemoveRenderObject(BasicSprite *sprite, bool destroy = true) {
+        render_objects.erase(
+            std::remove(render_objects.begin(), render_objects.end(), sprite),
+            render_objects.end());
+
+        if (destroy) {
+            sprite->Destroy();
+        }
+    }
 
   public:
     SDL_Renderer *renderer;
@@ -28,18 +45,19 @@ class Scene {
     }
 
     void Destroy() {
-        for (int i = 0; i < basic_sprites.size(); i++) {
-            basic_sprites.at(i)->Destroy();
+        for (int i = 0; i < render_objects.size(); i++) {
+            render_objects.at(i)->Destroy();
         }
 
         basic_sprites.clear();
         collide_sprites.clear();
+        render_objects.clear();
     }
 
     void AddCollideSprite(CollideSprite *sprite) {
-        sprite->SetColliders(&collide_sprites);        
+        AddRenderObject(sprite);
+        sprite->SetColliders(&collide_sprites);
         collide_sprites.push_back(sprite);
-        AddBasicSprite(sprite);
     }
 
     void AddCollideSprite(const std::vector<CollideSprite *> sprites) {
@@ -49,7 +67,7 @@ class Scene {
     }
 
     void AddBasicSprite(BasicSprite *sprite) {
-        sprite->SetRenderer(renderer);
+        AddRenderObject(sprite);
         basic_sprites.push_back(sprite);
     }
 
@@ -64,11 +82,11 @@ class Scene {
             std::remove(collide_sprites.begin(), collide_sprites.end(), sprite),
             collide_sprites.end());
 
-        RemoveBasicSprite(sprite, destroy);
+        RemoveRenderObject(sprite, destroy);
     }
 
     void RemoveCollideSprite(const std::vector<CollideSprite *> sprites,
-                      bool destroy = true) {
+                             bool destroy = true) {
         for (int i = 0; i < sprites.size(); i++) {
             RemoveCollideSprite(sprites.at(i));
         }
@@ -78,14 +96,11 @@ class Scene {
         basic_sprites.erase(
             std::remove(basic_sprites.begin(), basic_sprites.end(), sprite),
             basic_sprites.end());
-
-        if (destroy) {
-            sprite->Destroy();
-        }
+        RemoveRenderObject(sprite, destroy);
     }
 
     void RemoveBasicSprite(const std::vector<BasicSprite *> sprites,
-                      bool destroy = true) {
+                           bool destroy = true) {
         for (int i = 0; i < sprites.size(); i++) {
             RemoveBasicSprite(sprites.at(i));
         }
@@ -97,20 +112,41 @@ class Scene {
 
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
-        // Draw all basic sprites
+        // Move camera for all basic sprites
         for (int i = 0; i < basic_sprites.size(); i++) {
+            // Make sure that basic sprite isn't a focused sprite,
+            // and that camera has been moved
             if (std::find(camera->GetFocusedSprites()->begin(),
                           camera->GetFocusedSprites()->end(),
                           basic_sprites.at(i)) ==
-                camera->GetFocusedSprites()->end()) {
+                        camera->GetFocusedSprites()->end() &&
+                    camera->x != 0 ||
+                camera->y != 0) {
 
                 basic_sprites.at(i)->MoveX(camera->x);
                 basic_sprites.at(i)->MoveY(camera->y);
             }
+        }
 
-            if (basic_sprites.at(i)->IsVisible(win_w, win_h)) {
-                basic_sprites.at(i)->Draw();
+        // Move camera for all collide sprites
+        for (int i = 0; i < collide_sprites.size(); i++) {
+            // Make sure that collide sprite isn't a focused sprite,
+            // and that camera has been moved
+            if (std::find(camera->GetFocusedSprites()->begin(),
+                          camera->GetFocusedSprites()->end(),
+                          collide_sprites.at(i)) ==
+                        camera->GetFocusedSprites()->end() &&
+                    camera->x != 0 ||
+                camera->y != 0) {
+
+                collide_sprites.at(i)->MoveX(camera->x, false);
+                collide_sprites.at(i)->MoveY(camera->y, false);
             }
+        }
+
+        // Draw everything (all render objects)
+        for (int i = 0; i < render_objects.size(); i++){
+            render_objects.at(i)->Draw();
         }
 
         camera->x = 0;

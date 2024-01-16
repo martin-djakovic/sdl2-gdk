@@ -109,41 +109,42 @@ class CollideSprite : public BasicSprite {
             }
         }
     }
+    // Move sprite along x axis by value of x, checks collisions
+    void MoveX(double x) override { SetX(this->x + x, true); }
 
     // Move sprite along x axis by value of x
     void MoveX(double x, bool check_collision) {
-        MoveX(y, check_collision);
+        SetX(this->x + x, check_collision);
+    }
+
+    // Move sprite along x axis by value of speed, checks collision
+    void MoveX(Direction direction) override {
+        MoveX(speed * ConvertDirectionToInt(direction), true);
     }
 
     // Move sprite along x axis by value of speed
     void MoveX(Direction direction, bool check_collision) {
-        MoveX(direction, check_collision);
-    }
-
-    // Move sprite along y axis by value of y
-    void MoveY(double y, bool check_collision) {
-        MoveY(y, check_collision);
-    }
-
-    // Move sprite along y axis by value of speed
-    void MoveY(Direction direction, bool check_collision) {
-        MoveY(direction, check_collision);
-    }
-
-    // Move sprite along x axis by value of x, checks collisions
-    void MoveX(double x) override { SetX(this->x + x, true); }
-
-    // Move sprite along x axis by value of speed, checks collision
-    void MoveX(Direction direction) override {
-        SetX(this->x + speed * ConvertDirectionToInt(direction), true);
+        MoveX(speed * ConvertDirectionToInt(direction),
+              check_collision);
     }
 
     // Move sprite along y axis by value of y, checks collisions
     void MoveY(double y) override { SetY(this->y + y, true); }
 
+    // Move sprite along y axis by value of y
+    void MoveY(double y, bool check_collision) {
+        SetY(this->y + y, check_collision);
+    }
+
     // Move sprite along y axis by value of speed, checks collisions
     void MoveY(Direction direction) override {
-        SetY(this->y + speed * ConvertDirectionToInt(direction), true);
+        MoveY(speed * ConvertDirectionToInt(direction), true);
+    }
+
+    // Move sprite along y axis by value of speed
+    void MoveY(Direction direction, bool check_collision) {
+        MoveY(speed * ConvertDirectionToInt(direction),
+              check_collision);
     }
 
     // Set pointer to vector containing all sprites for which collisions should
@@ -179,7 +180,7 @@ class CollideSprite : public BasicSprite {
         if (hitbox.x + hitbox.w >= collider_hbx &&
             hitbox.x <= collider_hbx + collider_hbw &&
             hitbox.y + hitbox.h >= collider_hby &&
-            hitbox.y <= collider_hby + collider_hbh) {
+            hitbox.y <= collider_hby + collider_hbh && collide_sprite != this) {
 
             this->collide_sprite = collide_sprite;
             return true;
@@ -194,7 +195,7 @@ class CollideSprite : public BasicSprite {
     bool Collided() {
         for (int i = 0; i < colliders->size(); i++) {
 
-            if (colliders->at(i) != this && Collided(colliders->at(i))) {
+            if (Collided(colliders->at(i))) {
                 return true;
             }
         }

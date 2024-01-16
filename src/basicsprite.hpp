@@ -97,7 +97,7 @@ class BasicSprite {
 
     // Move sprite along x axis by value of speed
     virtual void MoveX(Direction direction) {
-        SetX(this->x + speed * ConvertDirectionToInt(direction));
+        MoveX(speed * ConvertDirectionToInt(direction));
     }
 
     // Set y position of sprite
@@ -109,7 +109,7 @@ class BasicSprite {
 
     // Move sprite along y axis by value of speed
     virtual void MoveY(Direction direction) {
-        SetY(this->y + speed * ConvertDirectionToInt(direction));
+        MoveY(speed * ConvertDirectionToInt(direction));
     }
 
     // Set width
