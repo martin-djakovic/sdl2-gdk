@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     Text main_menu_text("PRESS SPACE TO START", FONT_PATH, 32, {100, 50, 100},
                         WIN_W / 2, WIN_H / 2);
 
-    Camera game_camera({&hud, &background});
+    Camera game_camera({&background, &hud});
     Camera main_menu_camera;
 
     Scene game_scene(window, &game_camera);

@@ -42,6 +42,32 @@ class Camera {
         this->y = y;
     }
 
+    void AddFocusedSprite(BasicSprite *sprite) {
+        focused_sprites.push_back(sprite);
+    }
+
+    void AddFocusedSprite(const std::vector<BasicSprite *> sprites) {
+        for (int i = 0; i < sprites.size(); i++) {
+            AddFocusedSprite(sprites.at(i));
+        }
+    }
+
+    void RemoveFocusedSprite(BasicSprite *sprite) {
+        focused_sprites.erase(
+            std::remove(focused_sprites.begin(), focused_sprites.end(), sprite),
+            focused_sprites.end());
+    }
+
+    void RemoveFocusedSprite(const std::vector<BasicSprite *> sprites) {
+        for (int i = 0; i < sprites.size(); i++) {
+            RemoveFocusedSprite(sprites.at(i));
+        }
+    }
+
+    void SetFocusedSprites(const std::vector<BasicSprite *> sprites) {
+        focused_sprites = sprites;
+    }
+
     std::vector<BasicSprite *> *GetFocusedSprites() { return &focused_sprites; }
 };
 
