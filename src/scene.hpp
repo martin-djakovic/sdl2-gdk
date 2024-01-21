@@ -7,7 +7,8 @@
 
 #include "camera.hpp"
 #include "collidesprite.hpp"
-#include "text.hpp"
+#include "textline.hpp"
+#include "textblock.hpp"
 
 // Scene is used to group multiple sprites and draw them to the screen
 // Only one scene at a time should be drawn in any single window

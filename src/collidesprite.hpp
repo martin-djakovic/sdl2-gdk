@@ -9,6 +9,7 @@
 #include "basicsprite.hpp"
 
 // Image that represents an object in-game
+// Has basic functions for movement, drawing and collisions
 class CollideSprite : public BasicSprite {
 
   protected:
@@ -124,8 +125,7 @@ class CollideSprite : public BasicSprite {
 
     // Move sprite along x axis by value of speed
     void MoveX(Direction direction, bool check_collision) {
-        MoveX(speed * ConvertDirectionToInt(direction),
-              check_collision);
+        MoveX(speed * ConvertDirectionToInt(direction), check_collision);
     }
 
     // Move sprite along y axis by value of y, checks collisions
@@ -143,8 +143,7 @@ class CollideSprite : public BasicSprite {
 
     // Move sprite along y axis by value of speed
     void MoveY(Direction direction, bool check_collision) {
-        MoveY(speed * ConvertDirectionToInt(direction),
-              check_collision);
+        MoveY(speed * ConvertDirectionToInt(direction), check_collision);
     }
 
     // Set pointer to vector containing all sprites for which collisions should

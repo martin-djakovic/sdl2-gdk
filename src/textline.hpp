@@ -1,5 +1,5 @@
-#ifndef TEXT_SPRITE_HPP
-#define TEXT_SPRITE_HPP
+#ifndef TEXT_LINE_HPP
+#define TEXT_LINE_HPP
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -8,7 +8,8 @@
 
 #include "basicsprite.hpp"
 
-class Text : public BasicSprite {
+// Contains single line of text
+class TextLine : public BasicSprite {
   protected:
     TTF_Font *font;
     SDL_Color color;
@@ -30,7 +31,7 @@ class Text : public BasicSprite {
     }
 
   public:
-    Text(const char *text, const char *font_path, int font_size,
+    TextLine(const char *text, const char *font_path, int font_size,
          SDL_Color color, double x, double y)
         : BasicSprite() {
         this->text = text;

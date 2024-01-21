@@ -46,9 +46,10 @@ int main(int argc, char *argv[]) {
 
     BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
-    Text hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
-    Text main_menu_text("PRESS SPACE TO START", FONT_PATH, 32, {100, 50, 100},
-                        WIN_W / 2, WIN_H / 2);
+    TextBlock hud({"HELLO WORLD!"}, FONT_PATH, 32, {0, 255, 0}, 20, 20);
+    TextBlock main_menu_text(
+        {"HELLO!", "WELCOME TO THE GAME", "PRESS SPACE TO START"}, FONT_PATH,
+        32, {100, 100, 100}, 20, 20);
 
     Camera game_camera({&background, &hud});
     Camera main_menu_camera;
@@ -162,12 +163,10 @@ int main(int argc, char *argv[]) {
 
         if (player.Collided()) {
             hud.SetColor({255, 0, 0});
-            hud.SetText("COLLIDED!");
-
-            game_scene.RemoveCollideSprite(player.GetCollideSprite());
+            hud.SetText({"COLLIDED!"});
         } else {
             hud.SetColor({255, 255, 255});
-            hud.SetText("NOT COLLIDED!");
+            hud.SetText({"NOT COLLIDED!"});
         }
 
         // player.Rotate(0.5);

@@ -1,5 +1,6 @@
 #include "collidesprite.hpp"
 #include "scene.hpp"
-#include "text.hpp"
+#include "textline.hpp"
+#include "textblock.hpp"
 #include "init.hpp"
 #include "gamemath.hpp"

@@ -10,6 +10,7 @@
 #include "direction.hpp"
 
 // Image that represents an object in-game
+// Has basic functions for drawing and movement
 class BasicSprite {
 
   protected:
@@ -167,7 +168,8 @@ class BasicSprite {
     }
 
     // Change sprite image after an image has already been set with SetImg()
-    virtual void ChangeImg(const char *img_path, bool param_auto_set_size = false) {
+    virtual void ChangeImg(const char *img_path,
+                           bool param_auto_set_size = false) {
         img_rect.w = w;
         img_rect.h = h;
 
@@ -190,7 +192,7 @@ class BasicSprite {
     // Changes sprite rotation by angle
     void Rotate(double angle) { SetRotation(rotation_angle + angle); }
 
-    void Draw() {
+    virtual void Draw() {
         img_rect.x = x;
         img_rect.y = y;
         img_rect.w = w;
