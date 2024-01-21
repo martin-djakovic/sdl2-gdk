@@ -119,12 +119,12 @@ class CollideSprite : public BasicSprite {
     }
 
     // Move sprite along x axis by value of speed, checks collision
-    void MoveX(Direction direction) override {
+    void MoveX(GDK_Direction direction) override {
         MoveX(speed * ConvertDirectionToInt(direction), true);
     }
 
     // Move sprite along x axis by value of speed
-    void MoveX(Direction direction, bool check_collision) {
+    void MoveX(GDK_Direction direction, bool check_collision) {
         MoveX(speed * ConvertDirectionToInt(direction), check_collision);
     }
 
@@ -137,12 +137,12 @@ class CollideSprite : public BasicSprite {
     }
 
     // Move sprite along y axis by value of speed, checks collisions
-    void MoveY(Direction direction) override {
+    void MoveY(GDK_Direction direction) override {
         MoveY(speed * ConvertDirectionToInt(direction), true);
     }
 
     // Move sprite along y axis by value of speed
-    void MoveY(Direction direction, bool check_collision) {
+    void MoveY(GDK_Direction direction, bool check_collision) {
         MoveY(speed * ConvertDirectionToInt(direction), check_collision);
     }
 

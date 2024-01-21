@@ -46,10 +46,9 @@ int main(int argc, char *argv[]) {
 
     BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
-    TextBlock hud({"HELLO WORLD!"}, FONT_PATH, 32, {0, 255, 0}, 20, 20);
-    TextBlock main_menu_text(
-        {"HELLO!", "WELCOME TO THE GAME", "PRESS SPACE TO START"}, FONT_PATH,
-        32, {100, 100, 100}, 20, 20);
+    TextLine hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
+    TextBlock system_info(GDK_GetSystemInfo(), FONT_PATH, 13, {0, 255, 0}, 10,
+                          10);
 
     Camera game_camera({&background, &hud});
     Camera main_menu_camera;
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
     game_scene.AddBasicSprite(&player_hitbox);
     game_scene.AddBasicSprite(&hud);
 
-    main_menu.AddBasicSprite(&main_menu_text);
+    main_menu.AddBasicSprite(&system_info);
 
     std::vector<CollideSprite *> moving_sprites;
 
@@ -109,19 +108,19 @@ int main(int argc, char *argv[]) {
 
             switch (event.key.keysym.sym) {
             case SDLK_w:
-                player.MoveY(Direction::UP);
+                player.MoveY(GDK_Direction::UP);
                 break;
 
             case SDLK_a:
-                player.MoveX(Direction::LEFT);
+                player.MoveX(GDK_Direction::LEFT);
                 break;
 
             case SDLK_s:
-                player.MoveY(Direction::DOWN);
+                player.MoveY(GDK_Direction::DOWN);
                 break;
 
             case SDLK_d:
-                player.MoveX(Direction::RIGHT);
+                player.MoveX(GDK_Direction::RIGHT);
                 break;
 
             default:
@@ -163,10 +162,10 @@ int main(int argc, char *argv[]) {
 
         if (player.Collided()) {
             hud.SetColor({255, 0, 0});
-            hud.SetText({"COLLIDED!"});
+            hud.SetText("COLLIDED!");
         } else {
             hud.SetColor({255, 255, 255});
-            hud.SetText({"NOT COLLIDED!"});
+            hud.SetText("NOT COLLIDED!");
         }
 
         // player.Rotate(0.5);

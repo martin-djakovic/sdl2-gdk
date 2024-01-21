@@ -97,7 +97,7 @@ class BasicSprite {
     virtual void MoveX(double x) { SetX(this->x + x); }
 
     // Move sprite along x axis by value of speed
-    virtual void MoveX(Direction direction) {
+    virtual void MoveX(GDK_Direction direction) {
         MoveX(speed * ConvertDirectionToInt(direction));
     }
 
@@ -109,7 +109,7 @@ class BasicSprite {
     virtual void MoveY(double y) { SetY(this->y + y); }
 
     // Move sprite along y axis by value of speed
-    virtual void MoveY(Direction direction) {
+    virtual void MoveY(GDK_Direction direction) {
         MoveY(speed * ConvertDirectionToInt(direction));
     }
 

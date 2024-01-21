@@ -15,11 +15,11 @@ class TextLine : public BasicSprite {
     SDL_Color color;
     const char *font_path;
     int font_size;
-    const char *text;
+    std::string text;
 
     void UpdateTexture() {
         font = TTF_OpenFont(font_path, font_size);
-        surface = TTF_RenderText_Solid(font, text, color);
+        surface = TTF_RenderText_Solid(font, text.c_str(), color);
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
 
         SDL_QueryTexture(texture, NULL, NULL, &img_rect.w, &img_rect.h);
@@ -31,8 +31,8 @@ class TextLine : public BasicSprite {
     }
 
   public:
-    TextLine(const char *text, const char *font_path, int font_size,
-         SDL_Color color, double x, double y)
+    TextLine(std::string text, const char *font_path, int font_size,
+             SDL_Color color, double x, double y)
         : BasicSprite() {
         this->text = text;
         this->font_path = font_path;

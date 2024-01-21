@@ -7,8 +7,9 @@
 
 #include "camera.hpp"
 #include "collidesprite.hpp"
-#include "textline.hpp"
+#include "debug.hpp"
 #include "textblock.hpp"
+#include "textline.hpp"
 
 // Scene is used to group multiple sprites and draw them to the screen
 // Only one scene at a time should be drawn in any single window
@@ -20,6 +21,9 @@ class Scene {
     std::vector<BasicSprite *> render_objects;
     int win_w;
     int win_h;
+
+    SDL_Renderer *renderer;
+    Camera *camera;
 
     void AddRenderObject(BasicSprite *sprite) {
         sprite->SetRenderer(renderer);
@@ -37,9 +41,6 @@ class Scene {
     }
 
   public:
-    SDL_Renderer *renderer;
-    Camera *camera;
-
     Scene(SDL_Window *window, Camera *camera) {
         renderer = SDL_GetRenderer(window);
         this->camera = camera;
@@ -120,9 +121,8 @@ class Scene {
             if (std::find(camera->GetFocusedSprites()->begin(),
                           camera->GetFocusedSprites()->end(),
                           basic_sprites.at(i)) ==
-                        camera->GetFocusedSprites()->end() &&
-                    (camera->x != 0 ||
-                camera->y != 0)) {
+                    camera->GetFocusedSprites()->end() &&
+                (camera->x != 0 || camera->y != 0)) {
 
                 basic_sprites.at(i)->MoveX(camera->x);
                 basic_sprites.at(i)->MoveY(camera->y);
@@ -136,9 +136,8 @@ class Scene {
             if (std::find(camera->GetFocusedSprites()->begin(),
                           camera->GetFocusedSprites()->end(),
                           collide_sprites.at(i)) ==
-                        camera->GetFocusedSprites()->end() &&
-                    (camera->x != 0 ||
-                camera->y != 0)) {
+                    camera->GetFocusedSprites()->end() &&
+                (camera->x != 0 || camera->y != 0)) {
 
                 collide_sprites.at(i)->MoveX(camera->x, false);
                 collide_sprites.at(i)->MoveY(camera->y, false);
@@ -146,7 +145,7 @@ class Scene {
         }
 
         // Draw everything (all render objects)
-        for (int i = 0; i < render_objects.size(); i++){
+        for (int i = 0; i < render_objects.size(); i++) {
             render_objects.at(i)->Draw();
         }
 

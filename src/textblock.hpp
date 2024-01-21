@@ -15,7 +15,7 @@ class TextBlock : public BasicSprite {
     const char *font_path;
     int font_size;
     SDL_Color color;
-    std::vector<const char *> text;
+    std::vector<std::string> text;
 
     // Parse text vector into lines of text
     // Should only be called after SetRenderer() is set
@@ -34,9 +34,9 @@ class TextBlock : public BasicSprite {
 
         for (int i = 0; i < text.size(); i++) {
             // Create lines of text
-            lines.push_back(
-                new TextLine(text.at(i), font_path, font_size, color, x, y));
-            
+            lines.push_back(new TextLine(text.at(i).c_str(), font_path,
+                                         font_size, color, x, y));
+
             lines.at(i)->SetRenderer(sprite_renderer);
 
             // Reposition text lines (we needed to create the lines first to
@@ -48,7 +48,7 @@ class TextBlock : public BasicSprite {
     }
 
   public:
-    TextBlock(const std::vector<const char *> text, const char *font_path,
+    TextBlock(const std::vector<std::string> text, const char *font_path,
               int font_size, SDL_Color color, double x, double y)
         : BasicSprite() {
         this->x = x;
@@ -75,7 +75,7 @@ class TextBlock : public BasicSprite {
         }
     }
 
-    void SetText(const std::vector<const char *> text) {
+    void SetText(const std::vector<std::string> text) {
         this->text = text;
         CreateTextLines();
     }
