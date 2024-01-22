@@ -37,13 +37,22 @@ class TextBlock : public BasicSprite {
             lines.push_back(new TextLine(text.at(i).c_str(), font_path,
                                          font_size, color, x, y));
 
-            lines.at(i)->SetRenderer(sprite_renderer);
+            TextLine *current_line = lines.at(i);
+
+            current_line->SetRenderer(sprite_renderer);
 
             // Reposition text lines (we needed to create the lines first to
             // know their width and height)
-            lines.at(i)->SetY(y + lines.at(i)->GetH() * i);
+            current_line->SetY(y + current_line->GetH() * i);
             // ^ Above code could cause problems if lines are different font
             // size
+
+            // Set width and height of entire text block
+            if (current_line->GetW() > w) {
+                w = lines.at(i)->GetW();
+            }
+            
+            h += lines.at(i)->GetH();
         }
     }
 

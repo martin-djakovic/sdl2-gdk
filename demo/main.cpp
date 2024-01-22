@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 
     BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
-    TextLine hud("HELLO WORLD!", FONT_PATH, 32, {0, 255, 0}, 20, 20);
+    TextLine hud("", FONT_PATH, 32, {0, 255, 0}, 20, 20);
     TextBlock system_info(GDK_GetSystemInfo(), FONT_PATH, 13, {0, 255, 0}, 10,
                           10);
 
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
         player_hitbox.SetY(player.GetHitbox()->y);
         player_hitbox.SetW(player.GetHitbox()->w);
         player_hitbox.SetH(player.GetHitbox()->h);
-
+        
         game_scene.Draw();
 
         for (int i = 0; i < moving_sprites.size(); i++) {
