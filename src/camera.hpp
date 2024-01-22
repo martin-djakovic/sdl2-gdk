@@ -7,11 +7,11 @@
 #include "basicsprite.hpp"
 
 // Camera affects the view
-// All sprites in the scene are offset by camera x and y
-// focused_sprites are not offset
+// All objects in the scene are offset by camera x and y
+// focused_objects are not offset
 class Camera {
   private:
-    std::vector<BasicSprite *> focused_sprites;
+    std::vector<BasicSprite *> focused_objects;
 
   public:
     // Camera x gets reset every frame
@@ -29,46 +29,46 @@ class Camera {
         y = start_y;
     }
 
-    Camera(BasicSprite *focused_sprite, double x = 0, double y = 0) {
-        focused_sprites.push_back(focused_sprite);
+    Camera(BasicSprite *focused_object, double x = 0, double y = 0) {
+        focused_objects.push_back(focused_object);
         this->x = x;
         this->y = y;
     }
 
-    Camera(const std::vector<BasicSprite *> focused_sprites, double x = 0,
+    Camera(const std::vector<BasicSprite *> focused_objects, double x = 0,
            double y = 0) {
-        this->focused_sprites = focused_sprites;
+        this->focused_objects = focused_objects;
         this->x = x;
         this->y = y;
     }
 
-    void AddFocusedSprite(BasicSprite *sprite) {
-        focused_sprites.push_back(sprite);
+    void AddFocusedObject(BasicSprite *object) {
+        focused_objects.push_back(object);
     }
 
-    void AddFocusedSprite(const std::vector<BasicSprite *> sprites) {
-        for (int i = 0; i < sprites.size(); i++) {
-            AddFocusedSprite(sprites.at(i));
+    void AddFocusedObject(const std::vector<BasicSprite *> object) {
+        for (int i = 0; i < object.size(); i++) {
+            AddFocusedObject(object.at(i));
         }
     }
 
-    void RemoveFocusedSprite(BasicSprite *sprite) {
-        focused_sprites.erase(
-            std::remove(focused_sprites.begin(), focused_sprites.end(), sprite),
-            focused_sprites.end());
+    void RemoveFocusedObject(BasicSprite *object) {
+        focused_objects.erase(
+            std::remove(focused_objects.begin(), focused_objects.end(), object),
+            focused_objects.end());
     }
 
-    void RemoveFocusedSprite(const std::vector<BasicSprite *> sprites) {
-        for (int i = 0; i < sprites.size(); i++) {
-            RemoveFocusedSprite(sprites.at(i));
+    void RemoveFocusedObject(const std::vector<BasicSprite *> object) {
+        for (int i = 0; i < object.size(); i++) {
+            RemoveFocusedObject(object.at(i));
         }
     }
 
-    void SetFocusedSprites(const std::vector<BasicSprite *> sprites) {
-        focused_sprites = sprites;
+    void SetFocusedObjects(const std::vector<BasicSprite *> object) {
+        focused_objects = object;
     }
 
-    std::vector<BasicSprite *> *GetFocusedSprites() { return &focused_sprites; }
+    std::vector<BasicSprite *> *GetFocusedObjects() { return &focused_objects; }
 };
 
 #endif

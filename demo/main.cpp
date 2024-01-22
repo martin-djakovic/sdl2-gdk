@@ -56,12 +56,12 @@ int main(int argc, char *argv[]) {
     Scene game_scene(window, &game_camera);
     Scene main_menu(window, &main_menu_camera);
 
-    game_scene.AddBasicSprite(&background);
-    game_scene.AddCollideSprite({&s1, &s2, &s3, &s4, &s5, &player});
-    game_scene.AddBasicSprite(&player_hitbox);
-    game_scene.AddBasicSprite(&hud);
+    game_scene.AddObject(&background);
+    game_scene.AddCollideObject({&s1, &s2, &s3, &s4, &s5, &player});
+    game_scene.AddObject(&player_hitbox);
+    game_scene.AddObject(&hud);
 
-    main_menu.AddBasicSprite(&system_info);
+    main_menu.AddObject(&system_info);
 
     std::vector<CollideSprite *> moving_sprites;
 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < moving_sprites.size(); i++) {
-        game_scene.AddCollideSprite(moving_sprites.at(i));
+        game_scene.AddCollideObject(moving_sprites.at(i));
     }
 
     main_menu.Draw();
