@@ -5,7 +5,7 @@
 #define WHITE_SQR_PATH "res/whitesqr.png"
 #define RED_SQR_PATH "res/redsqr.png"
 #define BG_PATH "res/bg.png"
-#define FONT_PATH "res/mechanical.otf"
+#define FONT_PATH "res/font/font.ttf"
 #define WIN_W 1280
 #define WIN_H 720
 #define PLAYER_SPEED 3
@@ -46,9 +46,10 @@ int main(int argc, char *argv[]) {
 
     BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
-    TextLine hud("", FONT_PATH, 32, {0, 255, 0}, 20, 20);
-    TextBlock system_info(GDK_GetSystemInfo(), FONT_PATH, 13, {0, 255, 0}, 10,
+    TextLine hud("", FONT_PATH, 16, {0, 255, 0}, 20, 20);
+    TextBlock system_info(GDK_GetSystemInfo(), FONT_PATH, 10, {0, 255, 0}, 10,
                           10);
+    TextLine start_game("PRESS SPACE TO START!", FONT_PATH, 16, {0, 255, 0}, 0, 0);
 
     Camera game_camera({&background, &hud});
     Camera main_menu_camera;
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]) {
     game_scene.AddObject(&player_hitbox);
     game_scene.AddObject(&hud);
 
-    main_menu.AddObject(&system_info);
+    main_menu.AddObject({&system_info, &start_game});
 
     std::vector<CollideSprite *> moving_sprites;
 
@@ -78,6 +79,9 @@ int main(int argc, char *argv[]) {
         game_scene.AddCollideObject(moving_sprites.at(i));
     }
 
+    start_game.SetX(system_info.GetX());
+    start_game.SetY(system_info.GetY() + system_info.GetH() + 20);
+
     main_menu.Draw();
 
     while (true) {
@@ -87,9 +91,6 @@ int main(int argc, char *argv[]) {
             break;
         }
     }
-
-    hud.SetColor({255, 50, 100});
-    hud.SetSize(35);
 
     // Main game loop
     while (running) {
