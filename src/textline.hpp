@@ -53,7 +53,7 @@ class TextLine : public BasicSprite {
         UpdateTexture();
     }
 
-    void SetText(const char *text) {
+    void SetText(std::string text) {
         this->text = text;
         UpdateTexture();
     }

@@ -21,6 +21,8 @@ class Scene {
     std::vector<BasicSprite *> render_objects;
     int win_w;
     int win_h;
+    // Frames per second
+    int fps;
 
     SDL_Renderer *renderer;
     Camera *camera;
@@ -37,6 +39,25 @@ class Scene {
 
         if (destroy) {
             object->Destroy();
+        }
+    }
+
+    // To calculate FPS, we need 2 frames to know the time between them,
+    // odd_frame keeps track if the calculation is on the first or second frame
+    bool odd_frame = true;
+    Uint64 last_frame_time;
+
+    // Calculate current frames per second
+    // Must be called on every draw
+    void CalculateFPS() {
+        if (odd_frame) {
+            last_frame_time = SDL_GetPerformanceCounter();
+            odd_frame = !odd_frame;
+        } else {
+            Uint64 this_frame_time = SDL_GetPerformanceCounter();
+            fps = 1.0f / ((this_frame_time - last_frame_time) /
+                          (float)SDL_GetPerformanceFrequency());
+            odd_frame = !odd_frame;
         }
     }
 
@@ -79,10 +100,12 @@ class Scene {
         }
     }
 
-    void RemoveCollideObject(CollideSprite *collide_object, bool destroy = true) {
-        collide_sprites.erase(
-            std::remove(collide_sprites.begin(), collide_sprites.end(), collide_object),
-            collide_sprites.end());
+    void RemoveCollideObject(CollideSprite *collide_object,
+                             bool destroy = true) {
+        collide_sprites.erase(std::remove(collide_sprites.begin(),
+                                          collide_sprites.end(),
+                                          collide_object),
+                              collide_sprites.end());
 
         RemoveRenderObject(collide_object, destroy);
     }
@@ -102,7 +125,7 @@ class Scene {
     }
 
     void RemoveObject(const std::vector<BasicSprite *> object,
-                           bool destroy = true) {
+                      bool destroy = true) {
         for (int i = 0; i < object.size(); i++) {
             RemoveObject(object.at(i));
         }
@@ -110,6 +133,8 @@ class Scene {
 
     // Draw all visible objects in scene
     void Draw() {
+        CalculateFPS();
+
         SDL_RenderClear(renderer);
 
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
@@ -158,7 +183,11 @@ class Scene {
     std::vector<CollideSprite *> *GetAllCollideObjects() {
         return &collide_sprites;
     }
+
     std::vector<BasicSprite *> *GetAllObjects() { return &render_objects; }
+
+    // Get frames per second
+    int GetFPS() { return fps; }
 };
 
 #endif

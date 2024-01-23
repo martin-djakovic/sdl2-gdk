@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
         "sdl2-gdk test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_W,
         WIN_H, SDL_WINDOW_INPUT_FOCUS);
 
-    SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 
     bool running = true;
     SDL_Event event;
@@ -47,9 +47,11 @@ int main(int argc, char *argv[]) {
     BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
     TextLine hud("", FONT_PATH, 16, {0, 255, 0}, 20, 20);
+    TextLine fps("", FONT_PATH, 10, {0, 255, 0}, 0, 0);
     TextBlock system_info(GDK_GetSystemInfo(), FONT_PATH, 10, {0, 255, 0}, 10,
                           10);
-    TextLine start_game("PRESS SPACE TO START!", FONT_PATH, 16, {0, 255, 0}, 0, 0);
+    TextLine start_game("PRESS SPACE TO START!", FONT_PATH, 16, {0, 255, 0}, 0,
+                        0);
 
     Camera game_camera({&background, &hud});
     Camera main_menu_camera;
@@ -61,12 +63,14 @@ int main(int argc, char *argv[]) {
     game_scene.AddCollideObject({&s1, &s2, &s3, &s4, &s5, &player});
     game_scene.AddObject(&player_hitbox);
     game_scene.AddObject(&hud);
+    game_scene.AddObject(&fps);
 
     main_menu.AddObject({&system_info, &start_game});
 
     std::vector<CollideSprite *> moving_sprites;
 
     int mousex, mousey;
+    std::string fps_text;
 
     for (int i = 0; i < 50; i++) {
         for (int j = 0; j < 7; j++) {
@@ -94,11 +98,17 @@ int main(int argc, char *argv[]) {
 
     // Main game loop
     while (running) {
+        fps_text = "FPS: " + std::to_string(game_scene.GetFPS());
+
+        fps.SetX(hud.GetX());
+        fps.SetY(hud.GetY() + hud.GetH());
+        fps.SetText(fps_text);
+
         player_hitbox.SetX(player.GetHitbox()->x);
         player_hitbox.SetY(player.GetHitbox()->y);
         player_hitbox.SetW(player.GetHitbox()->w);
         player_hitbox.SetH(player.GetHitbox()->h);
-        
+
         game_scene.Draw();
 
         for (int i = 0; i < moving_sprites.size(); i++) {
@@ -168,11 +178,6 @@ int main(int argc, char *argv[]) {
             hud.SetColor({255, 255, 255});
             hud.SetText("NOT COLLIDED!");
         }
-
-        // player.Rotate(0.5);
-
-        // Lock refresh rate
-        SDL_Delay(1000 / 60);
     }
 
     game_scene.Destroy();
