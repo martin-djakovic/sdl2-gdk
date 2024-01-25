@@ -28,7 +28,7 @@ class BasicSprite {
     SDL_RendererFlip flip;
     SDL_Renderer *sprite_renderer;
     SDL_Surface *surface;
-    SDL_Texture *texture;
+    SDL_Texture *texture = nullptr;
     SDL_Rect img_rect;
     bool auto_set_size;
 
@@ -164,12 +164,14 @@ class BasicSprite {
     virtual void SetRenderer(SDL_Renderer *renderer) {
         sprite_renderer = renderer;
 
-        ChangeImg(img_path.c_str(), auto_set_size);
+        SetImg(img_path.c_str(), auto_set_size);
     }
 
-    // Change sprite image after an image has already been set with SetImg()
-    virtual void ChangeImg(const char *img_path,
+    // Change sprite image
+    virtual void SetImg(const char *img_path,
                            bool param_auto_set_size = false) {
+        SDL_DestroyTexture(texture);
+
         img_rect.w = w;
         img_rect.h = h;
 

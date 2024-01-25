@@ -27,8 +27,8 @@ int main(int argc, char *argv[]) {
     SDL_Window *window = SDL_CreateWindow(
         "sdl2-gdk test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_W,
         WIN_H, SDL_WINDOW_INPUT_FOCUS);
-
-    SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    // SDL_RENDERER_PRESENTVSYNC for locked framerate
+    SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     bool running = true;
     SDL_Event event;
@@ -46,12 +46,10 @@ int main(int argc, char *argv[]) {
 
     BasicSprite background(0, 0, 1280, 720, BG_PATH);
 
-    TextLine hud("", FONT_PATH, 16, {0, 255, 0}, 20, 20);
+    TextLine hud("NOT LOADED", FONT_PATH, 16, {0, 255, 0}, 20, 20);
     TextLine fps("", FONT_PATH, 10, {0, 255, 0}, 0, 0);
     TextBlock system_info(GDK_GetSystemInfo(), FONT_PATH, 10, {0, 255, 0}, 10,
                           10);
-    TextLine start_game("PRESS SPACE TO START!", FONT_PATH, 16, {0, 255, 0}, 0,
-                        0);
 
     Camera game_camera({&background, &hud});
     Camera main_menu_camera;
@@ -65,30 +63,31 @@ int main(int argc, char *argv[]) {
     game_scene.AddObject(&hud);
     game_scene.AddObject(&fps);
 
-    main_menu.AddObject({&system_info, &start_game});
+    main_menu.AddObject({&system_info, &fps});
 
     std::vector<CollideSprite *> moving_sprites;
 
     int mousex, mousey;
     std::string fps_text;
 
-    for (int i = 0; i < 50; i++) {
-        for (int j = 0; j < 7; j++) {
-            moving_sprites.push_back(new CollideSprite(
-                1280 + 80 * i, j * 100 + 50, 50, 50, WHITE_SQR_PATH, 1));
-        }
+    for (int i = 0; i < 350; i++) {
+        moving_sprites.push_back(new CollideSprite(1280 + 80 * i, i / 7 * 100 + 50,
+                                                   50, 50, WHITE_SQR_PATH, 1));
     }
 
     for (int i = 0; i < moving_sprites.size(); i++) {
         game_scene.AddCollideObject(moving_sprites.at(i));
     }
 
-    start_game.SetX(system_info.GetX());
-    start_game.SetY(system_info.GetY() + system_info.GetH() + 20);
-
-    main_menu.Draw();
+    fps.SetX(system_info.GetX());
+    fps.SetY(system_info.GetY() + system_info.GetH());
 
     while (true) {
+        main_menu.Draw();
+
+        fps_text = "FPS: " + std::to_string(main_menu.GetFPS());
+        fps.SetText(fps_text);
+
         SDL_PollEvent(&event);
 
         if (event.key.keysym.sym == SDLK_SPACE) {
@@ -96,12 +95,14 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    fps.SetX(hud.GetX());
+    fps.SetY(hud.GetY() + hud.GetH());
+
     // Main game loop
     while (running) {
+        player.SetImg(WHITE_SQR_PATH);
         fps_text = "FPS: " + std::to_string(game_scene.GetFPS());
 
-        fps.SetX(hud.GetX());
-        fps.SetY(hud.GetY() + hud.GetH());
         fps.SetText(fps_text);
 
         player_hitbox.SetX(player.GetHitbox()->x);

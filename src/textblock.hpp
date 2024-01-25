@@ -68,9 +68,9 @@ class TextBlock : public BasicSprite {
         this->text = text;
     }
 
-    void ChangeImg(const char *img_path,
+    void SetImg(const char *img_path,
                    bool param_auto_set_size = false) override {
-        throw "Text can't call BasicSprite::ChangeImg()";
+        throw "Text can't call BasicSprite::SetImg()";
     }
 
     void SetRenderer(SDL_Renderer *renderer) {

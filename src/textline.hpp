@@ -18,16 +18,18 @@ class TextLine : public BasicSprite {
     std::string text;
 
     void UpdateTexture() {
+        SDL_DestroyTexture(texture);
+
         font = TTF_OpenFont(font_path, font_size);
         surface = TTF_RenderText_Solid(font, text.c_str(), color);
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
 
         SDL_QueryTexture(texture, NULL, NULL, &img_rect.w, &img_rect.h);
+        SDL_FreeSurface(surface);
+        TTF_CloseFont(font);
 
         w = img_rect.w;
         h = img_rect.h;
-
-        SDL_FreeSurface(surface);
     }
 
   public:
@@ -42,9 +44,9 @@ class TextLine : public BasicSprite {
         this->y = y;
     }
 
-    void ChangeImg(const char *img_path,
+    void SetImg(const char *img_path,
                    bool param_auto_set_size = false) override {
-        throw "Text can't call BasicSprite::ChangeImg()";
+        throw "Text can't call BasicSprite::SetImg()";
     }
 
     void SetRenderer(SDL_Renderer *renderer) {
