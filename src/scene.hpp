@@ -61,6 +61,50 @@ class Scene {
         }
     }
 
+    void MoveCamera() {
+        // Move camera for all objects
+        for (int i = 0; i < basic_sprites.size(); i++) {
+            // Make sure that object isn't a focused sprite,
+            // and that camera has been moved
+            if (std::find(camera->GetFocusedObjects()->begin(),
+                          camera->GetFocusedObjects()->end(),
+                          basic_sprites.at(i)) ==
+                    camera->GetFocusedObjects()->end() &&
+                (camera->x != 0 || camera->y != 0)) {
+
+                basic_sprites.at(i)->MoveX(camera->x);
+                basic_sprites.at(i)->MoveY(camera->y);
+            }
+        }
+
+        // Move camera for all collide sprites
+        for (int i = 0; i < collide_sprites.size(); i++) {
+            // Make sure that collide object isn't a focused sprite,
+            // and that camera has been moved
+            if (std::find(camera->GetFocusedObjects()->begin(),
+                          camera->GetFocusedObjects()->end(),
+                          collide_sprites.at(i)) ==
+                    camera->GetFocusedObjects()->end() &&
+                (camera->x != 0 || camera->y != 0)) {
+
+                collide_sprites.at(i)->MoveX(camera->x, false);
+                collide_sprites.at(i)->MoveY(camera->y, false);
+            }
+        }
+
+        camera->x = 0;
+        camera->y = 0;
+    }
+
+    // Draw everything in the scene
+    void DrawRenderObjects() {
+        for (int i = 0; i < render_objects.size(); i++) {
+            if (render_objects.at(i)->IsInBounds()) {
+                render_objects.at(i)->Draw();
+            }
+        }
+    }
+
   public:
     Scene(SDL_Window *window, Camera *camera) {
         renderer = SDL_GetRenderer(window);
@@ -136,46 +180,10 @@ class Scene {
         CalculateFPS();
 
         SDL_RenderClear(renderer);
-
         SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
-        // Move camera for all objects
-        for (int i = 0; i < basic_sprites.size(); i++) {
-            // Make sure that object isn't a focused sprite,
-            // and that camera has been moved
-            if (std::find(camera->GetFocusedObjects()->begin(),
-                          camera->GetFocusedObjects()->end(),
-                          basic_sprites.at(i)) ==
-                    camera->GetFocusedObjects()->end() &&
-                (camera->x != 0 || camera->y != 0)) {
-
-                basic_sprites.at(i)->MoveX(camera->x);
-                basic_sprites.at(i)->MoveY(camera->y);
-            }
-        }
-
-        // Move camera for all collide sprites
-        for (int i = 0; i < collide_sprites.size(); i++) {
-            // Make sure that collide object isn't a focused sprite,
-            // and that camera has been moved
-            if (std::find(camera->GetFocusedObjects()->begin(),
-                          camera->GetFocusedObjects()->end(),
-                          collide_sprites.at(i)) ==
-                    camera->GetFocusedObjects()->end() &&
-                (camera->x != 0 || camera->y != 0)) {
-
-                collide_sprites.at(i)->MoveX(camera->x, false);
-                collide_sprites.at(i)->MoveY(camera->y, false);
-            }
-        }
-
-        // Draw everything (all render objects)
-        for (int i = 0; i < render_objects.size(); i++) {
-            render_objects.at(i)->Draw();
-        }
-
-        camera->x = 0;
-        camera->y = 0;
+        MoveCamera();
+        DrawRenderObjects();
 
         SDL_RenderPresent(renderer);
     }

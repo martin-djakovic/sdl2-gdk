@@ -168,20 +168,19 @@ class BasicSprite {
     }
 
     // Change sprite image
-    virtual void SetImg(const char *img_path,
-                           bool param_auto_set_size = false) {
+    virtual void SetImg(const char *img_path, bool auto_set_size = false) {
         SDL_DestroyTexture(texture);
-
-        img_rect.w = w;
-        img_rect.h = h;
 
         surface = IMG_Load(img_path);
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
         SDL_FreeSurface(surface);
 
-        if (param_auto_set_size) {
+        if (auto_set_size) {
             SDL_QueryTexture(texture, NULL, NULL, &w, &h);
         }
+
+        img_rect.w = w;
+        img_rect.h = h;
     }
 
     // Set sprite flip to SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL or
@@ -209,7 +208,10 @@ class BasicSprite {
     }
 
     // Checks if sprite is in window bounds
-    bool IsVisible(int win_w, int win_h) {
+    bool IsInBounds() {
+        int win_w, win_h;
+        SDL_GetRendererOutputSize(sprite_renderer, &win_w, &win_h);
+
         if (x + w > 0 && y + w > 0 && x < win_w && y < win_h) {
             return true;
         } else {

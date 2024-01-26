@@ -100,7 +100,6 @@ int main(int argc, char *argv[]) {
 
     // Main game loop
     while (running) {
-        player.SetImg(WHITE_SQR_PATH);
         fps_text = "FPS: " + std::to_string(game_scene.GetFPS());
 
         fps.SetText(fps_text);
@@ -150,7 +149,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Check if player is out of bounds and move game_camera to player
-        if (!player.IsVisible(WIN_W, WIN_H)) {
+        if (!player.IsInBounds()) {
             // Out of bounds right
             if (player.GetX() >= WIN_W) {
                 game_camera.x -= WIN_W;
@@ -181,7 +180,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    game_scene.Destroy();
     SDL_DestroyWindow(window);
     SDL2_GDK_Quit();
 
