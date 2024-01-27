@@ -49,8 +49,7 @@ class CollideSprite : public BasicSprite {
   public:
     CollideSprite(double x, double y, int width, int height,
                   const char *img_path, double speed = 0,
-                  bool is_collider = true, bool auto_set_size = false,
-                  double rotation_angle = 0,
+                  bool auto_set_size = false, double rotation_angle = 0,
                   SDL_RendererFlip flip = SDL_FLIP_NONE)
         : BasicSprite(x, y, width, height, img_path, speed, auto_set_size,
                       rotation_angle, flip) {

@@ -94,6 +94,8 @@ class TextBlock : public BasicSprite {
         CreateTextLines();
     }
 
+    SDL_Color GetColor() { return color; }
+
     void SetSize(int font_size) {
         this->font_size = font_size;
         CreateTextLines();

@@ -45,7 +45,7 @@ class TextLine : public BasicSprite {
     }
 
     void SetImg(const char *img_path,
-                   bool param_auto_set_size = false) override {
+                bool param_auto_set_size = false) override {
         throw "Text can't call BasicSprite::SetImg()";
     }
 
@@ -64,6 +64,8 @@ class TextLine : public BasicSprite {
         this->color = color;
         UpdateTexture();
     }
+    
+    SDL_Color GetColor() { return color; }
 
     void SetSize(int font_size) {
         this->font_size = font_size;
