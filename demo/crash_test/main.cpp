@@ -26,12 +26,12 @@ int main(int argc, char *argv[]) {
     SDL_DisplayMode display;
     SDL_GetCurrentDisplayMode(0, &display);
 
-    int win_w = display.w;
-    int win_h = display.h;
+    int win_w = 1920;
+    int win_h = 1080;
 
     SDL_Window *window =
         SDL_CreateWindow("sdl2-gdk crash_test (collision demo)", 0, 0, win_w,
-                         win_h, SDL_WINDOW_FULLSCREEN);
+                         win_h, SDL_WINDOW_INPUT_FOCUS);
 
     SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -43,7 +43,8 @@ int main(int argc, char *argv[]) {
     TextBlock tl_start_game({"PRESS SPACE FOR OPTIMIZED MODE",
                              "PRESS BACKSPACE FOR BENCHMARK MODE"},
                             FONT_PATH, 10, COLOR_WHITE, 5, 5);
-    TextLine tl_fps("", FONT_PATH, 8, COLOR_GREEN, 5, 5);
+    // FPS and car count
+    TextBlock tb_stats({""}, FONT_PATH, 8, COLOR_GREEN, 5, 5);
 
     Camera cam_main_menu;
     Camera cam_game;
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]) {
     int car_y;
     int car_w = bs_background.GetW() * CAR_BG_W_RATIO;
     int car_h = bs_background.GetH() * CAR_BG_H_RATIO;
-    int car_speed = 3;
+    int car_speed = 10;
     CollideSprite *cs_car;
     std::vector<CollideSprite *> cs_cars;
 
@@ -75,11 +76,11 @@ int main(int argc, char *argv[]) {
     int obstacle_h = bs_background.GetH() / 4;
     CollideSprite *cs_obstacle;
 
-    srand(time(NULL));
+    GDK_SetRandomSeed((unsigned)time(NULL));
 
     // Generate cars
     for (int i = 0; i < CAR_COUNT; i++) {
-        random_color_index = rand() % car_colors.size();
+        random_color_index = GDK_GetRandomInt(0, car_colors.size() - 1);
         car_color = car_colors[random_color_index];
         car_x = win_w * 1.5 + 2 * i * car_w;
         car_y = (i % 6) * (car_w * 1.2) + 0.5 * car_w;
@@ -102,7 +103,7 @@ int main(int argc, char *argv[]) {
         sc_game.AddCollideObject(cs_obstacle);
     }
 
-    sc_game.AddObject(&tl_fps);
+    sc_game.AddObject(&tb_stats);
 
     // Draw start game screen
     sc_main_menu.RemoveObject(&tl_loading);
@@ -130,7 +131,8 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         fps = sc_game.GetFPS();
-        tl_fps.SetText("FPS: " + std::to_string(fps));
+        tb_stats.SetText({"FPS: " + std::to_string(fps),
+                          "CAR COUNT: " + std::to_string(cs_cars.size())});
 
         SDL_PollEvent(&event);
         if (event.type == SDL_QUIT) {
