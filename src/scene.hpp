@@ -7,7 +7,6 @@
 
 #include "camera.hpp"
 #include "collidesprite.hpp"
-#include "debug.hpp"
 #include "textblock.hpp"
 #include "textline.hpp"
 
@@ -19,10 +18,18 @@ class Scene {
     std::vector<BasicSprite *> basic_sprites;
     // Every object that should be drawn in the scene
     std::vector<BasicSprite *> render_objects;
+
     int win_w;
     int win_h;
-    // Frames per second
+
+    // To calculate FPS, we need 2 frames to know the time between them,
+    // odd_frame keeps track if the calculation is on the first or second frame
+    bool odd_frame = true;
+    Uint64 last_frame_time;
     int fps;
+
+    bool show_hitbox_outlines = false;
+    SDL_Color hitbox_outline_color = {0, 255, 0};
 
     SDL_Renderer *renderer;
     Camera *camera;
@@ -42,11 +49,6 @@ class Scene {
         }
     }
 
-    // To calculate FPS, we need 2 frames to know the time between them,
-    // odd_frame keeps track if the calculation is on the first or second frame
-    bool odd_frame = true;
-    Uint64 last_frame_time;
-
     // Calculate current frames per second
     // Must be called on every draw
     void CalculateFPS() {
@@ -58,6 +60,13 @@ class Scene {
             fps = 1.0f / ((this_frame_time - last_frame_time) /
                           (float)SDL_GetPerformanceFrequency());
             odd_frame = !odd_frame;
+        }
+    }
+
+    // Draw hitbox outlines of all collide sprites in scene
+    void DrawHitboxOutlines() {
+        for (int i = 0; i < collide_sprites.size(); i++) {
+            SDL_RenderDrawRect(renderer, collide_sprites.at(i)->GetHitbox());
         }
     }
 
@@ -185,6 +194,10 @@ class Scene {
         MoveCamera();
         DrawRenderObjects();
 
+        if (show_hitbox_outlines) {
+            DrawHitboxOutlines();
+        }
+
         SDL_RenderPresent(renderer);
     }
 
@@ -194,8 +207,25 @@ class Scene {
 
     std::vector<BasicSprite *> *GetAllObjects() { return &render_objects; }
 
-    // Get frames per second
     int GetFPS() { return fps; }
+
+    // Set if hitbox outlines of all collide objects should be drawn
+    // Enabling hitbox outlines will negatively impact performance, only use
+    // when debugging
+    void SetShowHitboxOutlines(bool show_hitbox_outlines) {
+        SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
+                               hitbox_outline_color.g, hitbox_outline_color.b,
+                               hitbox_outline_color.a);
+        this->show_hitbox_outlines = show_hitbox_outlines;
+    }
+
+    // Set color of hitbox outlines
+    void SetHitboxOutlineColor(SDL_Color color) {
+        hitbox_outline_color = color;
+        SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
+                               hitbox_outline_color.g, hitbox_outline_color.b,
+                               hitbox_outline_color.a);
+    }
 };
 
 #endif

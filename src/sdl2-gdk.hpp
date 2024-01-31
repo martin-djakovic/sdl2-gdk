@@ -1,5 +1,4 @@
 #include "collidesprite.hpp"
-#include "debug.hpp"
 #include "gamemath.hpp"
 #include "init.hpp"
 #include "scene.hpp"

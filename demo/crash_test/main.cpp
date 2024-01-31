@@ -1,4 +1,5 @@
 #include "../../src/sdl2-gdk.hpp"
+#include <thread>
 
 #define BG_PATH "res/road.png"
 #define RED_CAR_PATH "res/red_car.png"
@@ -15,6 +16,7 @@
 
 #define OBSTACLE_COUNT 3
 #define CAR_COUNT 500
+#define CAR_SPEED 10
 
 #define CAR_BG_W_RATIO 0.0703125
 #define CAR_BG_H_RATIO 0.0833333333333
@@ -66,7 +68,7 @@ int main(int argc, char *argv[]) {
     int car_y;
     int car_w = bs_background.GetW() * CAR_BG_W_RATIO;
     int car_h = bs_background.GetH() * CAR_BG_H_RATIO;
-    int car_speed = 10;
+    int car_speed = CAR_SPEED;
     CollideSprite *cs_car;
     std::vector<CollideSprite *> cs_cars;
 
@@ -128,6 +130,9 @@ int main(int argc, char *argv[]) {
 
     int fps;
     float cs_car_speed;
+
+    sc_game.SetHitboxOutlineColor({255, 255, 0});
+    sc_game.SetShowHitboxOutlines(true);
 
     while (true) {
         fps = sc_game.GetFPS();
