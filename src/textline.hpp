@@ -21,6 +21,12 @@ class TextLine : public BasicSprite {
         SDL_DestroyTexture(texture);
 
         font = TTF_OpenFont(font_path, font_size);
+
+        // Check if given font is valid
+        if (font == NULL) {
+            printf("Failed loading font: %s\n", font_path);
+        }
+
         surface = TTF_RenderText_Solid(font, text.c_str(), color);
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
 
@@ -64,7 +70,7 @@ class TextLine : public BasicSprite {
         this->color = color;
         UpdateTexture();
     }
-    
+
     SDL_Color GetColor() { return color; }
 
     void SetSize(int font_size) {

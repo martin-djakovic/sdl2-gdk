@@ -1,13 +1,13 @@
 #include "../../src/sdl2-gdk.hpp"
-#include <thread>
 
-#define BG_PATH "res/road.png"
-#define RED_CAR_PATH "res/red_car.png"
-#define GREEN_CAR_PATH "res/green_car.png"
-#define BLUE_CAR_PATH "res/blue_car.png"
-#define CRASHED_CAR_PATH "res/crashed_car.png"
-#define CRASH_BLOCK_PATH "res/crash_block.png"
+#define BG_PATH "res/img/road.png"
+#define RED_CAR_PATH "res/img/red_car.png"
+#define GREEN_CAR_PATH "res/img/green_car.png"
+#define BLUE_CAR_PATH "res/img/blue_car.png"
+#define CRASHED_CAR_PATH "res/img/crashed_car.png"
+#define CRASH_BLOCK_PATH "res/img/crash_block.png"
 #define FONT_PATH "res/font/font.ttf"
+#define CRASH_SOUND_PATH "res/audio/crash.wav"
 
 #define COLOR_WHITE                                                            \
     { 255, 255, 255 }
@@ -17,6 +17,7 @@
 #define OBSTACLE_COUNT 3
 #define CAR_COUNT 500
 #define CAR_SPEED 10
+#define CAR_SOUND_COUNT 70
 
 #define CAR_BG_W_RATIO 0.0703125
 #define CAR_BG_H_RATIO 0.0833333333333
@@ -40,6 +41,7 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
 
     BasicSprite bs_background(0, 0, win_w, win_h, BG_PATH);
+    Sound s_crash(CRASH_SOUND_PATH, 20);
 
     TextLine tl_loading("LOADING...", FONT_PATH, 10, COLOR_WHITE, 5, 5);
     TextBlock tl_start_game({"PRESS SPACE FOR OPTIMIZED MODE",
@@ -130,6 +132,8 @@ int main(int argc, char *argv[]) {
 
     int fps;
     float cs_car_speed;
+    // Number of cars that make a sound upon collision
+    int car_sound_count = CAR_SOUND_COUNT;
 
     sc_game.SetHitboxOutlineColor({255, 255, 0});
     sc_game.SetShowHitboxOutlines(true);
@@ -163,9 +167,16 @@ int main(int argc, char *argv[]) {
                     cs_car->MoveX(cs_car_speed);
                 }
 
+                // Crash event
                 if (cs_car->Collided()) {
                     cs_car->SetImg(CRASHED_CAR_PATH);
                     cs_car->Rotate(rand() % 20 - 10);
+
+                    if (car_sound_count > 0) {
+                        s_crash.Play();
+                        car_sound_count--;
+                    }
+
                     cs_cars.erase(
                         std::remove(cs_cars.begin(), cs_cars.end(), cs_car),
                         cs_cars.end());

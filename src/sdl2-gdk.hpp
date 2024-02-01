@@ -4,3 +4,4 @@
 #include "scene.hpp"
 #include "textblock.hpp"
 #include "textline.hpp"
+#include "sound.hpp"

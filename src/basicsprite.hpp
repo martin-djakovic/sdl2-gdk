@@ -172,6 +172,12 @@ class BasicSprite {
         SDL_DestroyTexture(texture);
 
         surface = IMG_Load(img_path);
+
+        // Check if given image is valid
+        if (surface == NULL) {
+            printf("Failed loading image: %s\n", img_path);
+        }
+
         texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
         SDL_FreeSurface(surface);
 
