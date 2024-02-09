@@ -44,23 +44,11 @@ class CollideSprite : public BasicSprite {
     // Move sprite along x axis by value of x
     void MoveX(double x, bool check_collision);
 
-    // Move sprite along x axis by value of speed, checks collision
-    void MoveX(GDK_Direction direction) override;
-
-    // Move sprite along x axis by value of speed
-    void MoveX(GDK_Direction direction, bool check_collision);
-
     // Move sprite along y axis by value of y, checks collisions
     void MoveY(double y) override;
 
     // Move sprite along y axis by value of y
     void MoveY(double y, bool check_collision);
-
-    // Move sprite along y axis by value of speed, checks collisions
-    void MoveY(GDK_Direction direction) override;
-
-    // Move sprite along y axis by value of speed
-    void MoveY(GDK_Direction direction, bool check_collision);
 
     // Set pointer to vector containing all sprites for which collisions should
     // be checked

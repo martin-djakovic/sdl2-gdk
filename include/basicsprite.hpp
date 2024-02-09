@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <direction.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -60,18 +59,12 @@ class BasicSprite {
     // Move sprite along x axis by value of x
     virtual void MoveX(double x);
 
-    // Move sprite along x axis by value of speed
-    virtual void MoveX(GDK_Direction direction);
-
     // Set y position of sprite
     virtual void SetY(double y);
     int GetY();
 
     // Move sprite along y axis by value of y
     virtual void MoveY(double y);
-
-    // Move sprite along y axis by value of speed
-    virtual void MoveY(GDK_Direction direction);
 
     // Set width
     void SetW(int w);

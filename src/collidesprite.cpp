@@ -90,26 +90,10 @@ void CollideSprite::MoveX(double x, bool check_collision) {
     SetX(this->x + x, check_collision);
 }
 
-void CollideSprite::MoveX(GDK_Direction direction) {
-    MoveX(speed * ConvertDirectionToInt(direction), true);
-}
-
-void CollideSprite::MoveX(GDK_Direction direction, bool check_collision) {
-    MoveX(speed * ConvertDirectionToInt(direction), check_collision);
-}
-
 void CollideSprite::MoveY(double y) { SetY(this->y + y, true); }
 
 void CollideSprite::MoveY(double y, bool check_collision) {
     SetY(this->y + y, check_collision);
-}
-
-void CollideSprite::MoveY(GDK_Direction direction) {
-    MoveY(speed * ConvertDirectionToInt(direction), true);
-}
-
-void CollideSprite::MoveY(GDK_Direction direction, bool check_collision) {
-    MoveY(speed * ConvertDirectionToInt(direction), check_collision);
 }
 
 void CollideSprite::SetColliders(std::vector<CollideSprite *> *colliders) {

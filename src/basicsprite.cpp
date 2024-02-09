@@ -35,18 +35,10 @@ int BasicSprite::GetX() { return round(x); }
 
 void BasicSprite::MoveX(double x) { SetX(this->x + x); }
 
-void BasicSprite::MoveX(GDK_Direction direction) {
-    MoveX(speed * ConvertDirectionToInt(direction));
-}
-
 void BasicSprite::SetY(double y) { this->y = y; }
 int BasicSprite::GetY() { return round(y); }
 
 void BasicSprite::MoveY(double y) { SetY(this->y + y); }
-
-void BasicSprite::MoveY(GDK_Direction direction) {
-    MoveY(speed * ConvertDirectionToInt(direction));
-}
 
 void BasicSprite::SetW(int w) {
     if (w >= 0) {
