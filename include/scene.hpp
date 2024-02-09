@@ -89,6 +89,11 @@ class Scene {
 
     // Set color of hitbox outlines
     void SetHitboxOutlineColor(SDL_Color color);
+
+    // Returns coeficient that scales values depending on FPS
+    // Any values that depends on framerate should be multiplied by the
+    // performance multiplier
+    double GetPerformanceMultiplier();
 };
 
 #endif

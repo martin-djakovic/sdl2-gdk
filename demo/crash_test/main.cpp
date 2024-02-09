@@ -131,6 +131,7 @@ int main(int argc, char *argv[]) {
     }
 
     int fps;
+    double performance_multiplier;
     float cs_car_speed;
     // Number of cars that make a sound upon collision
     int car_sound_count = CAR_SOUND_COUNT;
@@ -143,6 +144,8 @@ int main(int argc, char *argv[]) {
         tb_stats.SetText({"FPS: " + std::to_string(fps),
                           "CAR COUNT: " + std::to_string(cs_cars.size())});
 
+        performance_multiplier = sc_game.GetPerformanceMultiplier();
+
         SDL_PollEvent(&event);
         if (event.type == SDL_QUIT) {
             break;
@@ -151,7 +154,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < cs_cars.size(); i++) {
             if (fps > 0) {
                 cs_car = cs_cars.at(i);
-                cs_car_speed = -cs_car->GetSpeed() / (fps / 100.0f);
+                cs_car_speed = -cs_car->GetSpeed() * performance_multiplier;
 
                 // If running optimized mode, only check collisions for sprites
                 // that are visible

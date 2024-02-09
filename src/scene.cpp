@@ -181,3 +181,5 @@ void Scene::SetHitboxOutlineColor(SDL_Color color) {
                            hitbox_outline_color.g, hitbox_outline_color.b,
                            hitbox_outline_color.a);
 }
+
+double Scene::GetPerformanceMultiplier() { return 100.0f / fps; }
