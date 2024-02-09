@@ -1,12 +1,4 @@
-#ifndef DIRECTION_HPP
-#define DIRECTION_HPP
-
-enum GDK_Direction {
-    DOWN,
-    UP,
-    RIGHT,
-    LEFT,
-};
+#include <direction.hpp>
 
 int ConvertDirectionToInt(GDK_Direction direction) {
     if (direction == DOWN || direction == RIGHT) {
@@ -15,5 +7,3 @@ int ConvertDirectionToInt(GDK_Direction direction) {
         return -1;
     }
 }
-
-#endif

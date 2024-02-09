@@ -1,4 +1,4 @@
-#include "../../src/sdl2-gdk.hpp"
+#include <sdl2-gdk.hpp>
 
 #define BG_PATH "res/img/road.png"
 #define RED_CAR_PATH "res/img/red_car.png"
