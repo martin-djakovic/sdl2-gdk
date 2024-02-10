@@ -1,7 +1,7 @@
 #include <textblock.hpp>
 
 TextBlock::TextBlock(const std::vector<std::string> text, const char *font_path,
-          int font_size, SDL_Color color, double x, double y)
+                     int font_size, SDL_Color color, double x, double y)
     : BasicSprite() {
     this->x = x;
     this->y = y;
@@ -18,6 +18,8 @@ void TextBlock::CreateTextLines() {
     }
 
     for (int i = 0; i < lines.size(); i++) {
+        // First destroy the texture of the line, then the line itself
+        lines.at(i)->Destroy();
         delete lines.at(i);
     }
 
