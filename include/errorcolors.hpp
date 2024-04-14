@@ -1,0 +1,5 @@
+#define ERR_COLOR "\x1b[31m"
+#define WARN_COLOR "\x1b[33m"
+#define FPATH_COLOR "\x1b[35m"
+#define NOTICE_COLOR "\x1b[36m"
+#define DEF_COLOR "\x1b[0m"

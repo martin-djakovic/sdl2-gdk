@@ -1,54 +1,42 @@
 #include <camera.hpp>
 
-Camera::Camera() {
-    x = 0;
-    y = 0;
+GDK_Camera::GDK_Camera() {}
+
+GDK_Camera::GDK_Camera(const std::vector<GDK_Sprite *> focused_sprites) {
+  this->focused_sprites = focused_sprites;
 }
 
-Camera::Camera(double start_x, double start_y) {
-    x = start_x;
-    y = start_y;
+void GDK_Camera::move(double x, double y) noexcept {
+  offset_x = x;
+  offset_y = y;
 }
 
-Camera::Camera(BasicSprite *focused_object, double x, double y) {
-    focused_objects.push_back(focused_object);
-    this->x = x;
-    this->y = y;
+void GDK_Camera::addFocusedSprite(GDK_Sprite *sprite) {
+  focused_sprites.push_back(sprite);
 }
 
-Camera::Camera(const std::vector<BasicSprite *> focused_objects, double x,
-               double y) {
-    this->focused_objects = focused_objects;
-    this->x = x;
-    this->y = y;
+void GDK_Camera::addFocusedSprite(const std::vector<GDK_Sprite *> sprites) {
+  for (int i = 0; i < sprites.size(); i++) {
+    addFocusedSprite(sprites.at(i));
+  }
 }
 
-void Camera::AddFocusedObject(BasicSprite *object) {
-    focused_objects.push_back(object);
+void GDK_Camera::removeFocusedSprite(GDK_Sprite *sprite) {
+  focused_sprites.erase(
+      std::remove(focused_sprites.begin(), focused_sprites.end(), sprite),
+      focused_sprites.end());
 }
 
-void Camera::AddFocusedObject(const std::vector<BasicSprite *> object) {
-    for (int i = 0; i < object.size(); i++) {
-        AddFocusedObject(object.at(i));
-    }
+void GDK_Camera::removeFocusedSprite(const std::vector<GDK_Sprite *> sprites) {
+  for (int i = 0; i < sprites.size(); i++) {
+    removeFocusedSprite(sprites.at(i));
+  }
 }
 
-void Camera::RemoveFocusedObject(BasicSprite *object) {
-    focused_objects.erase(
-        std::remove(focused_objects.begin(), focused_objects.end(), object),
-        focused_objects.end());
+void GDK_Camera::setFocusedSprites(const std::vector<GDK_Sprite *> sprites) {
+  focused_sprites = sprites;
 }
 
-void Camera::RemoveFocusedObjects(const std::vector<BasicSprite *> objects) {
-    for (int i = 0; i < objects.size(); i++) {
-        RemoveFocusedObject(objects.at(i));
-    }
-}
-
-void Camera::SetFocusedObjects(const std::vector<BasicSprite *> objects) {
-    focused_objects = objects;
-}
-
-std::vector<BasicSprite *> *Camera::GetFocusedObjects() {
-    return &focused_objects;
+std::vector<GDK_Sprite *> *GDK_Camera::getFocusedSprites() noexcept {
+  return &focused_sprites;
 }

@@ -1,155 +1,212 @@
+#include "fonttexture.hpp"
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_render.h>
 #include <basicsprite.hpp>
+#include <cstdio>
 
-BasicSprite::BasicSprite() {
-    this->x = 0;
-    this->y = 0;
-    SetW(0);
-    SetH(0);
-    this->speed = 0;
-    this->img_path = "";
-    this->auto_set_size = false;
-    this->rotation_angle = 0;
-    this->flip = SDL_FLIP_NONE;
-    rotation_center = {w / 2, h / 2};
+GDK_Sprite::GDK_Sprite() {
+  this->x = 0;
+  this->y = 0;
+  setWidth(0);
+  setHeight(0);
 }
 
-BasicSprite::BasicSprite(double x, double y, int width, int height,
-                         const char *img_path, double speed, bool auto_set_size,
-                         double rotation_angle, SDL_RendererFlip flip) {
-    this->x = x;
-    this->y = y;
-    SetW(width);
-    SetH(height);
-    this->speed = speed;
-    this->img_path = img_path;
-    this->auto_set_size = auto_set_size;
-    this->rotation_angle = rotation_angle;
-    this->flip = flip;
-    rotation_center = {w / 2, h / 2};
+GDK_Sprite::GDK_Sprite(GDK_Texture *texture) {
+  this->x = 0;
+  this->y = 0;
+  setWidth(0);
+  setHeight(0);
+  setTexture(texture);
 }
 
-void BasicSprite::Destroy() { SDL_DestroyTexture(texture); }
+GDK_Sprite::GDK_Sprite(GDK_Texture *texture, double x, double y, int width,
+                       int height) {
+  this->x = x;
+  this->y = y;
+  setWidth(width);
+  setHeight(height);
+  setTexture(texture);
+}
 
-void BasicSprite::SetX(double x) { this->x = x; }
-int BasicSprite::GetX() { return round(x); }
+GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture) {
+  this->x = 0;
+  this->y = 0;
+  setWidth(0);
+  setHeight(0);
+  setTexture(texture);
+}
 
-void BasicSprite::MoveX(double x) { SetX(this->x + x); }
+GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture, double x, double y) {
+  this->x = x;
+  this->y = y;
+  setTexture(texture);
+}
 
-void BasicSprite::SetY(double y) { this->y = y; }
-int BasicSprite::GetY() { return round(y); }
+GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width,
+                       int height) {
+  this->x = x;
+  this->y = y;
+  setWidth(width);
+  setHeight(height);
+  setTexture(texture, false);
+}
 
-void BasicSprite::MoveY(double y) { SetY(this->y + y); }
+void GDK_Sprite::setPosition(double x, double y) noexcept {
+  this->x = x;
+  this->y = y;
+}
 
-void BasicSprite::SetW(int w) {
-    if (w >= 0) {
-        this->w = w;
-    } else {
-        throw "Width cannot be less than 0";
+const double GDK_Sprite::getX() noexcept { return x; }
+const double GDK_Sprite::getY() noexcept { return y; }
+
+void GDK_Sprite::move(double x, double y) noexcept {
+  setPosition(this->x + x, this->y + y);
+}
+
+void GDK_Sprite::setWidth(unsigned int width) noexcept {
+  if (width == 0) {
+    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Sprite width is set to 0\n");
+  }
+
+  this->width = width;
+}
+
+const unsigned int GDK_Sprite::getWidth() noexcept { return width; }
+
+void GDK_Sprite::setHeight(unsigned int height) noexcept {
+  if (height == 0) {
+    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Sprite height is set to 0\n");
+  }
+
+  this->height = height;
+}
+
+const unsigned int GDK_Sprite::getHeight() noexcept { return height; }
+
+void GDK_Sprite::moveTo(int x, int y, double speed) {
+  if (speed == 0) {
+    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+                      " speed parameter of moveTo() is 0, not moving\n");
+    return;
+  }
+
+  grad_mvmt_goalx = x;
+  grad_mvmt_goaly = y;
+
+  int xdif = this->x - x;
+  int ydif = this->y - y;
+  // Movement iterations along line between this position and given
+  // position
+  grad_mvmt_iter = sqrt(xdif * xdif + ydif * ydif) / speed;
+
+  if (grad_mvmt_iter == 0) {
+    return;
+  }
+
+  grad_mvmt_speedx = -((double)xdif / grad_mvmt_iter);
+  grad_mvmt_speedy = -((double)ydif / grad_mvmt_iter);
+}
+
+void GDK_Sprite::gradualMovementIterator() {
+  if (grad_mvmt_iter > 0) {
+    move(grad_mvmt_speedx, grad_mvmt_speedy);
+
+    grad_mvmt_iter--;
+
+    if (grad_mvmt_iter == 0 && x != grad_mvmt_goalx && y != grad_mvmt_goalx) {
+      setPosition(grad_mvmt_goalx, grad_mvmt_goaly);
     }
+  }
 }
 
-int BasicSprite::GetW() { return w; }
+void GDK_Sprite::setTexture(GDK_Texture *texture) {
+  // Print error if renderer is null
+  if (texture->renderer == nullptr) {
+    printf(ERR_COLOR
+           "GDK ERROR:" DEF_COLOR
+           " Failed setting sprite texture - texture renderer not set\n");
+    return;
+  }
 
-void BasicSprite::SetH(int h) {
-    if (h >= 0) {
-        this->h = h;
-    } else {
-        throw "Height cannot be less than 0";
-    }
+  // Print error if texture is null
+  if (texture->sdl_texture == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed setting sprite texture - texture not loaded\n");
+    return;
+  }
+
+  this->texture = texture->sdl_texture;
+  this->renderer = texture->renderer;
 }
 
-int BasicSprite::GetH() { return h; }
+void GDK_Sprite::setTexture(GDK_FontTexture *texture,
+                            const bool auto_set_size) {
+  this->texture = texture->sdl_texture;
+  this->renderer = texture->renderer;
 
-void BasicSprite::SetSpeed(double speed) { this->speed = speed; }
-double BasicSprite::GetSpeed() { return speed; }
-
-void BasicSprite::MoveTo(int x, int y) {
-    grad_mvmt_goalx = x;
-    grad_mvmt_goaly = y;
-
-    int xdif = this->x - x;
-    int ydif = this->y - y;
-    // Movement iterations along line between this position and given
-    // position
-    grad_mvmt_iter = sqrt(xdif * xdif + ydif * ydif) / speed;
-
-    if (grad_mvmt_iter == 0) {
-        return;
-    }
-
-    grad_mvmt_speedx = -((double)xdif / grad_mvmt_iter);
-    grad_mvmt_speedy = -((double)ydif / grad_mvmt_iter);
+  if (auto_set_size) {
+    SDL_QueryTexture(texture->sdl_texture, NULL, NULL, &width, &height);
+  }
 }
 
-void BasicSprite::GradualMovementIterator() {
-    if (grad_mvmt_iter > 0) {
-        MoveX(grad_mvmt_speedx);
-        MoveY(grad_mvmt_speedy);
+void GDK_Sprite::setFlip(SDL_RendererFlip flip) { this->flip = flip; }
 
-        grad_mvmt_iter--;
+void GDK_Sprite::setRotation(double angle) noexcept { rotation_angle = angle; }
 
-        if (grad_mvmt_iter == 0 && x != grad_mvmt_goalx &&
-            y != grad_mvmt_goalx) {
-            SetX(grad_mvmt_goalx);
-            SetY(grad_mvmt_goaly);
-        }
-    }
+void GDK_Sprite::rotate(double angle) noexcept {
+  setRotation(rotation_angle + angle);
 }
 
-void BasicSprite::SetRenderer(SDL_Renderer *renderer) {
-    sprite_renderer = renderer;
-
-    SetImg(img_path.c_str(), auto_set_size);
+void GDK_Sprite::setRotationCenter(SDL_Point *rotation_point){
+  this->rotation_point = rotation_point;
 }
 
-void BasicSprite::SetImg(const char *img_path, bool auto_set_size) {
-    SDL_DestroyTexture(texture);
+void GDK_Sprite::draw() {
+  rect.x = x;
+  rect.y = y;
+  rect.w = width;
+  rect.h = height;
 
-    surface = IMG_Load(img_path);
+  // Complete step of gradual movement on every frame (when sprite is
+  // drawn)
+  gradualMovementIterator();
 
-    // Check if given image is valid
-    if (surface == NULL) {
-        printf("Failed loading image: %s\n", img_path);
-    }
+  // Check if texture was set/loaded
+  if (texture == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed drawing sprite - texture not set/loaded\n");
+    return;
+  }
 
-    texture = SDL_CreateTextureFromSurface(sprite_renderer, surface);
-    SDL_FreeSurface(surface);
+  // Check if renderer is set properly
+  if (renderer == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed drawing sprite - renderer not set\n");
+    return;
+  }
 
-    if (auto_set_size) {
-        SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-    }
+  // Print warning if sprite texture is not visible (width/height is 0)
+  if (width == 0 || height == 0) {
+    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+                      " Sprite drawn but not visible - width/height is 0\n");
+  }
+  // Print warning if sprite texture is not visible (out of bounds)
+  if (!isInBounds()) {
+    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+                      " Sprite drawn but not visible - out of bounds\n");
+  }
 
-    img_rect.w = w;
-    img_rect.h = h;
+  SDL_RenderCopyEx(renderer, texture, NULL, &rect, rotation_angle,
+                   rotation_point, flip);
 }
 
-void BasicSprite::SetFlip(SDL_RendererFlip flip) { this->flip = flip; }
+const bool GDK_Sprite::isInBounds() {
+  int win_w, win_h;
+  SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
-void BasicSprite::SetRotation(double angle) { rotation_angle = angle; }
-
-void BasicSprite::Rotate(double angle) { SetRotation(rotation_angle + angle); }
-
-void BasicSprite::Draw() {
-    img_rect.x = x;
-    img_rect.y = y;
-    img_rect.w = w;
-    img_rect.h = h;
-
-    // Complete step of gradual movement on every frame (when sprite is
-    // drawn)
-    GradualMovementIterator();
-
-    SDL_RenderCopyEx(sprite_renderer, texture, NULL, &img_rect, rotation_angle,
-                     &rotation_center, flip);
-}
-
-bool BasicSprite::IsInBounds() {
-    int win_w, win_h;
-    SDL_GetRendererOutputSize(sprite_renderer, &win_w, &win_h);
-
-    if (x + w > 0 && y + w > 0 && x < win_w && y < win_h) {
-        return true;
-    } else {
-        return false;
-    }
+  if (x + width > 0 && y + height > 0 && x < win_w && y < win_h) {
+    return true;
+  } else {
+    return false;
+  }
 }

@@ -6,10 +6,14 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
-// Initialize all sdl2-gdk dependencies
-void SDL2_GDK_Init();
+/*
+ * @brief Initialize all sdl2-gdk dependencies
+ */
+void gdkInit();
 
-// Quit all sdl2-gdk dependencies
-void SDL2_GDK_Quit();
+/*
+ * @brief Quit all sdl2-gdk dependencies
+ */
+void gdkQuit();
 
 #endif

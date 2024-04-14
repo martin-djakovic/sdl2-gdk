@@ -1,44 +1,69 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <iostream>
-#include <vector>
 #include <algorithm>
 #include <basicsprite.hpp>
+#include <vector>
 
-// Camera affects the view
-// All objects in the scene are offset by camera x and y
-// focused_objects are not offset
-class Camera {
-  private:
-    std::vector<BasicSprite *> focused_objects;
+class GDK_Camera {
+  friend class GDK_Scene;
 
-  public:
-    // Camera x gets reset every frame
-    double x;
-    // Camera y gets reset every frame
-    double y;
+private:
+  std::vector<GDK_Sprite *> focused_sprites;
+  /* Values determining how much sprites in scene should be moved in the next
+   * frame Changes when moving camera Gets set to 0 when frame is drawn
+   */
+  double offset_x = 0;
+  double offset_y = 0;
 
-    Camera();
+public:
+  GDK_Camera();
 
-    Camera(double start_x, double start_y);
+  /*
+   * @param focused_sprites sprites that will not get moved when moving camera
+   */
+  GDK_Camera(const std::vector<GDK_Sprite *> focused_sprites);
 
-    Camera(BasicSprite *focused_object, double x = 0, double y = 0);
+  /*
+   * @brief Moves all unfocused sprites in the scene that has this camera
+   */
+  void move(double x, double y) noexcept;
 
-    Camera(const std::vector<BasicSprite *> focused_objects, double x = 0,
-           double y = 0);
+  /*
+   * @brief Make a sprite focused. Focused sprites do not get moved when moving
+   * camera
+   */
+  void addFocusedSprite(GDK_Sprite *sprite);
 
-    void AddFocusedObject(BasicSprite *object);
+  /*
+   * @brief Make multiple sprites focused. Focused sprites do not get moved
+   * when moving camera
+   */
+  void addFocusedSprite(const std::vector<GDK_Sprite *> sprites);
 
-    void AddFocusedObject(const std::vector<BasicSprite *> object);
+  /*
+   * @brief Unfocus sprite. Focused sprites do not get moved
+   * when moving camera
+   */
+  void removeFocusedSprite(GDK_Sprite *sprite);
 
-    void RemoveFocusedObject(BasicSprite *object);
+  /*
+   * @brief Unfocus multiple sprites. Focused sprites do not get moved
+   * when moving camera
+   */
+  void removeFocusedSprite(const std::vector<GDK_Sprite *> sprites);
 
-    void RemoveFocusedObjects(const std::vector<BasicSprite *> objects);
+  /*
+   * @brief Sets focused sprites. Focused sprites do not get moved
+   * when moving camera
+   */
+  void setFocusedSprites(const std::vector<GDK_Sprite *> sprites);
 
-    void SetFocusedObjects(const std::vector<BasicSprite *> objects);
-
-    std::vector<BasicSprite *> *GetFocusedObjects();
+  /*
+   * @brief Gets focused sprites. Focused sprites do not get moved
+   * when moving camera
+   */
+  std::vector<GDK_Sprite *> *getFocusedSprites() noexcept;
 };
 
 #endif

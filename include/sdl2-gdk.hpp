@@ -1,7 +1,8 @@
+#include <basicsprite.hpp>
+#include <camera.hpp>
 #include <collidesprite.hpp>
-#include <gamemath.hpp>
+#include <fonttexture.hpp>
 #include <init.hpp>
 #include <scene.hpp>
-#include <textblock.hpp>
-#include <textline.hpp>
 #include <sound.hpp>
+#include <texture.hpp>

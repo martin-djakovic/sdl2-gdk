@@ -1,46 +1,58 @@
+#include <errorcolors.hpp>
 #include <sound.hpp>
 
-Sound::Sound() {
-    this->file_path = "";
-    SetChannel(-1);
+GDK_Sound::GDK_Sound() {
+  this->file_path = "";
+  setChannel(-1);
 }
 
-Sound::Sound(const char *audio_file_path, int volume) {
-    SetSound(audio_file_path);
-    SetChannel(-1);
-    SetVolume(volume);
+GDK_Sound::GDK_Sound(const char *audio_file_path, unsigned int volume) {
+  setSound(audio_file_path);
+  setChannel(-1);
+  setVolume(volume);
 }
 
-void Sound::LoadChunk() {
-    Mix_FreeChunk(chunk);
-    chunk = Mix_LoadWAV(file_path);
+void GDK_Sound::loadChunk() {
+  Mix_FreeChunk(chunk);
+  chunk = Mix_LoadWAV(file_path);
 
-    if (chunk == NULL) {
-        printf("Failed loading audio file: %s\n", file_path);
-    }
+  if (chunk == NULL) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     "Failed loading audio file:" FPATH_COLOR " %s\n",
+           file_path);
+  }
 }
 
-void Sound::SetSound(const char *audio_file_path) {
-    this->file_path = audio_file_path;
-    LoadChunk();
+void GDK_Sound::setSound(const char *audio_file_path) {
+  this->file_path = audio_file_path;
+  loadChunk();
 }
 
-void Sound::SetVolume(int volume) {
-    this->volume = volume;
-    Mix_Volume(channel, volume);
+void GDK_Sound::setVolume(unsigned int volume) noexcept {
+  this->volume = volume;
+  Mix_Volume(channel, volume);
 }
-int Sound::GetVolume() { return volume; }
+const int GDK_Sound::getVolume() noexcept { return volume; }
 
-void Sound::SetChannel(int channel) { this->channel = channel; }
-int Sound::GetChannel() { return channel; }
+void GDK_Sound::setChannel(int channel) noexcept {
+  if (channel < -1) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR " Invalid channel value %i\n",
+           channel);
+    return;
+  }
 
-void Sound::Destroy() { Mix_FreeChunk(chunk); }
+  this->channel = channel;
+}
+const int GDK_Sound::getChannel() noexcept { return channel; }
 
-void Sound::Play(int loops) { Mix_PlayChannel(channel, chunk, loops); }
-// Play audio for time_ms milliseconds
-void Sound::PlayTimed(int time_ms, int loops) {
-    Mix_PlayChannelTimed(channel, chunk, loops, time_ms);
+void GDK_Sound::destroy() { Mix_FreeChunk(chunk); }
+
+void GDK_Sound::play(unsigned int loops) {
+  Mix_PlayChannel(channel, chunk, loops);
+}
+void GDK_Sound::playTimed(unsigned int time_ms, unsigned int loops) {
+  Mix_PlayChannelTimed(channel, chunk, loops, time_ms);
 }
 
-void Sound::Pause() { Mix_Pause(channel); }
-void Sound::Resume() { Mix_Resume(channel); }
+void GDK_Sound::pause() { Mix_Pause(channel); }
+void GDK_Sound::resume() { Mix_Resume(channel); }

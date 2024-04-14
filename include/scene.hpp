@@ -1,99 +1,165 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <algorithm>
 #include <camera.hpp>
 #include <collidesprite.hpp>
-#include <iostream>
-#include <textblock.hpp>
-#include <textline.hpp>
+#include <errorcolors.hpp>
 #include <vector>
 
-// Scene is used to group multiple sprites and draw them to the screen
-// Only one scene at a time should be drawn in any single window
-class Scene {
-  private:
-    std::vector<CollideSprite *> collide_sprites;
-    std::vector<BasicSprite *> basic_sprites;
-    // Every object that should be drawn in the scene
-    std::vector<BasicSprite *> render_objects;
+class GDK_Scene {
+private:
+  std::vector<GDK_CollideSprite *> collide_sprites;
+  std::vector<GDK_Sprite *> basic_sprites;
+  // Every sprite that should be drawn in the scene
+  std::vector<GDK_Sprite *> sprites;
 
-    int win_w;
-    int win_h;
+  int win_w;
+  int win_h;
 
-    // To calculate FPS, we need 2 frames to know the time between them,
-    // odd_frame keeps track if the calculation is on the first or second frame
-    bool odd_frame = true;
-    Uint64 last_frame_time;
-    int fps;
+  // To calculate FPS, we need 2 frames to know the time between them,
+  // odd_frame keeps track if the calculation is on the first or second frame
+  bool odd_frame = true;
+  Uint64 last_frame_time;
+  int fps = -1;
 
-    bool show_hitbox_outlines = false;
-    SDL_Color hitbox_outline_color = {0, 255, 0};
+  bool show_hitbox_outlines = false;
+  SDL_Color hitbox_outline_color = {0, 255, 0};
 
-    SDL_Renderer *renderer;
-    Camera *camera;
+  GDK_Camera *camera = nullptr;
 
-    void AddRenderObject(BasicSprite *object);
+  SDL_Renderer *renderer = nullptr;
 
-    void RemoveRenderObject(BasicSprite *object, bool destroy = true);
+  /*
+   * @brief Calculates FPS. Must be called every time draw() is called to be
+   * accurate
+   */
+  void calculateFPS();
 
-    // Calculate current frames per second
-    // Must be called on every draw
-    void CalculateFPS();
+  /*
+   * @brief Draws hitbox outlines of all collide sprites
+   */
+  void drawHitboxOutlines();
 
-    // Draw hitbox outlines of all collide sprites in scene
-    void DrawHitboxOutlines();
+  /*
+   * @brief Draws all sprites in the scene
+   */
+  void drawSprites();
 
-    void MoveCamera();
+  /*
+   * @brief Completes camera movement
+   */
+  void updateCamera();
 
-    // Draw everything in the scene
-    void DrawRenderObjects();
+public:
+  GDK_Scene() noexcept;
 
-  public:
-    Scene(SDL_Window *window, Camera *camera);
+  /*
+   * @param camera Camera object for this scene. Camera movement is updated when
+   * scene is drawn
+   * @param renderer SDL_Renderer that scene will be drawn on. All textures in
+   * the scene must have the same renderer as the scene
+   */
+  GDK_Scene(SDL_Renderer *renderer, GDK_Camera *camera) noexcept;
 
-    void Destroy();
+  /*
+   * @brief Set scene camera. Camera movement is updated when scene is drawn
+   */
+  void setCamera(GDK_Camera *camera) noexcept;
 
-    void AddCollideObject(CollideSprite *collide_object);
+  /*
+   * @brief Frees scene from memory. Doesn't destroy scene sprites
+   */
+  void destroy();
 
-    void AddCollideObject(const std::vector<CollideSprite *> collide_object);
+  /*
+   * @brief Adds collide sprite to scene. Sets colliders of collide sprite to
+   * all collide sprites in the scene
+   */
+  void addCollideSprite(GDK_CollideSprite *collide_sprite);
 
-    void AddObject(BasicSprite *object);
+  /* @brief Adds collide sprites to scene. Sets colliders of collide sprites to
+   * all collide sprites in the scene
+   * @param sprites Vector of collide sprites to be added
+   */
+  void addCollideSprite(const std::vector<GDK_CollideSprite *> collide_sprites);
 
-    void AddObject(const std::vector<BasicSprite *> object);
+  /*
+   * @brief Adds sprite to scene
+   * @param sprites Sprite to be added
+   */
+  void addSprite(GDK_Sprite *sprite);
 
-    void RemoveCollideObject(CollideSprite *collide_object,
-                             bool destroy = true);
+  /*
+   * @brief Adds sprites to scene
+   * @param sprites Vector of sprites to be added
+   */
+  void addSprite(const std::vector<GDK_Sprite *> sprites);
 
-    void RemoveCollideObject(const std::vector<CollideSprite *> collide_object,
-                             bool destroy = true);
+  /*
+   * @brief Removes collide sprite from scene
+   * @param sprites Collide sprite to be removed
+   */
+  void removeCollideSprite(GDK_CollideSprite *collide_sprite);
 
-    void RemoveObject(BasicSprite *object, bool destroy = true);
+  /*
+   * @brief Removes collide sprites from scene
+   * @param sprites Vector containing collide sprites to be removed
+   */
+  void removeCollideSprite(const std::vector<GDK_CollideSprite *> collide_sprites);
 
-    void RemoveObject(const std::vector<BasicSprite *> object,
-                      bool destroy = true);
+  /*
+   * @brief Removes sprite from scene
+   * @param sprite Sprite to be removed
+   */
+  void removeSprite(GDK_Sprite *sprite);
 
-    // Draw all visible objects in scene
-    void Draw();
+  /*
+   * @brief Removes sprites from scene
+   * @param sprites Vector containing sprites to be removed
+   */
+  void removeSprite(const std::vector<GDK_Sprite *> sprites);
 
-    std::vector<CollideSprite *> *GetAllCollideObjects();
+  /*
+   * @brief Draws all visible sprites in the scene. Applies camera movement
+   */
+  void draw();
 
-    std::vector<BasicSprite *> *GetAllObjects();
+  /*
+   * @return All collide sprites in the scene
+   */
+  std::vector<GDK_CollideSprite *> *getAllCollideSprites() noexcept;
 
-    int GetFPS();
+  /*
+   * @return All sprites in the scene
+   */
+  std::vector<GDK_Sprite *> *getAllSprites() noexcept;
 
-    // Set if hitbox outlines of all collide objects should be drawn
-    // Enabling hitbox outlines will negatively impact performance, only use
-    // when debugging
-    void SetShowHitboxOutlines(bool show_hitbox_outlines);
+  /*
+   * @return Frames per second at which scene is being drawn. Only useful if
+   * scene is being drawn in a continuous loop without interruptions.
+   * @return -1 if there were not enough frame samples to calculate FPS
+   */
+  const int getFPS();
 
-    // Set color of hitbox outlines
-    void SetHitboxOutlineColor(SDL_Color color);
+  /*
+   * @brief Determine if collide sprite hitbox outlines should be drawn.
+   * @param show_hitbox_outlines If true, hitbox outlines are drawn, if false
+   * they are not drawn
+   */
+  void setShowHitboxOutlines(bool show_hitbox_outlines);
 
-    // Returns coeficient that scales values depending on FPS
-    // Any values that depends on framerate should be multiplied by the
-    // performance multiplier
-    double GetPerformanceMultiplier();
+  /*
+   * @brief Set color of collide sprite hitbox outlines
+   */
+  void setHitboxOutlineColor(SDL_Color color);
+
+  /*
+   * @return Coeficient that scales values depending on FPS
+   * Any values that depend on framerate should be multiplied by the
+   * performance multiplier
+   * @return 1 if there were not enough frame samples to calculate FPS
+   */
+  const double getPerformanceMultiplier() noexcept;
 };
 
 #endif

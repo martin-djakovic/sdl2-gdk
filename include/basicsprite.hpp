@@ -1,110 +1,150 @@
 #ifndef BASIC_SPRITE_HPP
 #define BASIC_SPRITE_HPP
 
+#include "fonttexture.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <stdexcept>
-#include <string>
-#include <vector>
+#include <SDL2/SDL_render.h>
+#include <errorcolors.hpp>
+#include <texture.hpp>
 
-// Image that represents an object in-game
-// Has basic functions for drawing and movement
-class BasicSprite {
+class GDK_Sprite {
+  friend class GDK_Scene;
 
-  protected:
-    double x;
-    double y;
-    // Movement speed
-    double speed;
-    // Width
-    int w;
-    // Height
-    int h;
-    double rotation_angle;
-    SDL_Point rotation_center;
-    std::string img_path;
-    SDL_RendererFlip flip;
-    SDL_Renderer *sprite_renderer;
-    SDL_Surface *surface;
-    SDL_Texture *texture = nullptr;
-    SDL_Rect img_rect;
-    bool auto_set_size;
+protected:
+  double x;
+  double y;
+  int width;
+  int height;
+  SDL_Rect rect;
+  SDL_Renderer *renderer;
+  SDL_Texture *texture = nullptr;
+  SDL_RendererFlip flip = SDL_FLIP_NONE;
+  SDL_Point *rotation_point = nullptr;
+  double rotation_angle;
 
-    // Variables used for gradual movement across multiple frames
-    int grad_mvmt_iter = 0;
-    double grad_mvmt_speedx;
-    double grad_mvmt_speedy;
-    double grad_mvmt_goalx;
-    double grad_mvmt_goaly;
+  // Variables used for gradual movement across multiple frames
+  int grad_mvmt_iter = 0;
+  double grad_mvmt_speedx;
+  double grad_mvmt_speedy;
+  double grad_mvmt_goalx;
+  double grad_mvmt_goaly;
 
-    // Used to gradually move sprite according to data from MoveTo()
-    // Needed when movement is to be made across multiple frames
-    // Is called on every draw
-    virtual void GradualMovementIterator();
+  /**
+   * @brief Moves sprite each frame according to data calculated in moveTo()
+   */
+  virtual void gradualMovementIterator();
 
-  public:
-    BasicSprite();
+public:
+  GDK_Sprite();
+  GDK_Sprite(GDK_Texture *texture);
+  GDK_Sprite(GDK_Texture *texture, double x, double y, int width, int height);
+  GDK_Sprite(GDK_FontTexture *texture);
+  GDK_Sprite(GDK_FontTexture *texture, double x, double y);
+  GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width, int height);
 
-    BasicSprite(double x, double y, int width, int height, const char *img_path,
-                double speed = 0, bool auto_set_size = false,
-                double rotation_angle = 0,
-                SDL_RendererFlip flip = SDL_FLIP_NONE);
+  /*
+   * @brief Set the position of sprite
+   *
+   * @param x x coordinate of sprite
+   * @param y y coordinate of sprite
+   */
+  virtual void setPosition(double x, double y) noexcept;
 
-    void Destroy();
+  /*
+   * @return x position of sprite
+   */
+  const double getX() noexcept;
+  /*
+   * @return y position of sprite
+   */
+  const double getY() noexcept;
 
-    // Set x position of sprite
-    virtual void SetX(double x);
-    int GetX();
+  /*
+   * @brief Move sprite
+   *
+   * @param x distance to move on x-axis
+   * @param y distance to move on y-axis
+   */
+  virtual void move(double x, double y) noexcept;
 
-    // Move sprite along x axis by value of x
-    virtual void MoveX(double x);
+  /*
+   * @brief Set width of sprite
+   */
+  void setWidth(unsigned int width) noexcept;
+  /*
+   * @return Width of sprite
+   */
+  const unsigned int getWidth() noexcept;
 
-    // Set y position of sprite
-    virtual void SetY(double y);
-    int GetY();
+  /*
+   * @brief Set height of sprite
+   */
+  void setHeight(unsigned int height) noexcept;
+  /*
+   * @return Height of sprite
+   */
+  const unsigned int getHeight() noexcept;
 
-    // Move sprite along y axis by value of y
-    virtual void MoveY(double y);
+  /*
+   * @brief Moves sprite to given position by given speed evenly across
+   * multiple frames
+   *
+   * @param x x coordinate destination
+   * @param y y coordinate destination
+   * @param speed movement speed
+   */
+  void moveTo(int x, int y, double speed);
 
-    // Set width
-    void SetW(int w);
-    // Get width
-    int GetW();
+  /*
+   * @brief Set the sprite texture
+   */
+  void setTexture(GDK_Texture *texture);
 
-    // Set height
-    void SetH(int h);
-    // Get height
-    int GetH();
+  /*
+   * @brief Set the sprite texture to a font texture
+   *
+   * @param auto_set_size determine if sprite width/height should be
+   * automatically adjusted to fit the text without stretching/compressing it*/
+  void setTexture(GDK_FontTexture *texture, const bool auto_set_size = true);
 
-    void SetSpeed(double speed);
-    double GetSpeed();
+  /**
+   * @brief Flip the sprite texture
+   *
+   * @param flip SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL or
+   * SDL_FLIP_VERTICAL
+   */
+  void setFlip(SDL_RendererFlip flip);
 
-    // Moves sprite to given point
-    // Evenly changes sprite x and y by given speed
-    // until point is reached
-    void MoveTo(int x, int y);
+  /**
+   * @brief Rotate sprite texture to angle
+   */
+  void setRotation(double angle) noexcept;
 
-    // Set sprite renderer and create image passed in constructor
-    // Renderer will be automatically set when sprite is added to a scene
-    virtual void SetRenderer(SDL_Renderer *renderer);
+  /**
+   * @brief Rotate sprite texture by angle
+   */
+  void rotate(double angle) noexcept;
 
-    // Change sprite image
-    virtual void SetImg(const char *img_path, bool auto_set_size = false);
+  /**
+   * @brief Set point around which sprite texture rotates, relative to the
+   * sprite x and y. Default rotation point is in the center of the sprite
+   */
+  void setRotationCenter(SDL_Point *rotation_point);
 
-    // Set sprite flip to SDL_FLIP_NONE, SDL_FLIP_HORIZONTAL or
-    // SDL_FLIP_VERTICAL
-    void SetFlip(SDL_RendererFlip flip);
+  /**
+   * @brief Copies sprite texture to renderer
+   */
+  void draw();
 
-    // Sets sprite rotation to angle
-    void SetRotation(double angle);
-
-    // Changes sprite rotation by angle
-    void Rotate(double angle);
-
-    virtual void Draw();
-
-    // Checks if sprite is in window bounds
-    bool IsInBounds();
+  /**
+   * @brief Check if sprite is in window bounds. The evaluated window is the
+   * same window that is associated with the renderer of the texture
+   *
+   * @return true if sprite is located within the window
+   * @return false if sprite is outside the window
+   */
+  const bool isInBounds();
 };
 
 #endif
