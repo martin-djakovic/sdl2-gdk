@@ -1,5 +1,5 @@
-#ifndef BASIC_SPRITE_HPP
-#define BASIC_SPRITE_HPP
+#ifndef SPRITE_HPP
+#define SPRITE_HPP
 
 #include "fonttexture.hpp"
 #include <SDL2/SDL.h>

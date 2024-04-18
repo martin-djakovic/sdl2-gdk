@@ -2,7 +2,7 @@
 #define CAMERA_HPP
 
 #include <algorithm>
-#include <basicsprite.hpp>
+#include <sprite.hpp>
 #include <vector>
 
 class GDK_Camera {

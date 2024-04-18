@@ -1,7 +1,7 @@
 #include "fonttexture.hpp"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
-#include <basicsprite.hpp>
+#include <sprite.hpp>
 #include <cstdio>
 
 GDK_Sprite::GDK_Sprite() {

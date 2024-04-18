@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <basicsprite.hpp>
+#include <sprite.hpp>
 #include <vector>
 
 // Image that represents an object in-game
