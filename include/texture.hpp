@@ -6,11 +6,10 @@
 
 class GDK_Texture {
   friend class GDK_Sprite;
+  friend class GDK_Scene;
 
-private:
-  const char *file_path;
+protected:
   SDL_Texture *sdl_texture = nullptr;
-  SDL_Surface *surface;
   SDL_Renderer *renderer = nullptr;
 
 public:
@@ -19,23 +18,6 @@ public:
    * @param renderer renderer on which texture will be created and drawn on
    */
   GDK_Texture(SDL_Renderer *renderer);
-
-  /**
-   * @param renderer renderer on which texture will be created and drawn on
-   * @param file_path relative/absolute file path to the image that will be used
-   * to create texture. All file types supported by
-   * SDL_Texture are compatible
-   */
-  GDK_Texture(SDL_Renderer *renderer, const char *file_path);
-
-  /**
-   * @brief Generates a texture from image file. All file types supported by
-   * SDL_Texture are compatible with this function. Renderer must be set with
-   * setRenderer() or in constructor before calling loadImageFile()
-   *
-   * @param file_path relative/absolute file path to the image
-   */
-  void loadImageFile(const char *file_path);
 
   /**
    * @brief Sets renderer on which texture will be created and drawn. Must be

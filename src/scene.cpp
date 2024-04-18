@@ -74,7 +74,8 @@ void GDK_Scene::setCamera(GDK_Camera *camera) noexcept {
 void GDK_Scene::drawSprites() {
   for (int i = 0; i < sprites.size(); i++) {
     // Print error if scene renderer and sprite renderer do not match
-    if (sprites.at(i)->renderer != renderer) {
+    if (sprites.at(i)->texture != nullptr &&
+        sprites.at(i)->texture->renderer != renderer) {
       printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
                        " Failed drawing scene, sprite renderer and scene "
                        "renderer do not match\n");

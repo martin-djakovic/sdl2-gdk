@@ -11,7 +11,7 @@ GDK_Sprite::GDK_Sprite() {
   setHeight(0);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_Texture *texture) {
+GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
@@ -19,7 +19,7 @@ GDK_Sprite::GDK_Sprite(GDK_Texture *texture) {
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_Texture *texture, double x, double y, int width,
+GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width,
                        int height) {
   this->x = x;
   this->y = y;
@@ -119,7 +119,7 @@ void GDK_Sprite::gradualMovementIterator() {
   }
 }
 
-void GDK_Sprite::setTexture(GDK_Texture *texture) {
+void GDK_Sprite::setTexture(GDK_ImageTexture *texture) {
   // Print error if renderer is null
   if (texture->renderer == nullptr) {
     printf(ERR_COLOR
@@ -135,14 +135,31 @@ void GDK_Sprite::setTexture(GDK_Texture *texture) {
     return;
   }
 
-  this->texture = texture->sdl_texture;
-  this->renderer = texture->renderer;
+  this->texture = texture;
 }
 
 void GDK_Sprite::setTexture(GDK_FontTexture *texture,
                             const bool auto_set_size) {
-  this->texture = texture->sdl_texture;
-  this->renderer = texture->renderer;
+  this->texture = texture;
+  // Print warning if renderer is null
+  if (texture->renderer == nullptr) {
+    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+                      " Sprite texture renderer is not set\n");
+  }
+
+  // Print error if texture is null and we're trying to automatically fit sprite
+  // size to texture size
+  if (texture->sdl_texture == nullptr && auto_set_size) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed setting sprite size - texture not loaded\n");
+    return;
+  }
+
+  // Print warning if texture is null
+  if (texture->sdl_texture == nullptr) {
+    printf(ERR_COLOR "GDK WARNING:" DEF_COLOR
+                     " Sprite texture is not loaded\n");
+  }
 
   if (auto_set_size) {
     SDL_QueryTexture(texture->sdl_texture, NULL, NULL, &width, &height);
@@ -157,7 +174,7 @@ void GDK_Sprite::rotate(double angle) noexcept {
   setRotation(rotation_angle + angle);
 }
 
-void GDK_Sprite::setRotationCenter(SDL_Point *rotation_point){
+void GDK_Sprite::setRotationCenter(SDL_Point *rotation_point) {
   this->rotation_point = rotation_point;
 }
 
@@ -171,17 +188,24 @@ void GDK_Sprite::draw() {
   // drawn)
   gradualMovementIterator();
 
-  // Check if texture was set/loaded
+  // Check if texture was set
   if (texture == nullptr) {
     printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed drawing sprite - texture not set/loaded\n");
+                     " Failed drawing sprite - texture not set\n");
+    return;
+  }
+
+  // Check if texture was loaded
+  if (texture->sdl_texture == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed drawing sprite - texture not loaded\n");
     return;
   }
 
   // Check if renderer is set properly
-  if (renderer == nullptr) {
+  if (texture->renderer == nullptr) {
     printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed drawing sprite - renderer not set\n");
+                     " Failed drawing sprite - texture renderer not set\n");
     return;
   }
 
@@ -196,13 +220,19 @@ void GDK_Sprite::draw() {
                       " Sprite drawn but not visible - out of bounds\n");
   }
 
-  SDL_RenderCopyEx(renderer, texture, NULL, &rect, rotation_angle,
-                   rotation_point, flip);
+  SDL_RenderCopyEx(texture->renderer, texture->sdl_texture, NULL, &rect,
+                   rotation_angle, rotation_point, flip);
 }
 
 const bool GDK_Sprite::isInBounds() {
   int win_w, win_h;
-  SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
+
+  if (texture == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Cannot check if sprite is in bounds - texture not set");
+  }
+
+  SDL_GetRendererOutputSize(texture->renderer, &win_w, &win_h);
 
   if (x + width > 0 && y + height > 0 && x < win_w && y < win_h) {
     return true;

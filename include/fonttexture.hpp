@@ -1,15 +1,14 @@
 #ifndef FONT_TEXTURE_HPP
 #define FONT_TEXTURE_HPP
 
-#include "texture.hpp"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 #include <errorcolors.hpp>
+#include <texture.hpp>
 
-class GDK_FontTexture {
-  friend class GDK_Sprite;
+class GDK_FontTexture : public GDK_Texture {
 
 private:
   const char *text;
@@ -17,9 +16,7 @@ private:
   unsigned int font_size;
   TTF_Font *font = nullptr;
   SDL_Color color;
-  SDL_Texture *sdl_texture = nullptr;
   SDL_Surface *surface;
-  SDL_Renderer *renderer = nullptr;
 
   /*
    * @brief Creates/updates texture based on GDK_FontTexture properties
@@ -38,16 +35,6 @@ public:
   GDK_FontTexture(SDL_Renderer *renderer, const char *text,
                   const char *font_path, unsigned int font_size,
                   SDL_Color color);
-
-  /*
-   * @brief Set renderer on which texture will be created and draw on
-   */
-  void setRenderer(SDL_Renderer *renderer);
-
-  /*
-   * @brief Free texture object from memory
-   */
-  void destroy();
 
   void setText(const char *text) noexcept;
 

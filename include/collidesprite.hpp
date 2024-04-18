@@ -49,7 +49,7 @@ public:
    *
    * @param texture sprite texture
    */
-  GDK_CollideSprite(GDK_Texture *texture);
+  GDK_CollideSprite(GDK_ImageTexture *texture);
   /**
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    *
@@ -59,7 +59,7 @@ public:
    * @param width sprite width
    * @param height sprite height
    */
-  GDK_CollideSprite(GDK_Texture *texture, double x, double y, int width,
+  GDK_CollideSprite(GDK_ImageTexture *texture, double x, double y, int width,
                     int height);
 
   /**

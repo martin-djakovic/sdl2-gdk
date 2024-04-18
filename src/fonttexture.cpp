@@ -37,19 +37,6 @@ GDK_FontTexture::GDK_FontTexture(SDL_Renderer *renderer, const char *text, const
   updateTexture();
 }
 
-void GDK_FontTexture::setRenderer(SDL_Renderer *renderer) {
-  this->renderer = renderer;
-}
-
-void GDK_FontTexture::destroy() {
-  SDL_DestroyTexture(sdl_texture);
-
-  printf(NOTICE_COLOR "GDK NOTICE:" DEF_COLOR
-                      " Destroyed GDK_FontTexture with text" FPATH_COLOR
-                      " %s" DEF_COLOR "and font file path" FPATH_COLOR "%s\n",
-         text, font_path);
-}
-
 void GDK_FontTexture::setText(const char *text) noexcept {
   if (text == "") {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR

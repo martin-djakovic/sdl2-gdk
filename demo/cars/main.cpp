@@ -36,11 +36,11 @@ int main(int argc, char *argv[]) {
 
   SDL_Event event;
 
-  GDK_Texture tx_car_red(renderer, RED_CAR_PATH);
-  GDK_Texture tx_car_green(renderer, GREEN_CAR_PATH);
-  GDK_Texture tx_car_blue(renderer, BLUE_CAR_PATH);
-  GDK_Texture tx_background(renderer, BG_PATH);
-  GDK_FontTexture ftx_fps(renderer, "", FONT_PATH, 8, {0, 255, 0});
+  GDK_ImageTexture tx_car_red(renderer, RED_CAR_PATH);
+  GDK_ImageTexture tx_car_green(renderer, GREEN_CAR_PATH);
+  GDK_ImageTexture tx_car_blue(renderer, BLUE_CAR_PATH);
+  GDK_ImageTexture tx_background(renderer, BG_PATH);
+  GDK_FontTexture ftx_fps(renderer, "FPS: 0000", FONT_PATH, 8, {0, 255, 0});
 
   GDK_CollideSprite cs_player(&tx_car_red, 100, 100, 180, 120);
   GDK_CollideSprite cs_car_left(&tx_car_green, -500, 100, 180, 120);
@@ -67,7 +67,6 @@ int main(int argc, char *argv[]) {
 
     std::string fps = "FPS: " + std::to_string(sc_game.getFPS());
     ftx_fps.setText(fps.c_str());
-    s_fps.setTexture(&ftx_fps);
 
     // Movement
     if (perf_multiplier != 1) {

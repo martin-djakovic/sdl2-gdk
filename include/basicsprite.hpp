@@ -6,7 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <errorcolors.hpp>
-#include <texture.hpp>
+#include <imagetexture.hpp>
 
 class GDK_Sprite {
   friend class GDK_Scene;
@@ -17,8 +17,7 @@ protected:
   int width;
   int height;
   SDL_Rect rect;
-  SDL_Renderer *renderer;
-  SDL_Texture *texture = nullptr;
+  GDK_Texture *texture = nullptr;
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_Point *rotation_point = nullptr;
   double rotation_angle;
@@ -37,8 +36,8 @@ protected:
 
 public:
   GDK_Sprite();
-  GDK_Sprite(GDK_Texture *texture);
-  GDK_Sprite(GDK_Texture *texture, double x, double y, int width, int height);
+  GDK_Sprite(GDK_ImageTexture *texture);
+  GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width, int height);
   GDK_Sprite(GDK_FontTexture *texture);
   GDK_Sprite(GDK_FontTexture *texture, double x, double y);
   GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width, int height);
@@ -99,7 +98,7 @@ public:
   /*
    * @brief Set the sprite texture
    */
-  void setTexture(GDK_Texture *texture);
+  void setTexture(GDK_ImageTexture *texture);
 
   /*
    * @brief Set the sprite texture to a font texture

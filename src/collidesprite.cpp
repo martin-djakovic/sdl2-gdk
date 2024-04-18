@@ -6,12 +6,12 @@ GDK_CollideSprite::GDK_CollideSprite() : GDK_Sprite() {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-GDK_CollideSprite::GDK_CollideSprite(GDK_Texture *texture)
+GDK_CollideSprite::GDK_CollideSprite(GDK_ImageTexture *texture)
     : GDK_Sprite(texture) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-GDK_CollideSprite::GDK_CollideSprite(GDK_Texture *texture, double x, double y,
+GDK_CollideSprite::GDK_CollideSprite(GDK_ImageTexture *texture, double x, double y,
                                      int width, int height)
     : GDK_Sprite(texture, x, y, width, height) {
   setHitboxProperties(0, 0, width, height);
