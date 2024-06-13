@@ -1,0 +1,89 @@
+#ifndef ANIMATED_TEXTURE_HPP
+#define ANIMATED_TEXTURE_HPP
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <errorcolors.hpp>
+#include <texture.hpp>
+
+class GDK_AnimatedTexture : public GDK_Texture {
+private:
+  SDL_Rect tile = {0, 0, 0, 0};
+  int tile_count = 0;
+  int current_tile = 1;
+  int tile_duration = 0;
+  bool is_playing = true;
+  const char *tile_sheet_path = "";
+  SDL_Surface *surface = nullptr;
+  SDL_Texture *tile_sheet = nullptr;
+  int last_tile_tick = 0;
+
+protected:
+  /**
+   * @brief switches to next tile on draw event if tile duration has passed
+   */
+  void flagDrawEvent() override;
+
+  void updateTileSize();
+
+  void loadTile(unsigned int tile_index);
+
+public:
+  GDK_AnimatedTexture();
+
+  /**
+   * @param renderer renderer on which texture will be created and drawn on
+   */
+  GDK_AnimatedTexture(SDL_Renderer *renderer);
+
+  /**
+   * @param renderer renderer on which texture will be created and drawn on
+   * @param tile_sheet_path relative/absolute file path to the tile sheet that
+   * will be used to create texture. All file types supported by SDL_Texture are
+   * compatible
+   */
+  GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path);
+
+  GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
+                      unsigned int tile_count);
+
+  GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
+                      unsigned int tile_count, unsigned int tile_duration);
+
+  /**
+   * @brief loads the image from which tiles will be made
+   *
+   * @param tile_sheet_path relative/absolute file path to the tile sheet. All
+   * file types supported by SDL_Texture are compatible
+   */
+  void loadTileSheet(const char *tile_sheet_path);
+
+  /**
+   * @brief sets number of horizontal tiles in tile sheet.
+   */
+  void setTileCount(unsigned int tile_count) noexcept;
+
+  const unsigned int getTileCount() noexcept;
+
+  /**
+   * @brief determines how long each tile will be displayed
+   */
+  void setTileDuration(unsigned int time_ms) noexcept;
+
+  const unsigned int getTileDuration() noexcept;
+
+  void play() noexcept;
+
+  void pause() noexcept;
+
+  const bool isPlaying() noexcept;
+
+  /**
+   * @brief sets animation to first tile
+   */
+  void reset() noexcept;
+
+  const bool isLoaded() noexcept;
+};
+
+#endif

@@ -12,6 +12,7 @@
 #define BLUE_CAR_PATH "res/img/blue_car.png"
 #define CRASHED_CAR_PATH "res/img/crashed_car.png"
 #define CRASH_BLOCK_PATH "res/img/crash_block.png"
+#define STICKMAN_PATH "res/img/stickman.png"
 #define FONT_PATH "res/font/font.ttf"
 #define CRASH_SOUND_PATH "res/audio/crash.wav"
 
@@ -20,7 +21,7 @@
 #define COLOR_GREEN                                                            \
   { 0, 255, 0 }
 
-#define PLAYER_SPEED 1000
+#define PLAYER_SPEED 500
 
 int main(int argc, char *argv[]) {
 
@@ -45,8 +46,9 @@ int main(int argc, char *argv[]) {
   GDK_ImageTexture tx_car_blue(renderer, BLUE_CAR_PATH);
   GDK_ImageTexture tx_background(renderer, BG_PATH);
   GDK_FontTexture ftx_fps(renderer, "FPS: 00000", FONT_PATH, 8, {0, 255, 0});
+  GDK_AnimatedTexture atx_stickman(renderer, STICKMAN_PATH, 5, 100);
 
-  GDK_CollideSprite cs_player(&tx_car_red, 100, 100, 180, 120);
+  GDK_CollideSprite cs_player(&atx_stickman, 100, 100, 80, 128);
   GDK_CollideSprite cs_car_left(&tx_car_green, -500, 100, 180, 120);
   GDK_CollideSprite cs_car_right(&tx_car_blue, 2500, 600, 180, 120);
   GDK_CollideSprite cs_car_top(&tx_car_red, 900, -400, 180, 120);
@@ -85,28 +87,27 @@ int main(int argc, char *argv[]) {
     if (perf_multiplier != 1) {
       switch (event.key.keysym.sym) {
       case SDLK_w:
-        cs_player.setRotation(90);
-        cs_player.setHitboxProperties(30, -30, 120, 180);
         cs_player.move(0, -PLAYER_SPEED * perf_multiplier);
         break;
 
       case SDLK_s:
-        cs_player.setRotation(-90);
-        cs_player.setHitboxProperties(30, -30, 120, 180);
         cs_player.move(0, PLAYER_SPEED * perf_multiplier);
         break;
 
       case SDLK_a:
-        cs_player.setRotation(0);
-        cs_player.setHitboxProperties(0, 0, 180, 120);
         cs_player.move(-PLAYER_SPEED * perf_multiplier, 0);
         break;
 
       case SDLK_d:
-        cs_player.setRotation(-180);
-        cs_player.setHitboxProperties(0, 0, 180, 120);
         cs_player.move(PLAYER_SPEED * perf_multiplier, 0);
         break;
+      // Animation play/pause
+      case SDLK_SPACE:
+        if (atx_stickman.isPlaying()) {
+          atx_stickman.pause();
+        } else {
+          atx_stickman.play();
+        }
       }
 
       // Player is off the screen

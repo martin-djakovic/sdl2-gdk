@@ -6,3 +6,4 @@
 #include <scene.hpp>
 #include <sound.hpp>
 #include <texture.hpp>
+#include <animatedtexture.hpp>

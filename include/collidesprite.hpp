@@ -52,14 +52,21 @@ public:
   GDK_CollideSprite(GDK_ImageTexture *texture);
   /**
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
-   *
-   * @param texture sprite texture
-   * @param x x coordinate of sprite
-   * @param y y coordinate of sprite
-   * @param width sprite width
-   * @param height sprite height
    */
   GDK_CollideSprite(GDK_ImageTexture *texture, double x, double y, int width,
+                    int height);
+  /**
+   * @brief Sets texture and default values for variables. Hitbox is not
+   * initialized, so it will have to be initialized later with
+   * setHitboxProperties()
+   *
+   * @param texture sprite texture
+   */
+  GDK_CollideSprite(GDK_AnimatedTexture *texture);
+  /**
+   * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
+   */
+  GDK_CollideSprite(GDK_AnimatedTexture *texture, double x, double y, int width,
                     int height);
 
   /**

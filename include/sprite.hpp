@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
+#include <animatedtexture.hpp>
 #include <errorcolors.hpp>
 #include <imagetexture.hpp>
 
@@ -37,10 +38,15 @@ protected:
 public:
   GDK_Sprite();
   GDK_Sprite(GDK_ImageTexture *texture);
-  GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width, int height);
+  GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width,
+             int height);
+  GDK_Sprite(GDK_AnimatedTexture *texture);
+  GDK_Sprite(GDK_AnimatedTexture *texture, double x, double y, int width,
+             int height);
   GDK_Sprite(GDK_FontTexture *texture);
   GDK_Sprite(GDK_FontTexture *texture, double x, double y);
-  GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width, int height);
+  GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width,
+             int height);
 
   /*
    * @brief Set the position of sprite
@@ -94,6 +100,8 @@ public:
    * @param speed movement speed
    */
   void moveTo(int x, int y, double speed);
+
+  void setTexture(GDK_AnimatedTexture *texture);
 
   /*
    * @brief Set the sprite texture

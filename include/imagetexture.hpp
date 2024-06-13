@@ -13,6 +13,7 @@ private:
 
 public:
   GDK_ImageTexture();
+  
   /**
    * @param renderer renderer on which texture will be created and drawn on
    */

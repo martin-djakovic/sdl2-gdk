@@ -1,8 +1,8 @@
 #include "fonttexture.hpp"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
-#include <sprite.hpp>
 #include <cstdio>
+#include <sprite.hpp>
 
 GDK_Sprite::GDK_Sprite() {
   this->x = 0;
@@ -21,6 +21,23 @@ GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture) {
 
 GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width,
                        int height) {
+  this->x = x;
+  this->y = y;
+  setWidth(width);
+  setHeight(height);
+  setTexture(texture);
+}
+
+GDK_Sprite::GDK_Sprite(GDK_AnimatedTexture *texture) {
+  this->x = 0;
+  this->y = 0;
+  setWidth(0);
+  setHeight(0);
+  setTexture(texture);
+}
+
+GDK_Sprite::GDK_Sprite(GDK_AnimatedTexture *texture, double x, double y,
+                       int width, int height) {
   this->x = x;
   this->y = y;
   setWidth(width);
@@ -138,13 +155,33 @@ void GDK_Sprite::setTexture(GDK_ImageTexture *texture) {
   this->texture = texture;
 }
 
+void GDK_Sprite::setTexture(GDK_AnimatedTexture *texture) {
+  // Print error if renderer is null
+  if (texture->renderer == nullptr) {
+    printf(ERR_COLOR
+           "GDK ERROR:" DEF_COLOR
+           " Failed setting sprite texture - texture renderer not set\n");
+    return;
+  }
+
+  // Print error if texture is null
+  if (texture->sdl_texture == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed setting sprite texture - texture not loaded\n");
+    return;
+  }
+
+  this->texture = texture;
+}
+
 void GDK_Sprite::setTexture(GDK_FontTexture *texture,
                             const bool auto_set_size) {
-  this->texture = texture;
-  // Print warning if renderer is null
+  // Print error if texture renderer is null
   if (texture->renderer == nullptr) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Sprite texture renderer is not set\n");
+    printf(ERR_COLOR
+           "GDK ERROR:" DEF_COLOR
+           " Failed setting sprite texture - texture renderer not set\n");
+    return;
   }
 
   // Print error if texture is null and we're trying to automatically fit sprite
@@ -157,9 +194,12 @@ void GDK_Sprite::setTexture(GDK_FontTexture *texture,
 
   // Print warning if texture is null
   if (texture->sdl_texture == nullptr) {
-    printf(ERR_COLOR "GDK WARNING:" DEF_COLOR
-                     " Sprite texture is not loaded\n");
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed setting sprite texture - texture not loaded\n");
+    return;
   }
+
+  this->texture = texture;
 
   if (auto_set_size) {
     SDL_QueryTexture(texture->sdl_texture, NULL, NULL, &width, &height);
@@ -220,6 +260,8 @@ void GDK_Sprite::draw() {
                       " Sprite drawn but not visible - out of bounds\n");
   }
 
+  texture->flagDrawEvent();
+
   SDL_RenderCopyEx(texture->renderer, texture->sdl_texture, NULL, &rect,
                    rotation_angle, rotation_point, flip);
 }
@@ -228,8 +270,10 @@ const bool GDK_Sprite::isInBounds() {
   int win_w, win_h;
 
   if (texture == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Cannot check if sprite is in bounds - texture not set");
+    printf(ERR_COLOR
+           "GDK ERROR:" DEF_COLOR
+           " Cannot check if sprite is in bounds - texture not set\n");
+    return false;
   }
 
   SDL_GetRendererOutputSize(texture->renderer, &win_w, &win_h);

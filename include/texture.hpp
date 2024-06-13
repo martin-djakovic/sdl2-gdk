@@ -12,6 +12,13 @@ protected:
   SDL_Texture *sdl_texture = nullptr;
   SDL_Renderer *renderer = nullptr;
 
+  /**
+   * @brief Gets called every time a sprite draws a texture. Not implemented in
+   * GDK_Texture, but children of GDK_Texture can use it as a signal to
+   * update/change (e.g. GDK_AnimatedTexture)
+   */
+  virtual void flagDrawEvent();
+
 public:
   GDK_Texture();
   /**
@@ -35,7 +42,7 @@ public:
    */
   const bool isLoaded() noexcept;
 
-  /*
+  /**
    * @brief Frees the texture object from memory
    */
   void destroy();
