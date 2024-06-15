@@ -5,17 +5,19 @@
 #include <SDL2/SDL_image.h>
 #include <errorcolors.hpp>
 #include <texture.hpp>
+#include <vector>
 
 class GDK_AnimatedTexture : public GDK_Texture {
 private:
-  SDL_Rect tile = {0, 0, 0, 0};
+  SDL_Rect tile_box = {0, 0, 0, 0};
   int tile_count = 0;
-  int current_tile = 1;
+  int current_tile = 0;
   int tile_duration = 0;
   bool is_playing = true;
   const char *tile_sheet_path = "";
   SDL_Surface *surface = nullptr;
   SDL_Texture *tile_sheet = nullptr;
+  std::vector<SDL_Texture *> tiles;
   int last_tile_tick = 0;
 
 protected:
@@ -24,9 +26,7 @@ protected:
    */
   void flagDrawEvent() override;
 
-  void updateTileSize();
-
-  void loadTile(unsigned int tile_index);
+  void setTile(unsigned int tile_index);
 
 public:
   GDK_AnimatedTexture();
@@ -36,14 +36,6 @@ public:
    */
   GDK_AnimatedTexture(SDL_Renderer *renderer);
 
-  /**
-   * @param renderer renderer on which texture will be created and drawn on
-   * @param tile_sheet_path relative/absolute file path to the tile sheet that
-   * will be used to create texture. All file types supported by SDL_Texture are
-   * compatible
-   */
-  GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path);
-
   GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
                       unsigned int tile_count);
 
@@ -51,17 +43,14 @@ public:
                       unsigned int tile_count, unsigned int tile_duration);
 
   /**
-   * @brief loads the image from which tiles will be made
+   * @brief loads the image from which tiles will be made. All tiles are equal
+   * width and heigth. The tile height is equal to the height of the tile sheet
    *
    * @param tile_sheet_path relative/absolute file path to the tile sheet. All
    * file types supported by SDL_Texture are compatible
+   * @param tile_count number of tiles in tile sheet (must be greater than 0)
    */
-  void loadTileSheet(const char *tile_sheet_path);
-
-  /**
-   * @brief sets number of horizontal tiles in tile sheet.
-   */
-  void setTileCount(unsigned int tile_count) noexcept;
+  void loadTileSheet(const char *tile_sheet_path, unsigned int tile_count);
 
   const unsigned int getTileCount() noexcept;
 

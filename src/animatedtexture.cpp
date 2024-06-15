@@ -7,18 +7,10 @@ GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer) {
 }
 
 GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
-                                         const char *tile_sheet_path) {
-  setRenderer(renderer);
-  loadTileSheet(tile_sheet_path);
-}
-
-GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
                                          const char *tile_sheet_path,
                                          unsigned int tile_count) {
   setRenderer(renderer);
-  loadTileSheet(tile_sheet_path);
-  setTileCount(tile_count);
-  loadTile(0);
+  loadTileSheet(tile_sheet_path, tile_count);
 }
 
 GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
@@ -26,10 +18,8 @@ GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
                                          unsigned int tile_count,
                                          unsigned int tile_duration) {
   setRenderer(renderer);
-  loadTileSheet(tile_sheet_path);
-  setTileCount(tile_count);
+  loadTileSheet(tile_sheet_path, tile_count);
   setTileDuration(tile_duration);
-  loadTile(0);
 }
 
 void GDK_AnimatedTexture::flagDrawEvent() {
@@ -44,43 +34,40 @@ void GDK_AnimatedTexture::flagDrawEvent() {
 
   if (current_tile == tile_count) {
     current_tile = 0;
-    tile.x = 0;
   }
 
-  loadTile(current_tile);
+  setTile(current_tile);
 
   last_tile_tick = SDL_GetTicks();
   current_tile++;
 }
 
-void GDK_AnimatedTexture::updateTileSize() {
-  if (tile_count > 0) {
-    int tile_sheet_width, tile_sheet_height;
-    SDL_QueryTexture(tile_sheet, NULL, NULL, &tile_sheet_width,
-                     &tile_sheet_height);
+void GDK_AnimatedTexture::setTile(unsigned int tile_index) {
+  sdl_texture = tiles.at(tile_index);
+}
 
-    tile.w = tile_sheet_width / tile_count;
-    tile.h = tile_sheet_height;
-
-    current_tile = 0;
+void GDK_AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
+                                        unsigned int tile_count) {
+  if (tile_count < 1) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed creating tiles - tile count is less than 1\n");
+    return;
   }
-}
 
-void GDK_AnimatedTexture::loadTile(unsigned int tile_index) {
-  tile.x = tile.w * current_tile;
+  if (renderer == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+                     " Failed creating tile sheet with file path" FPATH_COLOR
+                     " %s" DEF_COLOR " (renderer not set)\n",
+           tile_sheet_path);
+    return;
+  }
 
-  SDL_DestroyTexture(sdl_texture);
-  sdl_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
-                                  SDL_TEXTUREACCESS_TARGET, tile.w, tile.h);
-
-  SDL_SetRenderTarget(renderer, sdl_texture);
-  SDL_SetTextureBlendMode(sdl_texture, SDL_BLENDMODE_BLEND);
-  SDL_RenderCopy(renderer, tile_sheet, &tile, NULL);
-  SDL_SetRenderTarget(renderer, NULL);
-}
-
-void GDK_AnimatedTexture::loadTileSheet(const char *tile_sheet_path) {
+  // Set parameters
+  this->tile_count = tile_count;
   this->tile_sheet_path = tile_sheet_path;
+  current_tile = 0;
+
+  // Load surface
   surface = IMG_Load(tile_sheet_path);
 
   if (surface == NULL) {
@@ -91,31 +78,45 @@ void GDK_AnimatedTexture::loadTileSheet(const char *tile_sheet_path) {
     return;
   }
 
+  // Destroy old and create new tile sheet texture
   SDL_DestroyTexture(tile_sheet);
-
-  if (renderer != nullptr) {
-    tile_sheet = SDL_CreateTextureFromSurface(renderer, surface);
-  } else {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed creating tile sheet with file path" FPATH_COLOR
-                     " %s" DEF_COLOR " (renderer not set)\n",
-           tile_sheet_path);
-  }
+  tile_sheet = SDL_CreateTextureFromSurface(renderer, surface);
 
   SDL_FreeSurface(surface);
-  updateTileSize();
-}
 
-void GDK_AnimatedTexture::setTileCount(unsigned int tile_count) noexcept {
-  this->tile_count = tile_count;
+  // Set tile box width and height
+  int tile_sheet_width, tile_sheet_height;
+  SDL_QueryTexture(tile_sheet, NULL, NULL, &tile_sheet_width,
+                   &tile_sheet_height);
 
-  if (tile_count < 1) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed creating tiles - tile count is less than 1\n");
-    return;
+  tile_box.w = tile_sheet_width / tile_count;
+  tile_box.h = tile_sheet_height;
+
+  // Delete previous tiles
+  for (int i = 0; i < tiles.size(); i++) {
+    SDL_DestroyTexture(tiles.at(i));
   }
 
-  updateTileSize();
+  tiles.clear();
+
+  // Cut individual tiles and place them into vector
+  tile_box.x = 0;
+
+  for (int i = 0; i < tile_count; i++) {
+    SDL_Texture *tmp_tile =
+        SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888,
+                          SDL_TEXTUREACCESS_TARGET, tile_box.w, tile_box.h);
+
+    tile_box.x = tile_box.w * i;
+    SDL_SetRenderTarget(renderer, tmp_tile);
+    SDL_SetTextureBlendMode(tmp_tile, SDL_BLENDMODE_BLEND);
+    SDL_RenderCopy(renderer, tile_sheet, &tile_box, NULL);
+    SDL_SetRenderTarget(renderer, NULL);
+
+    tiles.push_back(tmp_tile);
+  }
+
+  setTile(0);
 }
 
 const unsigned int GDK_AnimatedTexture::getTileCount() noexcept {
