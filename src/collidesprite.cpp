@@ -41,7 +41,6 @@ GDK_CollideSprite::movementCollided(GDK_CollideSprite *collide_sprite) {
                            hitbox.y < collider_hby + collider_hbh;
 
   if (movement_collides && collide_sprite->enable_movement_collision) {
-    this->grad_mvmt_iter = 0;
     return true;
   } else {
     return false;

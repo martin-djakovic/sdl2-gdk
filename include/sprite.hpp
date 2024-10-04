@@ -23,18 +23,6 @@ protected:
   SDL_Point *rotation_point = nullptr;
   double rotation_angle;
 
-  // Variables used for gradual movement across multiple frames
-  int grad_mvmt_iter = 0;
-  double grad_mvmt_speedx;
-  double grad_mvmt_speedy;
-  double grad_mvmt_goalx;
-  double grad_mvmt_goaly;
-
-  /**
-   * @brief Moves sprite each frame according to data calculated in moveTo()
-   */
-  virtual void gradualMovementIterator();
-
 public:
   GDK_Sprite();
   GDK_Sprite(GDK_ImageTexture *texture);
@@ -90,16 +78,6 @@ public:
    * @return Height of sprite
    */
   const unsigned int getHeight() noexcept;
-
-  /*
-   * @brief Moves sprite to given position by given speed evenly across
-   * multiple frames
-   *
-   * @param x x coordinate destination
-   * @param y y coordinate destination
-   * @param speed movement speed
-   */
-  void moveTo(int x, int y, double speed);
 
   void setTexture(GDK_AnimatedTexture *texture);
 

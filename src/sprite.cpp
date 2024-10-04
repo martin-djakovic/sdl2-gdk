@@ -100,42 +100,6 @@ void GDK_Sprite::setHeight(unsigned int height) noexcept {
 
 const unsigned int GDK_Sprite::getHeight() noexcept { return height; }
 
-void GDK_Sprite::moveTo(int x, int y, double speed) {
-  if (speed == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " speed parameter of moveTo() is 0, not moving\n");
-    return;
-  }
-
-  grad_mvmt_goalx = x;
-  grad_mvmt_goaly = y;
-
-  int xdif = this->x - x;
-  int ydif = this->y - y;
-  // Movement iterations along line between this position and given
-  // position
-  grad_mvmt_iter = sqrt(xdif * xdif + ydif * ydif) / speed;
-
-  if (grad_mvmt_iter == 0) {
-    return;
-  }
-
-  grad_mvmt_speedx = -((double)xdif / grad_mvmt_iter);
-  grad_mvmt_speedy = -((double)ydif / grad_mvmt_iter);
-}
-
-void GDK_Sprite::gradualMovementIterator() {
-  if (grad_mvmt_iter > 0) {
-    move(grad_mvmt_speedx, grad_mvmt_speedy);
-
-    grad_mvmt_iter--;
-
-    if (grad_mvmt_iter == 0 && x != grad_mvmt_goalx && y != grad_mvmt_goalx) {
-      setPosition(grad_mvmt_goalx, grad_mvmt_goaly);
-    }
-  }
-}
-
 void GDK_Sprite::setTexture(GDK_ImageTexture *texture) {
   // Print error if renderer is null
   if (texture->renderer == nullptr) {
@@ -223,10 +187,6 @@ void GDK_Sprite::draw() {
   rect.y = y;
   rect.w = width;
   rect.h = height;
-
-  // Complete step of gradual movement on every frame (when sprite is
-  // drawn)
-  gradualMovementIterator();
 
   // Check if texture was set
   if (texture == nullptr) {
