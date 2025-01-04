@@ -7,3 +7,4 @@
 #include <sound.hpp>
 #include <texture.hpp>
 #include <animatedtexture.hpp>
+#include <performancetools.hpp>

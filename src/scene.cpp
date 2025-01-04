@@ -7,18 +7,6 @@ GDK_Scene::GDK_Scene(SDL_Renderer *renderer, GDK_Camera *camera) noexcept {
   this->camera = camera;
 }
 
-void GDK_Scene::calculateFPS() {
-  if (odd_frame) {
-    last_frame_time = SDL_GetPerformanceCounter();
-    odd_frame = !odd_frame;
-  } else {
-    Uint64 this_frame_time = SDL_GetPerformanceCounter();
-    fps = 1.0f / ((this_frame_time - last_frame_time) /
-                  (float)SDL_GetPerformanceFrequency());
-    odd_frame = !odd_frame;
-  }
-}
-
 void GDK_Scene::drawHitboxOutlines() {
   for (int i = 0; i < collide_sprites.size(); i++) {
     SDL_RenderDrawRect(renderer, collide_sprites.at(i)->getHitbox());
@@ -151,8 +139,6 @@ void GDK_Scene::removeSprite(const std::vector<GDK_Sprite *> sprites) {
 }
 
 void GDK_Scene::draw() {
-  calculateFPS();
-
   SDL_RenderClear(renderer);
   SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
@@ -174,8 +160,6 @@ std::vector<GDK_Sprite *> *GDK_Scene::getAllSprites() noexcept {
   return &sprites;
 }
 
-const int GDK_Scene::getFPS() { return fps; }
-
 void GDK_Scene::setShowHitboxOutlines(bool show_hitbox_outlines) {
   SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
                          hitbox_outline_color.g, hitbox_outline_color.b,
@@ -188,24 +172,4 @@ void GDK_Scene::setHitboxOutlineColor(SDL_Color color) {
   SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
                          hitbox_outline_color.g, hitbox_outline_color.b,
                          hitbox_outline_color.a);
-}
-
-const double GDK_Scene::getPerformanceMultiplier() noexcept {
-  // Check if at least 2 frames have been drawn
-  if (fps == -1) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Not enough frame samples to calculate performance "
-                      "multiplier, returning 1\n");
-    return 1;
-  }
-
-  // Print error if FPS is too low (gets rounded to 0)
-  if (fps == 0) {
-    printf(WARN_COLOR
-           "GDK WARNING:" DEF_COLOR
-           " FPS is too low to get performance multiplier, returning 1\n");
-    return 1;
-  }
-
-  return 100.0f / fps;
 }

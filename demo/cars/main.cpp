@@ -16,12 +16,10 @@
 #define FONT_PATH "res/font/font.ttf"
 #define CRASH_SOUND_PATH "res/audio/crash.wav"
 
-#define COLOR_WHITE                                                            \
-  { 255, 255, 255 }
-#define COLOR_GREEN                                                            \
-  { 0, 255, 0 }
+#define COLOR_WHITE {255, 255, 255}
+#define COLOR_GREEN {0, 255, 0}
 
-#define PLAYER_SPEED 500
+#define PLAYER_SPEED 10
 
 int main(int argc, char *argv[]) {
 
@@ -38,6 +36,7 @@ int main(int argc, char *argv[]) {
 
   SDL_Renderer *renderer =
       SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  SDL_RenderSetVSync(renderer, 1);
 
   SDL_Event event;
 
@@ -45,7 +44,7 @@ int main(int argc, char *argv[]) {
   GDK_ImageTexture tx_car_green(renderer, GREEN_CAR_PATH);
   GDK_ImageTexture tx_car_blue(renderer, BLUE_CAR_PATH);
   GDK_ImageTexture tx_background(renderer, BG_PATH);
-  GDK_FontTexture ftx_fps(renderer, "FPS: 00000", FONT_PATH, 8, {0, 255, 0});
+  GDK_FontTexture ftx_fps(renderer, "FPS: 000", FONT_PATH, 8, {0, 255, 0});
   GDK_AnimatedTexture atx_stickman(renderer, STICKMAN_PATH, 5, 100);
 
   GDK_CollideSprite cs_player(&atx_stickman, 100, 100, 80, 128);
@@ -65,49 +64,37 @@ int main(int argc, char *argv[]) {
                             &cs_car_top, &cs_car_bottom, &cs_car_center});
   sc_game.setShowHitboxOutlines(true);
 
-  double perf_multiplier;
-  std::string fps_digit = "";
-
+  std::string fps_digit;
   while (event.type != SDL_QUIT) {
+    fps_digit = "FPS: " + std::to_string(gdkCalculateFPS());
+
     SDL_PollEvent(&event);
-
-    perf_multiplier = sc_game.getPerformanceMultiplier();
-
-    fps_digit = std::to_string(sc_game.getFPS());
-
-    while (fps_digit.length() < 5) {
-      fps_digit = "0" + fps_digit;
-    }
-
-    fps_digit = "FPS: " + fps_digit;
 
     ftx_fps.setText(fps_digit.c_str());
 
     // Movement
-    if (perf_multiplier != 1) {
-      switch (event.key.keysym.sym) {
-      case SDLK_w:
-        cs_player.move(0, -PLAYER_SPEED * perf_multiplier);
-        break;
+    switch (event.key.keysym.sym) {
+    case SDLK_w:
+      cs_player.move(0, -PLAYER_SPEED);
+      break;
 
-      case SDLK_s:
-        cs_player.move(0, PLAYER_SPEED * perf_multiplier);
-        break;
+    case SDLK_s:
+      cs_player.move(0, PLAYER_SPEED);
+      break;
 
-      case SDLK_a:
-        cs_player.move(-PLAYER_SPEED * perf_multiplier, 0);
-        break;
+    case SDLK_a:
+      cs_player.move(-PLAYER_SPEED, 0);
+      break;
 
-      case SDLK_d:
-        cs_player.move(PLAYER_SPEED * perf_multiplier, 0);
-        break;
-      // Animation play/pause
-      case SDLK_SPACE:
-        if (atx_stickman.isPlaying()) {
-          atx_stickman.pause();
-        } else {
-          atx_stickman.play();
-        }
+    case SDLK_d:
+      cs_player.move(PLAYER_SPEED, 0);
+      break;
+    // Animation play/pause
+    case SDLK_SPACE:
+      if (atx_stickman.isPlaying()) {
+        atx_stickman.pause();
+      } else {
+        atx_stickman.play();
       }
 
       // Player is off the screen

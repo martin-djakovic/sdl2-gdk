@@ -16,24 +16,12 @@ private:
   int win_w;
   int win_h;
 
-  // To calculate FPS, we need 2 frames to know the time between them,
-  // odd_frame keeps track if the calculation is on the first or second frame
-  bool odd_frame = true;
-  Uint64 last_frame_time;
-  int fps = -1;
-
   bool show_hitbox_outlines = false;
   SDL_Color hitbox_outline_color = {0, 255, 0};
 
   GDK_Camera *camera = nullptr;
 
   SDL_Renderer *renderer = nullptr;
-
-  /*
-   * @brief Calculates FPS. Must be called every time draw() is called to be
-   * accurate
-   */
-  void calculateFPS();
 
   /*
    * @brief Draws hitbox outlines of all collide sprites
@@ -135,13 +123,6 @@ public:
   std::vector<GDK_Sprite *> *getAllSprites() noexcept;
 
   /*
-   * @return Frames per second at which scene is being drawn. Only useful if
-   * scene is being drawn in a continuous loop without interruptions.
-   * @return -1 if there were not enough frame samples to calculate FPS
-   */
-  const int getFPS();
-
-  /*
    * @brief Determine if collide sprite hitbox outlines should be drawn.
    * @param show_hitbox_outlines If true, hitbox outlines are drawn, if false
    * they are not drawn
@@ -152,14 +133,6 @@ public:
    * @brief Set color of collide sprite hitbox outlines
    */
   void setHitboxOutlineColor(SDL_Color color);
-
-  /*
-   * @return Coeficient that scales values depending on FPS
-   * Any values that depend on framerate should be multiplied by the
-   * performance multiplier
-   * @return 1 if there were not enough frame samples to calculate FPS
-   */
-  const double getPerformanceMultiplier() noexcept;
 };
 
 #endif
