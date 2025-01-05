@@ -4,14 +4,15 @@
 #include <cstdio>
 #include <sprite.hpp>
 
-GDK_Sprite::GDK_Sprite() {
+namespace gdk {
+Sprite::Sprite() {
   this->x = 0;
   this->y = 0;
   setWidth(0);
   setHeight(0);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture) {
+Sprite::Sprite(ImageTexture *texture) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
@@ -19,7 +20,7 @@ GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture) {
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width,
+Sprite::Sprite(ImageTexture *texture, double x, double y, int width,
                        int height) {
   this->x = x;
   this->y = y;
@@ -28,7 +29,7 @@ GDK_Sprite::GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width,
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_AnimatedTexture *texture) {
+Sprite::Sprite(AnimatedTexture *texture) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
@@ -36,7 +37,7 @@ GDK_Sprite::GDK_Sprite(GDK_AnimatedTexture *texture) {
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_AnimatedTexture *texture, double x, double y,
+Sprite::Sprite(AnimatedTexture *texture, double x, double y,
                        int width, int height) {
   this->x = x;
   this->y = y;
@@ -45,7 +46,7 @@ GDK_Sprite::GDK_Sprite(GDK_AnimatedTexture *texture, double x, double y,
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture) {
+Sprite::Sprite(FontTexture *texture) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
@@ -53,13 +54,13 @@ GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture) {
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture, double x, double y) {
+Sprite::Sprite(FontTexture *texture, double x, double y) {
   this->x = x;
   this->y = y;
   setTexture(texture);
 }
 
-GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width,
+Sprite::Sprite(FontTexture *texture, double x, double y, int width,
                        int height) {
   this->x = x;
   this->y = y;
@@ -68,19 +69,19 @@ GDK_Sprite::GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width,
   setTexture(texture, false);
 }
 
-void GDK_Sprite::setPosition(double x, double y) noexcept {
+void Sprite::setPosition(double x, double y) noexcept {
   this->x = x;
   this->y = y;
 }
 
-const double GDK_Sprite::getX() noexcept { return x; }
-const double GDK_Sprite::getY() noexcept { return y; }
+const double Sprite::getX() noexcept { return x; }
+const double Sprite::getY() noexcept { return y; }
 
-void GDK_Sprite::move(double x, double y) noexcept {
+void Sprite::move(double x, double y) noexcept {
   setPosition(this->x + x, this->y + y);
 }
 
-void GDK_Sprite::setWidth(unsigned int width) noexcept {
+void Sprite::setWidth(unsigned int width) noexcept {
   if (width == 0) {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Sprite width is set to 0\n");
   }
@@ -88,9 +89,9 @@ void GDK_Sprite::setWidth(unsigned int width) noexcept {
   this->width = width;
 }
 
-const unsigned int GDK_Sprite::getWidth() noexcept { return width; }
+const unsigned int Sprite::getWidth() noexcept { return width; }
 
-void GDK_Sprite::setHeight(unsigned int height) noexcept {
+void Sprite::setHeight(unsigned int height) noexcept {
   if (height == 0) {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Sprite height is set to 0\n");
   }
@@ -98,9 +99,9 @@ void GDK_Sprite::setHeight(unsigned int height) noexcept {
   this->height = height;
 }
 
-const unsigned int GDK_Sprite::getHeight() noexcept { return height; }
+const unsigned int Sprite::getHeight() noexcept { return height; }
 
-void GDK_Sprite::setTexture(GDK_ImageTexture *texture) {
+void Sprite::setTexture(ImageTexture *texture) {
   // Print error if renderer is null
   if (texture->renderer == nullptr) {
     printf(ERR_COLOR
@@ -119,7 +120,7 @@ void GDK_Sprite::setTexture(GDK_ImageTexture *texture) {
   this->texture = texture;
 }
 
-void GDK_Sprite::setTexture(GDK_AnimatedTexture *texture) {
+void Sprite::setTexture(AnimatedTexture *texture) {
   // Print error if renderer is null
   if (texture->renderer == nullptr) {
     printf(ERR_COLOR
@@ -138,7 +139,7 @@ void GDK_Sprite::setTexture(GDK_AnimatedTexture *texture) {
   this->texture = texture;
 }
 
-void GDK_Sprite::setTexture(GDK_FontTexture *texture,
+void Sprite::setTexture(FontTexture *texture,
                             const bool auto_set_size) {
   // Print error if texture renderer is null
   if (texture->renderer == nullptr) {
@@ -170,19 +171,19 @@ void GDK_Sprite::setTexture(GDK_FontTexture *texture,
   }
 }
 
-void GDK_Sprite::setFlip(SDL_RendererFlip flip) { this->flip = flip; }
+void Sprite::setFlip(SDL_RendererFlip flip) { this->flip = flip; }
 
-void GDK_Sprite::setRotation(double angle) noexcept { rotation_angle = angle; }
+void Sprite::setRotation(double angle) noexcept { rotation_angle = angle; }
 
-void GDK_Sprite::rotate(double angle) noexcept {
+void Sprite::rotate(double angle) noexcept {
   setRotation(rotation_angle + angle);
 }
 
-void GDK_Sprite::setRotationCenter(SDL_Point *rotation_point) {
+void Sprite::setRotationCenter(SDL_Point *rotation_point) {
   this->rotation_point = rotation_point;
 }
 
-void GDK_Sprite::draw() {
+void Sprite::draw() {
   rect.x = x;
   rect.y = y;
   rect.w = width;
@@ -226,7 +227,7 @@ void GDK_Sprite::draw() {
                    rotation_angle, rotation_point, flip);
 }
 
-const bool GDK_Sprite::isInBounds() {
+const bool Sprite::isInBounds() {
   int win_w, win_h;
 
   if (texture == nullptr) {
@@ -244,3 +245,4 @@ const bool GDK_Sprite::isInBounds() {
     return false;
   }
 }
+} // namespace gdk

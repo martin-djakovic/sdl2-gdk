@@ -7,7 +7,8 @@
 #include <texture.hpp>
 #include <vector>
 
-class GDK_AnimatedTexture : public GDK_Texture {
+namespace gdk {
+class AnimatedTexture : public Texture {
 private:
   SDL_Rect tile_box = {0, 0, 0, 0};
   int tile_count = 0;
@@ -29,17 +30,17 @@ protected:
   void setTile(unsigned int tile_index);
 
 public:
-  GDK_AnimatedTexture();
+  AnimatedTexture();
 
   /**
    * @param renderer renderer on which texture will be created and drawn on
    */
-  GDK_AnimatedTexture(SDL_Renderer *renderer);
+  AnimatedTexture(SDL_Renderer *renderer);
 
-  GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
+  AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
                       unsigned int tile_count);
 
-  GDK_AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
+  AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
                       unsigned int tile_count, unsigned int tile_duration);
 
   /**
@@ -74,5 +75,6 @@ public:
 
   const bool isLoaded() noexcept;
 };
+} // namespace gdk
 
 #endif

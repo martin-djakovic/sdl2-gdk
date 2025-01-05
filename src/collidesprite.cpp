@@ -2,33 +2,35 @@
 #include <cstdio>
 #include <texture.hpp>
 
-GDK_CollideSprite::GDK_CollideSprite() : GDK_Sprite() {
+namespace gdk {
+CollideSprite::CollideSprite() : Sprite() {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-GDK_CollideSprite::GDK_CollideSprite(GDK_ImageTexture *texture)
-    : GDK_Sprite(texture) {
+CollideSprite::CollideSprite(ImageTexture *texture)
+    : Sprite(texture) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-GDK_CollideSprite::GDK_CollideSprite(GDK_AnimatedTexture *texture) : GDK_Sprite(texture) {
+CollideSprite::CollideSprite(AnimatedTexture *texture)
+    : Sprite(texture) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-GDK_CollideSprite::GDK_CollideSprite(GDK_AnimatedTexture *texture, double x, double y,
-                                     int width, int height)
-    : GDK_Sprite(texture, x, y, width, height) {
+CollideSprite::CollideSprite(AnimatedTexture *texture, double x,
+                                     double y, int width, int height)
+    : Sprite(texture, x, y, width, height) {
   setHitboxProperties(0, 0, width, height);
 }
 
-GDK_CollideSprite::GDK_CollideSprite(GDK_ImageTexture *texture, double x, double y,
-                                     int width, int height)
-    : GDK_Sprite(texture, x, y, width, height) {
+CollideSprite::CollideSprite(ImageTexture *texture, double x,
+                                     double y, int width, int height)
+    : Sprite(texture, x, y, width, height) {
   setHitboxProperties(0, 0, width, height);
 }
 
 const bool
-GDK_CollideSprite::movementCollided(GDK_CollideSprite *collide_sprite) {
+CollideSprite::movementCollided(CollideSprite *collide_sprite) {
   int collider_hbx = collide_sprite->getHitbox()->x;
   int collider_hby = collide_sprite->getHitbox()->y;
   int collider_hbw = collide_sprite->getHitbox()->w;
@@ -47,21 +49,21 @@ GDK_CollideSprite::movementCollided(GDK_CollideSprite *collide_sprite) {
   }
 }
 
-void GDK_CollideSprite::updateHitboxCoords() noexcept {
+void CollideSprite::updateHitboxCoords() noexcept {
   hitbox.x = x + hitbox_xoffset;
   hitbox.y = y + hitbox_yoffset;
 }
 
-void GDK_CollideSprite::setEnableMovementCollision(
+void CollideSprite::setEnableMovementCollision(
     bool enable_movement_collision) noexcept {
   this->enable_movement_collision = enable_movement_collision;
 }
 
-const bool GDK_CollideSprite::getEnableMovementCollision() noexcept {
+const bool CollideSprite::getEnableMovementCollision() noexcept {
   return enable_movement_collision;
 }
 
-void GDK_CollideSprite::setPosition(double x, double y) noexcept {
+void CollideSprite::setPosition(double x, double y) noexcept {
   // TODO:
   // Make this function less abysmal when you have time
   bool collision_detected = false;
@@ -112,29 +114,29 @@ void GDK_CollideSprite::setPosition(double x, double y) noexcept {
   }
 }
 
-void GDK_CollideSprite::move(double x, double y) noexcept {
+void CollideSprite::move(double x, double y) noexcept {
   setPosition(this->x + x, this->y + y);
 }
 
-void GDK_CollideSprite::setColliders(
-    std::vector<GDK_CollideSprite *> *colliders) {
+void CollideSprite::setColliders(
+    std::vector<CollideSprite *> *colliders) {
   this->colliders = colliders;
 }
 
-void GDK_CollideSprite::setHitboxProperties(double x_offset, double y_offset,
+void CollideSprite::setHitboxProperties(double x_offset, double y_offset,
                                             int width, int height) {
   // Print warning if hitbox width/height is 0, because then collisions can't
   // be checked
   if (width == 0 || height == 0) {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Hitbox width/height of GDK_CollideSprite set to 0 "
+                      " Hitbox width/height of CollideSprite set to 0 "
                       "- will be unable to perform collisions");
   }
 
   // Print error if hitbox width/height is set to less than 0
   if (width < 0 || height < 0) {
     printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed setting GDK_CollideSprite hitbox "
+                     " Failed setting CollideSprite hitbox "
                      "width/height - values may not be less than 0");
     return;
   }
@@ -147,9 +149,9 @@ void GDK_CollideSprite::setHitboxProperties(double x_offset, double y_offset,
   hitbox.h = height;
 }
 
-SDL_Rect *GDK_CollideSprite::getHitbox() { return &hitbox; }
+SDL_Rect *CollideSprite::getHitbox() { return &hitbox; }
 
-const bool GDK_CollideSprite::collided(GDK_CollideSprite *collide_sprite) {
+const bool CollideSprite::collided(CollideSprite *collide_sprite) {
   // Print warning if the function is checking whether the sprite collides
   // with itself.
   if (collide_sprite == this) {
@@ -184,7 +186,7 @@ const bool GDK_CollideSprite::collided(GDK_CollideSprite *collide_sprite) {
   }
 }
 
-const bool GDK_CollideSprite::collided() {
+const bool CollideSprite::collided() {
   for (int i = 0; i < colliders->size(); i++) {
     if (colliders->at(i) != this && collided(colliders->at(i))) {
       return true;
@@ -194,6 +196,7 @@ const bool GDK_CollideSprite::collided() {
   return false;
 }
 
-GDK_CollideSprite *GDK_CollideSprite::getCollideSprite() {
+CollideSprite *CollideSprite::getCollideSprite() {
   return collide_sprite;
 }
+} // namespace gdk

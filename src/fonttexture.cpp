@@ -6,7 +6,8 @@
 #include <cstdio>
 #include <fonttexture.hpp>
 
-void GDK_FontTexture::updateTexture() {
+namespace gdk {
+void FontTexture::updateTexture() {
   // Cannot create texture if these properties are not set
   if (font == nullptr || renderer == nullptr || text == "") {
     return;
@@ -21,15 +22,16 @@ void GDK_FontTexture::updateTexture() {
   SDL_FreeSurface(surface);
 }
 
-GDK_FontTexture::GDK_FontTexture() {
+FontTexture::FontTexture() {
   text = "";
   font_path = "";
   font_size = 0;
   color = {255, 255, 255};
 }
 
-GDK_FontTexture::GDK_FontTexture(SDL_Renderer *renderer, const char *text, const char *font_path,
-                                 unsigned int font_size, SDL_Color color) {
+FontTexture::FontTexture(SDL_Renderer *renderer, const char *text,
+                                 const char *font_path, unsigned int font_size,
+                                 SDL_Color color) {
   this->text = text;
   setFont(font_path, font_size);
   this->color = color;
@@ -37,17 +39,17 @@ GDK_FontTexture::GDK_FontTexture(SDL_Renderer *renderer, const char *text, const
   updateTexture();
 }
 
-void GDK_FontTexture::setText(const char *text) noexcept {
+void FontTexture::setText(const char *text) noexcept {
   if (text == "") {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Set GDK_FontTexture text to empty value\n");
+                      " Set FontTexture text to empty value\n");
   }
 
   this->text = text;
   updateTexture();
 }
 
-void GDK_FontTexture::setFont(const char *font_path, unsigned int font_size) {
+void FontTexture::setFont(const char *font_path, unsigned int font_size) {
   // Destroy previous font to prevent memory leak
   TTF_CloseFont(font);
 
@@ -74,18 +76,18 @@ void GDK_FontTexture::setFont(const char *font_path, unsigned int font_size) {
   updateTexture();
 }
 
-const char *GDK_FontTexture::getFontPath() noexcept { return font_path; }
+const char *FontTexture::getFontPath() noexcept { return font_path; }
 
-const unsigned int GDK_FontTexture::getFontSize() noexcept { return font_size; }
+const unsigned int FontTexture::getFontSize() noexcept { return font_size; }
 
-void GDK_FontTexture::setColor(SDL_Color color) noexcept {
+void FontTexture::setColor(SDL_Color color) noexcept {
   this->color = color;
   updateTexture();
 }
 
-const SDL_Color GDK_FontTexture::getColor() noexcept { return color; }
+const SDL_Color FontTexture::getColor() noexcept { return color; }
 
-const bool GDK_FontTexture::isLoaded() noexcept {
+const bool FontTexture::isLoaded() noexcept {
   bool font_size_invalid = font_size == 0;
   bool texture_invalid = sdl_texture == nullptr;
   bool renderer_invalid = renderer == nullptr;
@@ -99,3 +101,4 @@ const bool GDK_FontTexture::isLoaded() noexcept {
 
   return true;
 }
+} // namespace gdk

@@ -1,18 +1,19 @@
 #include <errorcolors.hpp>
 #include <sound.hpp>
 
-GDK_Sound::GDK_Sound() {
+namespace gdk {
+Sound::Sound() {
   this->file_path = "";
   setChannel(-1);
 }
 
-GDK_Sound::GDK_Sound(const char *audio_file_path, unsigned int volume) {
+Sound::Sound(const char *audio_file_path, unsigned int volume) {
   setSound(audio_file_path);
   setChannel(-1);
   setVolume(volume);
 }
 
-void GDK_Sound::loadChunk() {
+void Sound::loadChunk() {
   Mix_FreeChunk(chunk);
   chunk = Mix_LoadWAV(file_path);
 
@@ -23,18 +24,18 @@ void GDK_Sound::loadChunk() {
   }
 }
 
-void GDK_Sound::setSound(const char *audio_file_path) {
+void Sound::setSound(const char *audio_file_path) {
   this->file_path = audio_file_path;
   loadChunk();
 }
 
-void GDK_Sound::setVolume(unsigned int volume) noexcept {
+void Sound::setVolume(unsigned int volume) noexcept {
   this->volume = volume;
   Mix_Volume(channel, volume);
 }
-const int GDK_Sound::getVolume() noexcept { return volume; }
+const int Sound::getVolume() noexcept { return volume; }
 
-void GDK_Sound::setChannel(int channel) noexcept {
+void Sound::setChannel(int channel) noexcept {
   if (channel < -1) {
     printf(ERR_COLOR "GDK ERROR:" DEF_COLOR " Invalid channel value %i\n",
            channel);
@@ -43,16 +44,17 @@ void GDK_Sound::setChannel(int channel) noexcept {
 
   this->channel = channel;
 }
-const int GDK_Sound::getChannel() noexcept { return channel; }
+const int Sound::getChannel() noexcept { return channel; }
 
-void GDK_Sound::destroy() { Mix_FreeChunk(chunk); }
+void Sound::destroy() { Mix_FreeChunk(chunk); }
 
-void GDK_Sound::play(unsigned int loops) {
+void Sound::play(unsigned int loops) {
   Mix_PlayChannel(channel, chunk, loops);
 }
-void GDK_Sound::playTimed(unsigned int time_ms, unsigned int loops) {
+void Sound::playTimed(unsigned int time_ms, unsigned int loops) {
   Mix_PlayChannelTimed(channel, chunk, loops, time_ms);
 }
 
-void GDK_Sound::pause() { Mix_Pause(channel); }
-void GDK_Sound::resume() { Mix_Resume(channel); }
+void Sound::pause() { Mix_Pause(channel); }
+void Sound::resume() { Mix_Resume(channel); }
+} // namespace gdk

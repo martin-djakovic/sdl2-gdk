@@ -9,8 +9,9 @@
 #include <errorcolors.hpp>
 #include <imagetexture.hpp>
 
-class GDK_Sprite {
-  friend class GDK_Scene;
+namespace gdk {
+class Sprite {
+  friend class Scene;
 
 protected:
   double x;
@@ -18,25 +19,25 @@ protected:
   int width;
   int height;
   SDL_Rect rect;
-  GDK_Texture *texture = nullptr;
+  Texture *texture = nullptr;
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_Point *rotation_point = nullptr;
   double rotation_angle;
 
 public:
-  GDK_Sprite();
-  GDK_Sprite(GDK_ImageTexture *texture);
-  GDK_Sprite(GDK_ImageTexture *texture, double x, double y, int width,
+  Sprite();
+  Sprite(ImageTexture *texture);
+  Sprite(ImageTexture *texture, double x, double y, int width,
              int height);
-  GDK_Sprite(GDK_AnimatedTexture *texture);
-  GDK_Sprite(GDK_AnimatedTexture *texture, double x, double y, int width,
+  Sprite(AnimatedTexture *texture);
+  Sprite(AnimatedTexture *texture, double x, double y, int width,
              int height);
-  GDK_Sprite(GDK_FontTexture *texture);
-  GDK_Sprite(GDK_FontTexture *texture, double x, double y);
-  GDK_Sprite(GDK_FontTexture *texture, double x, double y, int width,
+  Sprite(FontTexture *texture);
+  Sprite(FontTexture *texture, double x, double y);
+  Sprite(FontTexture *texture, double x, double y, int width,
              int height);
 
-  /*
+  /**
    * @brief Set the position of sprite
    *
    * @param x x coordinate of sprite
@@ -44,16 +45,16 @@ public:
    */
   virtual void setPosition(double x, double y) noexcept;
 
-  /*
+  /**
    * @return x position of sprite
    */
   const double getX() noexcept;
-  /*
+  /**
    * @return y position of sprite
    */
   const double getY() noexcept;
 
-  /*
+  /**
    * @brief Move sprite
    *
    * @param x distance to move on x-axis
@@ -61,37 +62,37 @@ public:
    */
   virtual void move(double x, double y) noexcept;
 
-  /*
+  /**
    * @brief Set width of sprite
    */
   void setWidth(unsigned int width) noexcept;
-  /*
+  /**
    * @return Width of sprite
    */
   const unsigned int getWidth() noexcept;
 
-  /*
+  /**
    * @brief Set height of sprite
    */
   void setHeight(unsigned int height) noexcept;
-  /*
+  /**
    * @return Height of sprite
    */
   const unsigned int getHeight() noexcept;
 
-  void setTexture(GDK_AnimatedTexture *texture);
+  void setTexture(AnimatedTexture *texture);
 
-  /*
+  /**
    * @brief Set the sprite texture
    */
-  void setTexture(GDK_ImageTexture *texture);
+  void setTexture(ImageTexture *texture);
 
-  /*
+  /**
    * @brief Set the sprite texture to a font texture
    *
    * @param auto_set_size determine if sprite width/height should be
    * automatically adjusted to fit the text without stretching/compressing it*/
-  void setTexture(GDK_FontTexture *texture, const bool auto_set_size = true);
+  void setTexture(FontTexture *texture, const bool auto_set_size = true);
 
   /**
    * @brief Flip the sprite texture
@@ -131,5 +132,6 @@ public:
    */
   const bool isInBounds();
 };
+} // namespace gdk
 
 #endif

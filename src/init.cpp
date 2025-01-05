@@ -1,6 +1,7 @@
 #include <init.hpp>
 
-void gdkInit() {
+namespace gdk {
+void initAll() {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     printf("Fatal error initializing SDL: %s\n", SDL_GetError());
   }
@@ -14,8 +15,9 @@ void gdkInit() {
   }
 }
 
-void gdkQuit() {
+void quitAll() {
   SDL_Quit();
   TTF_Quit();
   Mix_Quit();
 }
+} // namespace gdk

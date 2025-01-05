@@ -6,18 +6,17 @@
 #include <sprite.hpp>
 #include <vector>
 
-// Image that represents an object in-game
-// Has basic functions for movement, drawing and collisions
-class GDK_CollideSprite : public GDK_Sprite {
-  friend class GDK_Scene;
+namespace gdk {
+class CollideSprite : public Sprite {
+  friend class Scene;
 
 protected:
   SDL_Rect hitbox;
   double hitbox_xoffset;
   double hitbox_yoffset;
   bool enable_movement_collision = true;
-  std::vector<GDK_CollideSprite *> *colliders;
-  GDK_CollideSprite *collide_sprite;
+  std::vector<CollideSprite *> *colliders;
+  CollideSprite *collide_sprite;
 
   /**
    * @brief Only used to check for collisions when updating sprite x and y.
@@ -28,7 +27,7 @@ protected:
    * @return true if this spirte collided with collide_sprite
    * @return false if this spirte did not collide with collide_sprite
    */
-  const bool movementCollided(GDK_CollideSprite *collide_sprite);
+  const bool movementCollided(CollideSprite *collide_sprite);
 
   /**
    * @brief Updates hitbox coordinates when moving sprite to match properties
@@ -41,7 +40,7 @@ public:
    * @brief Sets default values for variables. Hitbox is not initialized, so
    * it will have to be initialized later with setHitboxProperties()
    */
-  GDK_CollideSprite();
+  CollideSprite();
   /**
    * @brief Sets texture and default values for variables. Hitbox is not
    * initialized, so it will have to be initialized later with
@@ -49,11 +48,11 @@ public:
    *
    * @param texture sprite texture
    */
-  GDK_CollideSprite(GDK_ImageTexture *texture);
+  CollideSprite(ImageTexture *texture);
   /**
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    */
-  GDK_CollideSprite(GDK_ImageTexture *texture, double x, double y, int width,
+  CollideSprite(ImageTexture *texture, double x, double y, int width,
                     int height);
   /**
    * @brief Sets texture and default values for variables. Hitbox is not
@@ -62,11 +61,11 @@ public:
    *
    * @param texture sprite texture
    */
-  GDK_CollideSprite(GDK_AnimatedTexture *texture);
+  CollideSprite(AnimatedTexture *texture);
   /**
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    */
-  GDK_CollideSprite(GDK_AnimatedTexture *texture, double x, double y, int width,
+  CollideSprite(AnimatedTexture *texture, double x, double y, int width,
                     int height);
 
   /**
@@ -108,7 +107,7 @@ public:
    * @param colliders pointer to vector containing all sprites with which this
    * sprite can implicitly collide with
    */
-  void setColliders(std::vector<GDK_CollideSprite *> *colliders);
+  void setColliders(std::vector<CollideSprite *> *colliders);
 
   /**
    * @brief Set hitbox properties of collide sprite
@@ -136,7 +135,7 @@ public:
    * @return true if this sprite collided with @param collide_sprite
    * @return false if this sprite did not collide with @param collide_sprite
    */
-  const bool collided(GDK_CollideSprite *collide_sprite);
+  const bool collided(CollideSprite *collide_sprite);
 
   /**
    * @brief Checks if sprite collided (touched/overlapped) with
@@ -152,7 +151,8 @@ public:
    * if sprite collided before calling this function or you will get
    * inaccurate results
    */
-  GDK_CollideSprite *getCollideSprite();
+  CollideSprite *getCollideSprite();
 };
+} // namespace gdk
 
 #endif

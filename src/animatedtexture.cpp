@@ -1,19 +1,20 @@
 #include <animatedtexture.hpp>
 
-GDK_AnimatedTexture::GDK_AnimatedTexture(){};
+namespace gdk {
+AnimatedTexture::AnimatedTexture() {};
 
-GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer) {
+AnimatedTexture::AnimatedTexture(SDL_Renderer *renderer) {
   setRenderer(renderer);
 }
 
-GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
+AnimatedTexture::AnimatedTexture(SDL_Renderer *renderer,
                                          const char *tile_sheet_path,
                                          unsigned int tile_count) {
   setRenderer(renderer);
   loadTileSheet(tile_sheet_path, tile_count);
 }
 
-GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
+AnimatedTexture::AnimatedTexture(SDL_Renderer *renderer,
                                          const char *tile_sheet_path,
                                          unsigned int tile_count,
                                          unsigned int tile_duration) {
@@ -22,7 +23,7 @@ GDK_AnimatedTexture::GDK_AnimatedTexture(SDL_Renderer *renderer,
   setTileDuration(tile_duration);
 }
 
-void GDK_AnimatedTexture::flagDrawEvent() {
+void AnimatedTexture::flagDrawEvent() {
   if (tile_duration == 0) {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
                       " Tile duration of animated texture is 0\n");
@@ -42,11 +43,11 @@ void GDK_AnimatedTexture::flagDrawEvent() {
   current_tile++;
 }
 
-void GDK_AnimatedTexture::setTile(unsigned int tile_index) {
+void AnimatedTexture::setTile(unsigned int tile_index) {
   sdl_texture = tiles.at(tile_index);
 }
 
-void GDK_AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
+void AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
                                         unsigned int tile_count) {
   if (tile_count < 1) {
     printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
@@ -119,26 +120,27 @@ void GDK_AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
   setTile(0);
 }
 
-const unsigned int GDK_AnimatedTexture::getTileCount() noexcept {
+const unsigned int AnimatedTexture::getTileCount() noexcept {
   return tile_count;
 }
 
-void GDK_AnimatedTexture::setTileDuration(unsigned int time_ms) noexcept {
+void AnimatedTexture::setTileDuration(unsigned int time_ms) noexcept {
   tile_duration = time_ms;
 }
 
-const unsigned int GDK_AnimatedTexture::getTileDuration() noexcept {
+const unsigned int AnimatedTexture::getTileDuration() noexcept {
   return tile_duration;
 }
 
-void GDK_AnimatedTexture::play() noexcept { is_playing = true; }
+void AnimatedTexture::play() noexcept { is_playing = true; }
 
-void GDK_AnimatedTexture::pause() noexcept { is_playing = false; }
+void AnimatedTexture::pause() noexcept { is_playing = false; }
 
-const bool GDK_AnimatedTexture::isPlaying() noexcept { return is_playing; }
+const bool AnimatedTexture::isPlaying() noexcept { return is_playing; }
 
-void GDK_AnimatedTexture::reset() noexcept { current_tile = 0; }
+void AnimatedTexture::reset() noexcept { current_tile = 0; }
 
-const bool GDK_AnimatedTexture::isLoaded() noexcept {
+const bool AnimatedTexture::isLoaded() noexcept {
   return sdl_texture != nullptr && renderer != nullptr;
 }
+} // namespace gdk

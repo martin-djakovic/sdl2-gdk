@@ -4,9 +4,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-class GDK_Texture {
-  friend class GDK_Sprite;
-  friend class GDK_Scene;
+namespace gdk {
+class Texture {
+  friend class Sprite;
+  friend class Scene;
 
 protected:
   SDL_Texture *sdl_texture = nullptr;
@@ -20,11 +21,11 @@ protected:
   virtual void flagDrawEvent();
 
 public:
-  GDK_Texture();
+  Texture();
   /**
    * @param renderer renderer on which texture will be created and drawn on
    */
-  GDK_Texture(SDL_Renderer *renderer);
+  Texture(SDL_Renderer *renderer);
 
   /**
    * @brief Sets renderer on which texture will be created and drawn. Must be
@@ -47,5 +48,6 @@ public:
    */
   void destroy();
 };
+} // namespace gdk
 
 #endif

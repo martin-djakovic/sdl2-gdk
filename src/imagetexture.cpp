@@ -1,16 +1,20 @@
 #include <errorcolors.hpp>
 #include <imagetexture.hpp>
 
-GDK_ImageTexture::GDK_ImageTexture() {}
+namespace gdk {
+ImageTexture::ImageTexture() {}
 
-GDK_ImageTexture::GDK_ImageTexture(SDL_Renderer *renderer) { setRenderer(renderer); }
+ImageTexture::ImageTexture(SDL_Renderer *renderer) {
+  setRenderer(renderer);
+}
 
-GDK_ImageTexture::GDK_ImageTexture(SDL_Renderer *renderer, const char *file_path) {
+ImageTexture::ImageTexture(SDL_Renderer *renderer,
+                                   const char *file_path) {
   setRenderer(renderer);
   loadImageFile(file_path);
 }
 
-void GDK_ImageTexture::loadImageFile(const char *file_path) {
+void ImageTexture::loadImageFile(const char *file_path) {
   surface = IMG_Load(file_path);
 
   // Check if given image is valid
@@ -39,10 +43,11 @@ void GDK_ImageTexture::loadImageFile(const char *file_path) {
   SDL_FreeSurface(surface);
 }
 
-const bool GDK_ImageTexture::isLoaded() noexcept {
+const bool ImageTexture::isLoaded() noexcept {
   if (sdl_texture == nullptr) {
     return false;
   } else {
     return true;
   }
 }
+} // namespace gdk

@@ -5,19 +5,19 @@
 #include <SDL2/SDL_image.h>
 #include <texture.hpp>
 
-class GDK_ImageTexture : public GDK_Texture {
-
+namespace gdk {
+class ImageTexture : public Texture {
 private:
   const char *file_path;
   SDL_Surface *surface;
 
 public:
-  GDK_ImageTexture();
-  
+  ImageTexture();
+
   /**
    * @param renderer renderer on which texture will be created and drawn on
    */
-  GDK_ImageTexture(SDL_Renderer *renderer);
+  ImageTexture(SDL_Renderer *renderer);
 
   /**
    * @param renderer renderer on which texture will be created and drawn on
@@ -25,7 +25,7 @@ public:
    * to create texture. All file types supported by
    * SDL_Texture are compatible
    */
-  GDK_ImageTexture(SDL_Renderer *renderer, const char *file_path);
+  ImageTexture(SDL_Renderer *renderer, const char *file_path);
 
   /**
    * @brief Generates a texture from image file. All file types supported by
@@ -44,5 +44,6 @@ public:
    */
   const bool isLoaded() noexcept;
 };
+} // namespace gdk
 
 #endif

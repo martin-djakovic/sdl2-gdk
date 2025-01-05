@@ -23,7 +23,7 @@
 
 int main(int argc, char *argv[]) {
 
-  gdkInit();
+  gdk::initAll();
 
   SDL_DisplayMode display;
   SDL_GetCurrentDisplayMode(0, &display);
@@ -40,24 +40,24 @@ int main(int argc, char *argv[]) {
 
   SDL_Event event;
 
-  GDK_ImageTexture tx_car_red(renderer, RED_CAR_PATH);
-  GDK_ImageTexture tx_car_green(renderer, GREEN_CAR_PATH);
-  GDK_ImageTexture tx_car_blue(renderer, BLUE_CAR_PATH);
-  GDK_ImageTexture tx_background(renderer, BG_PATH);
-  GDK_FontTexture ftx_fps(renderer, "FPS: 000", FONT_PATH, 8, {0, 255, 0});
-  GDK_AnimatedTexture atx_stickman(renderer, STICKMAN_PATH, 5, 100);
+  gdk::ImageTexture tx_car_red(renderer, RED_CAR_PATH);
+  gdk::ImageTexture tx_car_green(renderer, GREEN_CAR_PATH);
+  gdk::ImageTexture tx_car_blue(renderer, BLUE_CAR_PATH);
+  gdk::ImageTexture tx_background(renderer, BG_PATH);
+  gdk::FontTexture ftx_fps(renderer, "FPS: 000", FONT_PATH, 8, {0, 255, 0});
+  gdk::AnimatedTexture atx_stickman(renderer, STICKMAN_PATH, 5, 100);
 
-  GDK_CollideSprite cs_player(&atx_stickman, 100, 100, 80, 128);
-  GDK_CollideSprite cs_car_left(&tx_car_green, -500, 100, 180, 120);
-  GDK_CollideSprite cs_car_right(&tx_car_blue, 2500, 600, 180, 120);
-  GDK_CollideSprite cs_car_top(&tx_car_red, 900, -400, 180, 120);
-  GDK_CollideSprite cs_car_bottom(&tx_car_green, 500, 1400, 180, 120);
-  GDK_CollideSprite cs_car_center(&tx_car_blue, 300, 300, 180, 120);
-  GDK_Sprite s_background(&tx_background, 0, 0, win_w, win_h);
-  GDK_Sprite s_fps(&ftx_fps, 5, 5);
+  gdk::CollideSprite cs_player(&atx_stickman, 100, 100, 80, 128);
+  gdk::CollideSprite cs_car_left(&tx_car_green, -500, 100, 180, 120);
+  gdk::CollideSprite cs_car_right(&tx_car_blue, 2500, 600, 180, 120);
+  gdk::CollideSprite cs_car_top(&tx_car_red, 900, -400, 180, 120);
+  gdk::CollideSprite cs_car_bottom(&tx_car_green, 500, 1400, 180, 120);
+  gdk::CollideSprite cs_car_center(&tx_car_blue, 300, 300, 180, 120);
+  gdk::Sprite s_background(&tx_background, 0, 0, win_w, win_h);
+  gdk::Sprite s_fps(&ftx_fps, 5, 5);
 
-  GDK_Camera camera({&s_background, &s_fps});
-  GDK_Scene sc_game(renderer, &camera);
+  gdk::Camera camera({&s_background, &s_fps});
+  gdk::Scene sc_game(renderer, &camera);
 
   sc_game.addSprite({&s_background, &s_fps});
   sc_game.addCollideSprite({&cs_player, &cs_car_left, &cs_car_right,
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
   std::string fps_digit;
   while (event.type != SDL_QUIT) {
-    fps_digit = "FPS: " + std::to_string(gdkCalculateFPS());
+    fps_digit = "FPS: " + std::to_string(gdk::calculateFPS());
 
     SDL_PollEvent(&event);
 
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
   }
 
   sc_game.destroy();
-  gdkQuit();
+  gdk::quitAll();
 
   return 0;
 }

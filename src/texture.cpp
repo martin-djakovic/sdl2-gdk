@@ -1,17 +1,18 @@
 #include <errorcolors.hpp>
 #include <texture.hpp>
 
-GDK_Texture::GDK_Texture() {}
+namespace gdk {
+Texture::Texture() {}
 
-GDK_Texture::GDK_Texture(SDL_Renderer *renderer) { setRenderer(renderer); }
+Texture::Texture(SDL_Renderer *renderer) { setRenderer(renderer); }
 
-void GDK_Texture::flagDrawEvent() {}
+void Texture::flagDrawEvent() {}
 
-void GDK_Texture::setRenderer(SDL_Renderer *renderer) {
+void Texture::setRenderer(SDL_Renderer *renderer) {
   this->renderer = renderer;
 }
 
-const bool GDK_Texture::isLoaded() noexcept {
+const bool Texture::isLoaded() noexcept {
   if (sdl_texture == nullptr) {
     return false;
   } else {
@@ -19,4 +20,5 @@ const bool GDK_Texture::isLoaded() noexcept {
   }
 }
 
-void GDK_Texture::destroy() { SDL_DestroyTexture(sdl_texture); }
+void Texture::destroy() { SDL_DestroyTexture(sdl_texture); }
+} // namespace gdk

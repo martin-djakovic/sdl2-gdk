@@ -1,19 +1,20 @@
 #include <scene.hpp>
 
-GDK_Scene::GDK_Scene() noexcept {}
+namespace gdk {
+Scene::Scene() noexcept {}
 
-GDK_Scene::GDK_Scene(SDL_Renderer *renderer, GDK_Camera *camera) noexcept {
+Scene::Scene(SDL_Renderer *renderer, Camera *camera) noexcept {
   this->renderer = renderer;
   this->camera = camera;
 }
 
-void GDK_Scene::drawHitboxOutlines() {
+void Scene::drawHitboxOutlines() {
   for (int i = 0; i < collide_sprites.size(); i++) {
     SDL_RenderDrawRect(renderer, collide_sprites.at(i)->getHitbox());
   }
 }
 
-void GDK_Scene::updateCamera() {
+void Scene::updateCamera() {
   // Print warning if camera is not set
   if (camera == nullptr) {
     printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Scene camera is not set\n");
@@ -55,11 +56,11 @@ void GDK_Scene::updateCamera() {
   camera->offset_y = 0;
 }
 
-void GDK_Scene::setCamera(GDK_Camera *camera) noexcept {
+void Scene::setCamera(Camera *camera) noexcept {
   this->camera = camera;
 }
 
-void GDK_Scene::drawSprites() {
+void Scene::drawSprites() {
   for (int i = 0; i < sprites.size(); i++) {
     // Print error if scene renderer and sprite renderer do not match
     if (sprites.at(i)->texture != nullptr &&
@@ -77,37 +78,37 @@ void GDK_Scene::drawSprites() {
   }
 }
 
-void GDK_Scene::destroy() {
+void Scene::destroy() {
   basic_sprites.clear();
   collide_sprites.clear();
   sprites.clear();
 }
 
-void GDK_Scene::addCollideSprite(GDK_CollideSprite *collide_sprite) {
+void Scene::addCollideSprite(CollideSprite *collide_sprite) {
   sprites.push_back(collide_sprite);
   collide_sprite->setColliders(&collide_sprites);
   collide_sprites.push_back(collide_sprite);
 }
 
-void GDK_Scene::addCollideSprite(
-    const std::vector<GDK_CollideSprite *> collide_sprites) {
+void Scene::addCollideSprite(
+    const std::vector<CollideSprite *> collide_sprites) {
   for (int i = 0; i < collide_sprites.size(); i++) {
     addCollideSprite(collide_sprites.at(i));
   }
 }
 
-void GDK_Scene::addSprite(GDK_Sprite *sprite) {
+void Scene::addSprite(Sprite *sprite) {
   sprites.push_back(sprite);
   basic_sprites.push_back(sprite);
 }
 
-void GDK_Scene::addSprite(const std::vector<GDK_Sprite *> sprites) {
+void Scene::addSprite(const std::vector<Sprite *> sprites) {
   for (int i = 0; i < sprites.size(); i++) {
     addSprite(sprites.at(i));
   }
 }
 
-void GDK_Scene::removeCollideSprite(GDK_CollideSprite *collide_sprite) {
+void Scene::removeCollideSprite(CollideSprite *collide_sprite) {
   collide_sprites.erase(std::remove(collide_sprites.begin(),
                                     collide_sprites.end(), collide_sprite),
                         collide_sprites.end());
@@ -116,14 +117,14 @@ void GDK_Scene::removeCollideSprite(GDK_CollideSprite *collide_sprite) {
                 sprites.end());
 }
 
-void GDK_Scene::removeCollideSprite(
-    const std::vector<GDK_CollideSprite *> collide_sprites) {
+void Scene::removeCollideSprite(
+    const std::vector<CollideSprite *> collide_sprites) {
   for (int i = 0; i < collide_sprites.size(); i++) {
     removeCollideSprite(collide_sprites.at(i));
   }
 }
 
-void GDK_Scene::removeSprite(GDK_Sprite *sprite) {
+void Scene::removeSprite(Sprite *sprite) {
   basic_sprites.erase(
       std::remove(basic_sprites.begin(), basic_sprites.end(), sprite),
       basic_sprites.end());
@@ -132,13 +133,13 @@ void GDK_Scene::removeSprite(GDK_Sprite *sprite) {
                 sprites.end());
 }
 
-void GDK_Scene::removeSprite(const std::vector<GDK_Sprite *> sprites) {
+void Scene::removeSprite(const std::vector<Sprite *> sprites) {
   for (int i = 0; i < sprites.size(); i++) {
     removeSprite(sprites.at(i));
   }
 }
 
-void GDK_Scene::draw() {
+void Scene::draw() {
   SDL_RenderClear(renderer);
   SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
 
@@ -152,24 +153,25 @@ void GDK_Scene::draw() {
   SDL_RenderPresent(renderer);
 }
 
-std::vector<GDK_CollideSprite *> *GDK_Scene::getAllCollideSprites() noexcept {
+std::vector<CollideSprite *> *Scene::getAllCollideSprites() noexcept {
   return &collide_sprites;
 }
 
-std::vector<GDK_Sprite *> *GDK_Scene::getAllSprites() noexcept {
+std::vector<Sprite *> *Scene::getAllSprites() noexcept {
   return &sprites;
 }
 
-void GDK_Scene::setShowHitboxOutlines(bool show_hitbox_outlines) {
+void Scene::setShowHitboxOutlines(bool show_hitbox_outlines) {
   SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
                          hitbox_outline_color.g, hitbox_outline_color.b,
                          hitbox_outline_color.a);
   this->show_hitbox_outlines = show_hitbox_outlines;
 }
 
-void GDK_Scene::setHitboxOutlineColor(SDL_Color color) {
+void Scene::setHitboxOutlineColor(SDL_Color color) {
   hitbox_outline_color = color;
   SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
                          hitbox_outline_color.g, hitbox_outline_color.b,
                          hitbox_outline_color.a);
 }
+} // namespace gdk
