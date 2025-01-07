@@ -5,6 +5,7 @@
 */
 #include <sdl2-gdk.hpp>
 #include <string>
+#include <iostream>
 
 #define BG_PATH "res/img/road.png"
 #define RED_CAR_PATH "res/img/red_car.png"
@@ -49,9 +50,9 @@ int main(int argc, char *argv[]) {
 
   gdk::CollideSprite cs_player(&atx_stickman, 100, 100, 80, 128);
   gdk::CollideSprite cs_car_left(&tx_car_green, -500, 100, 180, 120);
-  gdk::CollideSprite cs_car_right(&tx_car_blue, 2500, 600, 180, 120);
+  gdk::CollideSprite cs_car_right(&tx_car_blue, 480, 300, 180, 120);
   gdk::CollideSprite cs_car_top(&tx_car_red, 900, -400, 180, 120);
-  gdk::CollideSprite cs_car_bottom(&tx_car_green, 500, 1400, 180, 120);
+  gdk::CollideSprite cs_car_bottom(&tx_car_green, 300, 420, 180, 120);
   gdk::CollideSprite cs_car_center(&tx_car_blue, 300, 300, 180, 120);
   gdk::Sprite s_background(&tx_background, 0, 0, win_w, win_h);
   gdk::Sprite s_fps(&ftx_fps, 5, 5);
@@ -65,6 +66,7 @@ int main(int argc, char *argv[]) {
   sc_game.setShowHitboxOutlines(true);
 
   std::string fps_digit;
+
   while (event.type != SDL_QUIT) {
     fps_digit = "FPS: " + std::to_string(gdk::calculateFPS());
 
@@ -96,18 +98,19 @@ int main(int argc, char *argv[]) {
       } else {
         atx_stickman.play();
       }
+      break;
+    }
 
-      // Player is off the screen
-      if (!cs_player.isInBounds()) {
-        if (cs_player.getX() >= win_w) {
-          camera.move(-win_w, 0);
-        } else if (cs_player.getX() + cs_player.getWidth() <= 0) {
-          camera.move(win_w, 0);
-        } else if (cs_player.getY() + cs_player.getHeight() <= 0) {
-          camera.move(0, win_h);
-        } else if (cs_player.getY() >= win_h) {
-          camera.move(0, -win_h);
-        }
+    // Player is off the screen
+    if (!cs_player.isInBounds()) {
+      if (cs_player.getX() >= win_w) {
+        camera.move(-win_w, 0);
+      } else if (cs_player.getX() + cs_player.getWidth() <= 0) {
+        camera.move(win_w, 0);
+      } else if (cs_player.getY() + cs_player.getHeight() <= 0) {
+        camera.move(0, win_h);
+      } else if (cs_player.getY() >= win_h) {
+        camera.move(0, -win_h);
       }
     }
 

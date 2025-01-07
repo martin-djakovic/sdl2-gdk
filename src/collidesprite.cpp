@@ -1,36 +1,32 @@
 #include <collidesprite.hpp>
 #include <cstdio>
 #include <texture.hpp>
+#include <algorithm>
 
 namespace gdk {
-CollideSprite::CollideSprite() : Sprite() {
+CollideSprite::CollideSprite() : Sprite() { setHitboxProperties(0, 0, 0, 0); }
+
+CollideSprite::CollideSprite(ImageTexture *texture) : Sprite(texture) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-CollideSprite::CollideSprite(ImageTexture *texture)
-    : Sprite(texture) {
+CollideSprite::CollideSprite(AnimatedTexture *texture) : Sprite(texture) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-CollideSprite::CollideSprite(AnimatedTexture *texture)
-    : Sprite(texture) {
-  setHitboxProperties(0, 0, 0, 0);
-}
-
-CollideSprite::CollideSprite(AnimatedTexture *texture, double x,
-                                     double y, int width, int height)
+CollideSprite::CollideSprite(AnimatedTexture *texture, double x, double y,
+                             int width, int height)
     : Sprite(texture, x, y, width, height) {
   setHitboxProperties(0, 0, width, height);
 }
 
-CollideSprite::CollideSprite(ImageTexture *texture, double x,
-                                     double y, int width, int height)
+CollideSprite::CollideSprite(ImageTexture *texture, double x, double y,
+                             int width, int height)
     : Sprite(texture, x, y, width, height) {
   setHitboxProperties(0, 0, width, height);
 }
 
-const bool
-CollideSprite::movementCollided(CollideSprite *collide_sprite) {
+const bool CollideSprite::movementCollided(CollideSprite *collide_sprite) {
   int collider_hbx = collide_sprite->getHitbox()->x;
   int collider_hby = collide_sprite->getHitbox()->y;
   int collider_hbw = collide_sprite->getHitbox()->w;
@@ -118,13 +114,12 @@ void CollideSprite::move(double x, double y) noexcept {
   setPosition(this->x + x, this->y + y);
 }
 
-void CollideSprite::setColliders(
-    std::vector<CollideSprite *> *colliders) {
+void CollideSprite::setColliders(std::vector<CollideSprite *> *colliders) {
   this->colliders = colliders;
 }
 
 void CollideSprite::setHitboxProperties(double x_offset, double y_offset,
-                                            int width, int height) {
+                                        int width, int height) {
   // Print warning if hitbox width/height is 0, because then collisions can't
   // be checked
   if (width == 0 || height == 0) {
@@ -179,24 +174,36 @@ const bool CollideSprite::collided(CollideSprite *collide_sprite) {
                   hitbox.y <= collider_hby + collider_hbh;
 
   if (collides) {
-    this->collide_sprite = collide_sprite;
+    collided_sprites.push_back(collide_sprite);
     return true;
   } else {
+    std::vector<gdk::CollideSprite *, std::allocator<gdk::CollideSprite *>>::iterator vector_position = std::find(collided_sprites.begin(), collided_sprites.end(), collide_sprite);
+    
+    if(vector_position != collided_sprites.end()) {
+      collided_sprites.erase(vector_position);
+    }
+
     return false;
   }
 }
 
 const bool CollideSprite::collided() {
+  collided_sprites.clear();
+
   for (int i = 0; i < colliders->size(); i++) {
     if (colliders->at(i) != this && collided(colliders->at(i))) {
-      return true;
+      continue;
     }
+  }
+
+  if (!collided_sprites.empty()) {
+    return true;
   }
 
   return false;
 }
 
-CollideSprite *CollideSprite::getCollideSprite() {
-  return collide_sprite;
+std::vector<CollideSprite *> *CollideSprite::getCollidedSprites() {
+  return &collided_sprites;
 }
 } // namespace gdk

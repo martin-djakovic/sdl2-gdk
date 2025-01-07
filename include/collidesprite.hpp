@@ -16,7 +16,7 @@ protected:
   double hitbox_yoffset;
   bool enable_movement_collision = true;
   std::vector<CollideSprite *> *colliders;
-  CollideSprite *collide_sprite;
+  std::vector<CollideSprite *> collided_sprites;
 
   /**
    * @brief Only used to check for collisions when updating sprite x and y.
@@ -53,7 +53,7 @@ public:
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    */
   CollideSprite(ImageTexture *texture, double x, double y, int width,
-                    int height);
+                int height);
   /**
    * @brief Sets texture and default values for variables. Hitbox is not
    * initialized, so it will have to be initialized later with
@@ -66,7 +66,7 @@ public:
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    */
   CollideSprite(AnimatedTexture *texture, double x, double y, int width,
-                    int height);
+                int height);
 
   /**
    * @brief Enable/disable movement collisions. Enabled by default
@@ -147,11 +147,11 @@ public:
   const bool collided();
 
   /**
-   * @brief Get the last sprite this sprite collided with. Make sure to check
-   * if sprite collided before calling this function or you will get
-   * inaccurate results
+   * @brief Get the last sprites this sprite collided with. Sprites are added to
+   * the vector only when collided() returns true, or removed when it returns
+   * false. To get accurate results you must call collided() first
    */
-  CollideSprite *getCollideSprite();
+  std::vector<CollideSprite *> *getCollidedSprites();
 };
 } // namespace gdk
 
