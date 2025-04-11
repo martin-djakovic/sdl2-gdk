@@ -16,26 +16,29 @@ class Sprite {
 protected:
   double x;
   double y;
+  int zindex;
   int width;
   int height;
   SDL_Rect rect;
   Texture *texture = nullptr;
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_Point *rotation_point = nullptr;
-  double rotation_angle;
+  double rotation_angle = 0;
+
+  static const bool comparePtr(Sprite *s1, Sprite *s2);
 
 public:
   Sprite();
-  Sprite(ImageTexture *texture);
-  Sprite(ImageTexture *texture, double x, double y, int width,
-             int height);
-  Sprite(AnimatedTexture *texture);
-  Sprite(AnimatedTexture *texture, double x, double y, int width,
-             int height);
-  Sprite(FontTexture *texture);
-  Sprite(FontTexture *texture, double x, double y);
-  Sprite(FontTexture *texture, double x, double y, int width,
-             int height);
+  Sprite(ImageTexture *texture, int zindex = 0);
+  Sprite(ImageTexture *texture, double x, double y, int width, int height,
+         int zindex = 0);
+  Sprite(AnimatedTexture *texture, int zindex = 0);
+  Sprite(AnimatedTexture *texture, double x, double y, int width, int height,
+         int zindex = 0);
+  Sprite(FontTexture *texture, int zindex = 0);
+  Sprite(FontTexture *texture, double x, double y, int zindex = 0);
+  Sprite(FontTexture *texture, double x, double y, int width, int height,
+         int zindex = 0);
 
   /**
    * @brief Set the position of sprite
@@ -103,6 +106,15 @@ public:
   void setFlip(SDL_RendererFlip flip);
 
   /**
+   * @brief Set zindex (draw order) for sprite. Sprite with lower zindex gets
+   * drawn first. If two or more sprites have the same zindex, that means the
+   * drawing order between those sprites doesn't matter. Make sure to call
+   * Scene::updateDrawOrder() whenever changing z-index after sprite has already
+   * been added to scene
+   */
+  void setZindex(int zindex);
+
+  /**
    * @brief Rotate sprite texture to angle
    */
   void setRotation(double angle) noexcept;
@@ -131,6 +143,16 @@ public:
    * @return false if sprite is outside the window
    */
   const bool isInBounds();
+
+  /**
+   * @brief The Sprite::operator< compares the zindex
+   */
+  const bool operator<(const Sprite &other_sprite);
+
+  /**
+   * @brief The Sprite::operator> compares the zindex
+   */
+  const bool operator>(const Sprite &other_sprite);
 };
 } // namespace gdk
 

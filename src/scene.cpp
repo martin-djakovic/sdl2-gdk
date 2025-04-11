@@ -56,9 +56,7 @@ void Scene::updateCamera() {
   camera->offset_y = 0;
 }
 
-void Scene::setCamera(Camera *camera) noexcept {
-  this->camera = camera;
-}
+void Scene::setCamera(Camera *camera) noexcept { this->camera = camera; }
 
 void Scene::drawSprites() {
   for (int i = 0; i < sprites.size(); i++) {
@@ -88,6 +86,7 @@ void Scene::addCollideSprite(CollideSprite *collide_sprite) {
   sprites.push_back(collide_sprite);
   collide_sprite->setColliders(&collide_sprites);
   collide_sprites.push_back(collide_sprite);
+  updateDrawOrder();
 }
 
 void Scene::addCollideSprite(
@@ -100,6 +99,7 @@ void Scene::addCollideSprite(
 void Scene::addSprite(Sprite *sprite) {
   sprites.push_back(sprite);
   basic_sprites.push_back(sprite);
+  updateDrawOrder();
 }
 
 void Scene::addSprite(const std::vector<Sprite *> sprites) {
@@ -115,6 +115,8 @@ void Scene::removeCollideSprite(CollideSprite *collide_sprite) {
 
   sprites.erase(std::remove(sprites.begin(), sprites.end(), collide_sprite),
                 sprites.end());
+
+  updateDrawOrder();
 }
 
 void Scene::removeCollideSprite(
@@ -131,6 +133,8 @@ void Scene::removeSprite(Sprite *sprite) {
 
   sprites.erase(std::remove(sprites.begin(), sprites.end(), sprite),
                 sprites.end());
+
+  updateDrawOrder();
 }
 
 void Scene::removeSprite(const std::vector<Sprite *> sprites) {
@@ -138,6 +142,8 @@ void Scene::removeSprite(const std::vector<Sprite *> sprites) {
     removeSprite(sprites.at(i));
   }
 }
+
+void Scene::updateDrawOrder() { std::sort(sprites.begin(), sprites.end(), Sprite::comparePtr); }
 
 void Scene::draw() {
   SDL_RenderClear(renderer);
@@ -157,9 +163,7 @@ std::vector<CollideSprite *> *Scene::getAllCollideSprites() noexcept {
   return &collide_sprites;
 }
 
-std::vector<Sprite *> *Scene::getAllSprites() noexcept {
-  return &sprites;
-}
+std::vector<Sprite *> *Scene::getAllSprites() noexcept { return &sprites; }
 
 void Scene::setShowHitboxOutlines(bool show_hitbox_outlines) {
   SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,

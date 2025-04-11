@@ -48,12 +48,12 @@ public:
    *
    * @param texture sprite texture
    */
-  CollideSprite(ImageTexture *texture);
+  CollideSprite(ImageTexture *texture, int zindex = 0);
   /**
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    */
   CollideSprite(ImageTexture *texture, double x, double y, int width,
-                int height);
+                int height, int zindex = 0);
   /**
    * @brief Sets texture and default values for variables. Hitbox is not
    * initialized, so it will have to be initialized later with
@@ -61,12 +61,12 @@ public:
    *
    * @param texture sprite texture
    */
-  CollideSprite(AnimatedTexture *texture);
+  CollideSprite(AnimatedTexture *texture, int zindex = 0);
   /**
    * @brief Sets texture, x, y, width and height of sprite. Initializes hitbox
    */
   CollideSprite(AnimatedTexture *texture, double x, double y, int width,
-                int height);
+                int height, int zindex = 0);
 
   /**
    * @brief Enable/disable movement collisions. Enabled by default

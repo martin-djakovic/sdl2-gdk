@@ -1,28 +1,30 @@
+#include <algorithm>
 #include <collidesprite.hpp>
 #include <cstdio>
 #include <texture.hpp>
-#include <algorithm>
 
 namespace gdk {
 CollideSprite::CollideSprite() : Sprite() { setHitboxProperties(0, 0, 0, 0); }
 
-CollideSprite::CollideSprite(ImageTexture *texture) : Sprite(texture) {
+CollideSprite::CollideSprite(ImageTexture *texture, int zindex)
+    : Sprite(texture, zindex) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
-CollideSprite::CollideSprite(AnimatedTexture *texture) : Sprite(texture) {
+CollideSprite::CollideSprite(AnimatedTexture *texture, int zindex)
+    : Sprite(texture, zindex) {
   setHitboxProperties(0, 0, 0, 0);
 }
 
 CollideSprite::CollideSprite(AnimatedTexture *texture, double x, double y,
-                             int width, int height)
-    : Sprite(texture, x, y, width, height) {
+                             int width, int height, int zindex)
+    : Sprite(texture, x, y, width, height, zindex) {
   setHitboxProperties(0, 0, width, height);
 }
 
 CollideSprite::CollideSprite(ImageTexture *texture, double x, double y,
-                             int width, int height)
-    : Sprite(texture, x, y, width, height) {
+                             int width, int height, int zindex)
+    : Sprite(texture, x, y, width, height, zindex) {
   setHitboxProperties(0, 0, width, height);
 }
 
@@ -177,9 +179,12 @@ const bool CollideSprite::collided(CollideSprite *collide_sprite) {
     collided_sprites.push_back(collide_sprite);
     return true;
   } else {
-    std::vector<gdk::CollideSprite *, std::allocator<gdk::CollideSprite *>>::iterator vector_position = std::find(collided_sprites.begin(), collided_sprites.end(), collide_sprite);
-    
-    if(vector_position != collided_sprites.end()) {
+    std::vector<gdk::CollideSprite *,
+                std::allocator<gdk::CollideSprite *>>::iterator
+        vector_position = std::find(collided_sprites.begin(),
+                                    collided_sprites.end(), collide_sprite);
+
+    if (vector_position != collided_sprites.end()) {
       collided_sprites.erase(vector_position);
     }
 

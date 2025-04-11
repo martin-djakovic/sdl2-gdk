@@ -12,62 +12,71 @@ Sprite::Sprite() {
   setHeight(0);
 }
 
-Sprite::Sprite(ImageTexture *texture) {
+Sprite::Sprite(ImageTexture *texture, int zindex) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
   setHeight(0);
   setTexture(texture);
+  setZindex(zindex);
 }
 
-Sprite::Sprite(ImageTexture *texture, double x, double y, int width,
-                       int height) {
+Sprite::Sprite(ImageTexture *texture, double x, double y, int width, int height,
+               int zindex) {
   this->x = x;
   this->y = y;
   setWidth(width);
   setHeight(height);
   setTexture(texture);
+  setZindex(zindex);
 }
 
-Sprite::Sprite(AnimatedTexture *texture) {
+Sprite::Sprite(AnimatedTexture *texture, int zindex) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
   setHeight(0);
   setTexture(texture);
+  setZindex(zindex);
 }
 
-Sprite::Sprite(AnimatedTexture *texture, double x, double y,
-                       int width, int height) {
+Sprite::Sprite(AnimatedTexture *texture, double x, double y, int width,
+               int height, int zindex) {
   this->x = x;
   this->y = y;
   setWidth(width);
   setHeight(height);
   setTexture(texture);
+  setZindex(zindex);
 }
 
-Sprite::Sprite(FontTexture *texture) {
+Sprite::Sprite(FontTexture *texture, int zindex) {
   this->x = 0;
   this->y = 0;
   setWidth(0);
   setHeight(0);
   setTexture(texture);
+  setZindex(zindex);
 }
 
-Sprite::Sprite(FontTexture *texture, double x, double y) {
+Sprite::Sprite(FontTexture *texture, double x, double y, int zindex) {
   this->x = x;
   this->y = y;
   setTexture(texture);
+  setZindex(zindex);
 }
 
-Sprite::Sprite(FontTexture *texture, double x, double y, int width,
-                       int height) {
+Sprite::Sprite(FontTexture *texture, double x, double y, int width, int height,
+               int zindex) {
   this->x = x;
   this->y = y;
   setWidth(width);
   setHeight(height);
   setTexture(texture, false);
+  setZindex(zindex);
 }
+
+const bool Sprite::comparePtr(Sprite *s1, Sprite *s2) { return *s1 < *s2; }
 
 void Sprite::setPosition(double x, double y) noexcept {
   this->x = x;
@@ -139,8 +148,7 @@ void Sprite::setTexture(AnimatedTexture *texture) {
   this->texture = texture;
 }
 
-void Sprite::setTexture(FontTexture *texture,
-                            const bool auto_set_size) {
+void Sprite::setTexture(FontTexture *texture, const bool auto_set_size) {
   // Print error if texture renderer is null
   if (texture->renderer == nullptr) {
     printf(ERR_COLOR
@@ -172,6 +180,8 @@ void Sprite::setTexture(FontTexture *texture,
 }
 
 void Sprite::setFlip(SDL_RendererFlip flip) { this->flip = flip; }
+
+void Sprite::setZindex(int zindex) { this->zindex = zindex; }
 
 void Sprite::setRotation(double angle) noexcept { rotation_angle = angle; }
 
@@ -244,5 +254,13 @@ const bool Sprite::isInBounds() {
   } else {
     return false;
   }
+}
+
+const bool Sprite::operator<(const Sprite &other_sprite) {
+  return zindex < other_sprite.zindex;
+}
+
+const bool Sprite::operator>(const Sprite &other_sprite) {
+  return zindex > other_sprite.zindex;
 }
 } // namespace gdk

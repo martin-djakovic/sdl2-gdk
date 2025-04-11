@@ -95,8 +95,7 @@ public:
    * @brief Removes collide sprites from scene
    * @param sprites Vector containing collide sprites to be removed
    */
-  void
-  removeCollideSprite(const std::vector<CollideSprite *> collide_sprites);
+  void removeCollideSprite(const std::vector<CollideSprite *> collide_sprites);
 
   /**
    * @brief Removes sprite from scene
@@ -109,6 +108,12 @@ public:
    * @param sprites Vector containing sprites to be removed
    */
   void removeSprite(const std::vector<Sprite *> sprites);
+
+  /**
+   * @brief Updates drawing order based on sprite z-indices. Sprites with lowest
+   * z-index are drawn first
+   */
+  void updateDrawOrder();
 
   /**
    * @brief Draws all visible sprites in the scene. Applies camera movement
