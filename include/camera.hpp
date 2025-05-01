@@ -2,6 +2,8 @@
 #define CAMERA_HPP
 
 #include <algorithm>
+#include <collidesprite.hpp>
+#include <scene.hpp>
 #include <sprite.hpp>
 #include <vector>
 
@@ -11,24 +13,31 @@ class Camera {
 
 private:
   std::vector<Sprite *> focused_sprites;
-  /* Values determining how much sprites in scene should be moved in the next
-   * frame Changes when moving camera Gets set to 0 when frame is drawn
-   */
-  double offset_x = 0;
-  double offset_y = 0;
+  Scene *scene = nullptr;
 
 public:
   Camera();
 
   /**
-   * @param focused_sprites sprites that will not get moved when moving camera
+   * @param focused_sprites Sprites that will not get moved when moving camera
    */
   Camera(const std::vector<Sprite *> focused_sprites);
 
   /**
+   * @brief Attach scene to camera. This scene will be subject to the camera
+   * movement
+   */
+  void attachScene(Scene *scene) noexcept;
+
+  /**
+   * @brief Detach the scene from camera
+   */
+  void detachScene() noexcept;
+
+  /**
    * @brief Moves all unfocused sprites in the scene that has this camera
    */
-  void move(double x, double y) noexcept;
+  void move(double x, double y);
 
   /**
    * @brief Make a sprite focused. Focused sprites do not get moved when moving

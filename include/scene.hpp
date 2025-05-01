@@ -1,10 +1,10 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <camera.hpp>
 #include <collidesprite.hpp>
 #include <errorcolors.hpp>
 #include <vector>
+#include <algorithm>
 
 namespace gdk {
 class Scene {
@@ -20,8 +20,6 @@ private:
   bool show_hitbox_outlines = false;
   SDL_Color hitbox_outline_color = {0, 255, 0};
 
-  Camera *camera = nullptr;
-
   SDL_Renderer *renderer = nullptr;
 
   /**
@@ -34,11 +32,6 @@ private:
    */
   void drawSprites();
 
-  /**
-   * @brief Completes camera movement
-   */
-  void updateCamera();
-
 public:
   Scene() noexcept;
 
@@ -48,12 +41,7 @@ public:
    * @param renderer SDL_Renderer that scene will be drawn on. All textures in
    * the scene must have the same renderer as the scene
    */
-  Scene(SDL_Renderer *renderer, Camera *camera) noexcept;
-
-  /**
-   * @brief Set scene camera. Camera movement is updated when scene is drawn
-   */
-  void setCamera(Camera *camera) noexcept;
+  Scene(SDL_Renderer *renderer) noexcept;
 
   /**
    * @brief Frees scene from memory. Doesn't destroy scene sprites
@@ -123,7 +111,12 @@ public:
   /**
    * @return All collide sprites in the scene
    */
-  std::vector<CollideSprite *> *getAllCollideSprites() noexcept;
+  std::vector<CollideSprite *> *getCollideSprites() noexcept;
+
+  /**
+   * @return All non-collide sprites in the scene
+   */
+  std::vector<Sprite *> *getBasicSprites() noexcept;
 
   /**
    * @return All sprites in the scene

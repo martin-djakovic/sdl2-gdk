@@ -7,9 +7,54 @@ Camera::Camera(const std::vector<Sprite *> focused_sprites) {
   this->focused_sprites = focused_sprites;
 }
 
-void Camera::move(double x, double y) noexcept {
-  offset_x = x;
-  offset_y = y;
+void Camera::attachScene(Scene *scene) noexcept { this->scene = scene; }
+
+void Camera::detachScene() noexcept { scene = nullptr; }
+
+void Camera::move(double x, double y) {
+  if (scene == nullptr) {
+    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR " No scene attached to camera\n");
+    return;
+  }
+
+  if (x == 0 && y == 0) {
+    return;
+  }
+
+  std::vector<Sprite *> *basic_sprites = scene->getBasicSprites();
+  std::vector<CollideSprite *> *collide_sprites = scene->getCollideSprites();
+
+  // Move camera for all basic sprites
+  for (int i = 0; i < basic_sprites->size(); i++) {
+    // Make sure that sprite isn't a focused sprite,
+    // and that camera has been moved
+    if (std::find(focused_sprites.begin(), focused_sprites.end(),
+                  basic_sprites->at(i)) == focused_sprites.end() &&
+        (x != 0 || y != 0)) {
+
+      basic_sprites->at(i)->move(x, 0);
+      basic_sprites->at(i)->move(0, y);
+    }
+  }
+
+  // Move camera for all collide sprites
+  for (int i = 0; i < collide_sprites->size(); i++) {
+    // Make sure that collide sprite isn't a focused sprite,
+    // and that camera has been moved
+    if (std::find(focused_sprites.begin(), focused_sprites.end(),
+                  collide_sprites->at(i)) == focused_sprites.end() &&
+        (x != 0 || y != 0)) {
+
+      // We need to move collide sprite without the use of move() function in
+      // this case, in order to avoid sprites colliding during camera movement
+      collide_sprites->at(i)->x += x;
+      collide_sprites->at(i)->y += y;
+      collide_sprites->at(i)->updateHitboxCoords();
+    }
+  }
+
+  x = 0;
+  y = 0;
 }
 
 void Camera::addFocusedSprite(Sprite *sprite) {

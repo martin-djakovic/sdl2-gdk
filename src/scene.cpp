@@ -3,9 +3,8 @@
 namespace gdk {
 Scene::Scene() noexcept {}
 
-Scene::Scene(SDL_Renderer *renderer, Camera *camera) noexcept {
+Scene::Scene(SDL_Renderer *renderer) noexcept {
   this->renderer = renderer;
-  this->camera = camera;
 }
 
 void Scene::drawHitboxOutlines() {
@@ -13,50 +12,6 @@ void Scene::drawHitboxOutlines() {
     SDL_RenderDrawRect(renderer, collide_sprites.at(i)->getHitbox());
   }
 }
-
-void Scene::updateCamera() {
-  // Print warning if camera is not set
-  if (camera == nullptr) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Scene camera is not set\n");
-    return;
-  }
-
-  // Move camera for all basic sprites
-  for (int i = 0; i < basic_sprites.size(); i++) {
-    // Make sure that sprite isn't a focused sprite,
-    // and that camera has been moved
-    if (std::find(camera->getFocusedSprites()->begin(),
-                  camera->getFocusedSprites()->end(),
-                  basic_sprites.at(i)) == camera->getFocusedSprites()->end() &&
-        (camera->offset_x != 0 || camera->offset_y != 0)) {
-
-      basic_sprites.at(i)->move(camera->offset_x, 0);
-      basic_sprites.at(i)->move(0, camera->offset_y);
-    }
-  }
-
-  // Move camera for all collide sprites
-  for (int i = 0; i < collide_sprites.size(); i++) {
-    // Make sure that collide sprite isn't a focused sprite,
-    // and that camera has been moved
-    if (std::find(camera->getFocusedSprites()->begin(),
-                  camera->getFocusedSprites()->end(), collide_sprites.at(i)) ==
-            camera->getFocusedSprites()->end() &&
-        (camera->offset_x != 0 || camera->offset_y != 0)) {
-
-      // We need to move collide sprite without the use of move() function in
-      // this case, in order to avoid sprites colliding during camera movement
-      collide_sprites.at(i)->x += camera->offset_x;
-      collide_sprites.at(i)->y += camera->offset_y;
-      collide_sprites.at(i)->updateHitboxCoords();
-    }
-  }
-
-  camera->offset_x = 0;
-  camera->offset_y = 0;
-}
-
-void Scene::setCamera(Camera *camera) noexcept { this->camera = camera; }
 
 void Scene::drawSprites() {
   for (int i = 0; i < sprites.size(); i++) {
@@ -143,13 +98,14 @@ void Scene::removeSprite(const std::vector<Sprite *> sprites) {
   }
 }
 
-void Scene::updateDrawOrder() { std::sort(sprites.begin(), sprites.end(), Sprite::comparePtr); }
+void Scene::updateDrawOrder() {
+  std::sort(sprites.begin(), sprites.end(), Sprite::comparePtr);
+}
 
 void Scene::draw() {
   SDL_RenderClear(renderer);
   SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
-
-  updateCamera();
+  
   drawSprites();
 
   if (show_hitbox_outlines) {
@@ -159,8 +115,12 @@ void Scene::draw() {
   SDL_RenderPresent(renderer);
 }
 
-std::vector<CollideSprite *> *Scene::getAllCollideSprites() noexcept {
+std::vector<CollideSprite *> *Scene::getCollideSprites() noexcept {
   return &collide_sprites;
+}
+
+std::vector<Sprite *> *Scene::getBasicSprites() noexcept {
+  return &basic_sprites;
 }
 
 std::vector<Sprite *> *Scene::getAllSprites() noexcept { return &sprites; }

@@ -9,6 +9,7 @@
 namespace gdk {
 class CollideSprite : public Sprite {
   friend class Scene;
+  friend class Camera;
 
 protected:
   SDL_Rect hitbox;
