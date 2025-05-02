@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <texture.hpp>
+#include <sdl2-gdk/texture.hpp>
 
 namespace gdk {
 class ImageTexture : public Texture {

@@ -1,4 +1,4 @@
-#include <init.hpp>
+#include <sdl2-gdk/init.hpp>
 
 namespace gdk {
 void initAll() {

@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <errorcolors.hpp>
-#include <texture.hpp>
+#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/texture.hpp>
 #include <vector>
 
 namespace gdk {

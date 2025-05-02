@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <sprite.hpp>
+#include <sdl2-gdk/sprite.hpp>
 #include <vector>
 
 namespace gdk {

@@ -5,9 +5,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
-#include <animatedtexture.hpp>
-#include <errorcolors.hpp>
-#include <imagetexture.hpp>
+#include <sdl2-gdk/animatedtexture.hpp>
+#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/imagetexture.hpp>
 
 namespace gdk {
 class Sprite {

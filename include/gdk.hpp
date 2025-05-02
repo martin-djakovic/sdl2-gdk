@@ -1,0 +1,10 @@
+#include <sdl2-gdk/sprite.hpp>
+#include <sdl2-gdk/camera.hpp>
+#include <sdl2-gdk/sprite.hpp>
+#include <sdl2-gdk/fonttexture.hpp>
+#include <sdl2-gdk/init.hpp>
+#include <sdl2-gdk/scene.hpp>
+#include <sdl2-gdk/sound.hpp>
+#include <sdl2-gdk/texture.hpp>
+#include <sdl2-gdk/animatedtexture.hpp>
+#include <sdl2-gdk/performancetools.hpp>

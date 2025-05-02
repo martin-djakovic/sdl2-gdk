@@ -5,8 +5,8 @@
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
-#include <errorcolors.hpp>
-#include <texture.hpp>
+#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/texture.hpp>
 
 namespace gdk {
 class FontTexture : public Texture {

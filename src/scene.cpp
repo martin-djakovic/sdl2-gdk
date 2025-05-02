@@ -1,4 +1,4 @@
-#include <scene.hpp>
+#include <sdl2-gdk/scene.hpp>
 
 namespace gdk {
 Scene::Scene() noexcept {}

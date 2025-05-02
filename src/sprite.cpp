@@ -1,8 +1,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <cstdio>
-#include <fonttexture.hpp>
-#include <sprite.hpp>
+#include <sdl2-gdk/fonttexture.hpp>
+#include <sdl2-gdk/sprite.hpp>
 
 namespace gdk {
 Sprite::Sprite() {

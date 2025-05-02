@@ -4,7 +4,7 @@
   and does not exactly reflect the best way to use this library
 */
 #include <iostream>
-#include <sdl2-gdk.hpp>
+#include <sdl2-gdk/gdk.hpp>
 #include <string>
 
 #define BG_PATH "res/img/road.png"

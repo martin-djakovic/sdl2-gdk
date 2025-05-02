@@ -1,5 +1,5 @@
-#include <errorcolors.hpp>
-#include <imagetexture.hpp>
+#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/imagetexture.hpp>
 
 namespace gdk {
 ImageTexture::ImageTexture() {}

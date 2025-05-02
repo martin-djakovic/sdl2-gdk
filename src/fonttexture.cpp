@@ -4,7 +4,7 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
 #include <cstdio>
-#include <fonttexture.hpp>
+#include <sdl2-gdk/fonttexture.hpp>
 
 namespace gdk {
 void FontTexture::updateTexture() {
