@@ -13,6 +13,12 @@ Sound::Sound(const char *audio_file_path, unsigned int volume) {
   setVolume(volume);
 }
 
+Sound::Sound(Sound *sound) {
+  setSound(sound->file_path);
+  setChannel(-1);
+  setVolume(sound->volume);
+}
+
 void Sound::loadChunk() {
   Mix_FreeChunk(chunk);
   chunk = Mix_LoadWAV(file_path);
@@ -48,9 +54,7 @@ const int Sound::getChannel() noexcept { return channel; }
 
 void Sound::destroy() { Mix_FreeChunk(chunk); }
 
-void Sound::play(unsigned int loops) {
-  Mix_PlayChannel(channel, chunk, loops);
-}
+void Sound::play(unsigned int loops) { Mix_PlayChannel(channel, chunk, loops); }
 void Sound::playTimed(unsigned int time_ms, unsigned int loops) {
   Mix_PlayChannelTimed(channel, chunk, loops, time_ms);
 }

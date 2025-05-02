@@ -23,6 +23,10 @@ public:
    */
   Camera(const std::vector<Sprite *> focused_sprites);
 
+  Camera(Camera *camera);
+
+  Camera(Camera *camera, Scene *scene);
+
   /**
    * @brief Attach scene to camera. This scene will be subject to the camera
    * movement

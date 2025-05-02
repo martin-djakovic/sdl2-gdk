@@ -32,9 +32,12 @@ public:
   /**
    * @brief Set font texture properties
    */
-  FontTexture(SDL_Renderer *renderer, const char *text,
-                  const char *font_path, unsigned int font_size,
-                  SDL_Color color);
+  FontTexture(SDL_Renderer *renderer, const char *text, const char *font_path,
+              unsigned int font_size, SDL_Color color);
+
+  FontTexture(FontTexture *texture);
+
+  FontTexture(FontTexture *texture, const char *text);
 
   void setText(const char *text) noexcept;
 

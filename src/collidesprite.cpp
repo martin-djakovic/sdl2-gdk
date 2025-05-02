@@ -28,6 +28,21 @@ CollideSprite::CollideSprite(ImageTexture *texture, double x, double y,
   setHitboxProperties(0, 0, width, height);
 }
 
+CollideSprite::CollideSprite(CollideSprite *sprite) : Sprite(sprite) {
+  hitbox = sprite->hitbox;
+  hitbox_xoffset = sprite->hitbox_xoffset;
+  hitbox_yoffset = sprite->hitbox_yoffset;
+  enable_movement_collision = sprite->enable_movement_collision;
+}
+
+CollideSprite::CollideSprite(CollideSprite *sprite, double x, double y)
+    : Sprite(sprite, x, y) {
+  hitbox = sprite->hitbox;
+  hitbox_xoffset = sprite->hitbox_xoffset;
+  hitbox_yoffset = sprite->hitbox_yoffset;
+  enable_movement_collision = sprite->enable_movement_collision;
+}
+
 const bool CollideSprite::movementCollided(CollideSprite *collide_sprite) {
   int collider_hbx = collide_sprite->getHitbox()->x;
   int collider_hby = collide_sprite->getHitbox()->y;

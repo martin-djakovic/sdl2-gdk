@@ -4,7 +4,17 @@ namespace gdk {
 Camera::Camera() {}
 
 Camera::Camera(const std::vector<Sprite *> focused_sprites) {
-  this->focused_sprites = focused_sprites;
+  setFocusedSprites(focused_sprites);
+}
+
+Camera::Camera(Camera *camera) {
+  setFocusedSprites(camera->focused_sprites);
+  attachScene(camera->scene);
+}
+
+Camera::Camera(Camera *camera, Scene *Scene) {
+  setFocusedSprites(camera->focused_sprites);
+  attachScene(scene);
 }
 
 void Camera::attachScene(Scene *scene) noexcept { this->scene = scene; }

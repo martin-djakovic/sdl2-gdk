@@ -1,7 +1,7 @@
-#include "fonttexture.hpp"
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <cstdio>
+#include <fonttexture.hpp>
 #include <sprite.hpp>
 
 namespace gdk {
@@ -74,6 +74,32 @@ Sprite::Sprite(FontTexture *texture, double x, double y, int width, int height,
   setHeight(height);
   setTexture(texture, false);
   setZindex(zindex);
+}
+
+Sprite::Sprite(Sprite *sprite) {
+  x = sprite->x;
+  y = sprite->y;
+  zindex = sprite->zindex;
+  width = sprite->width;
+  height = sprite->height;
+  rect = sprite->rect;
+  texture = sprite->texture;
+  flip = sprite->flip;
+  rotation_point = sprite->rotation_point;
+  rotation_angle = sprite->rotation_angle;
+}
+
+Sprite::Sprite(Sprite *sprite, double x, double y) {
+  this->x = x;
+  this->y = y;
+  zindex = sprite->zindex;
+  width = sprite->width;
+  height = sprite->height;
+  rect = sprite->rect;
+  texture = sprite->texture;
+  flip = sprite->flip;
+  rotation_point = sprite->rotation_point;
+  rotation_angle = sprite->rotation_angle;
 }
 
 const bool Sprite::comparePtr(Sprite *s1, Sprite *s2) { return *s1 < *s2; }

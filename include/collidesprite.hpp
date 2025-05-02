@@ -69,6 +69,10 @@ public:
   CollideSprite(AnimatedTexture *texture, double x, double y, int width,
                 int height, int zindex = 0);
 
+  CollideSprite(CollideSprite *sprite);
+
+  CollideSprite(CollideSprite *sprite, double x, double y);
+
   /**
    * @brief Enable/disable movement collisions. Enabled by default
    *

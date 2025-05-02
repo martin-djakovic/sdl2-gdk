@@ -38,13 +38,15 @@ public:
   AnimatedTexture(SDL_Renderer *renderer);
 
   AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
-                      unsigned int tile_count);
+                  unsigned int tile_count);
 
   AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
-                      unsigned int tile_count, unsigned int tile_duration);
+                  unsigned int tile_count, unsigned int tile_duration);
+
+  AnimatedTexture(AnimatedTexture *texture);
 
   /**
-   * @brief loads the image from which tiles will be made. All tiles are equal
+   * @brief Loads the image from which tiles will be made. All tiles are equal
    * width and heigth. The tile height is equal to the height of the tile sheet
    *
    * @param tile_sheet_path relative/absolute file path to the tile sheet. All
@@ -56,7 +58,7 @@ public:
   const unsigned int getTileCount() noexcept;
 
   /**
-   * @brief determines how long each tile will be displayed
+   * @brief Determines how long each tile will be displayed
    */
   void setTileDuration(unsigned int time_ms) noexcept;
 
@@ -69,7 +71,7 @@ public:
   const bool isPlaying() noexcept;
 
   /**
-   * @brief sets animation to first tile
+   * @brief Sets animation to first tile
    */
   void reset() noexcept;
 

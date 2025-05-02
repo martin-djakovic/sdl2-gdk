@@ -14,6 +14,11 @@ ImageTexture::ImageTexture(SDL_Renderer *renderer,
   loadImageFile(file_path);
 }
 
+ImageTexture::ImageTexture(ImageTexture *texture){
+  setRenderer(texture->renderer);
+  loadImageFile(texture->file_path);
+}
+
 void ImageTexture::loadImageFile(const char *file_path) {
   surface = IMG_Load(file_path);
 

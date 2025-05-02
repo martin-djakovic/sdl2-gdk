@@ -1,2 +1,4 @@
 .vscode/
 demo/cars/bin
+build.sh
+libgdk.so

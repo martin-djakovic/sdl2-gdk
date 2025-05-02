@@ -30,12 +30,28 @@ FontTexture::FontTexture() {
 }
 
 FontTexture::FontTexture(SDL_Renderer *renderer, const char *text,
-                                 const char *font_path, unsigned int font_size,
-                                 SDL_Color color) {
-  this->text = text;
+                         const char *font_path, unsigned int font_size,
+                         SDL_Color color) {
+  setText(text);
   setFont(font_path, font_size);
-  this->color = color;
+  setColor(color);
   setRenderer(renderer);
+  updateTexture();
+}
+
+FontTexture::FontTexture(FontTexture *texture) {
+  setRenderer(texture->renderer);
+  setText(texture->text);
+  setColor(texture->color);
+  setFont(texture->font_path, texture->font_size);
+  updateTexture();
+}
+
+FontTexture::FontTexture(FontTexture *texture, const char *text) {
+  setRenderer(texture->renderer);
+  setText(text);
+  setColor(texture->color);
+  setFont(texture->font_path, texture->font_size);
   updateTexture();
 }
 

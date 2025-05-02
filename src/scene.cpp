@@ -3,8 +3,14 @@
 namespace gdk {
 Scene::Scene() noexcept {}
 
-Scene::Scene(SDL_Renderer *renderer) noexcept {
-  this->renderer = renderer;
+Scene::Scene(SDL_Renderer *renderer) noexcept { this->renderer = renderer; }
+
+Scene::Scene(Scene *scene) {
+  renderer = scene->renderer;
+  addCollideSprite(*scene->getCollideSprites());
+  addSprite(*scene->getBasicSprites());
+  setShowHitboxOutlines(scene->show_hitbox_outlines);
+  setHitboxOutlineColor(scene->hitbox_outline_color);
 }
 
 void Scene::drawHitboxOutlines() {
@@ -105,7 +111,7 @@ void Scene::updateDrawOrder() {
 void Scene::draw() {
   SDL_RenderClear(renderer);
   SDL_GetRendererOutputSize(renderer, &win_w, &win_h);
-  
+
   drawSprites();
 
   if (show_hitbox_outlines) {

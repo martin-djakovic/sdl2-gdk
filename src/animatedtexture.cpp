@@ -8,19 +8,29 @@ AnimatedTexture::AnimatedTexture(SDL_Renderer *renderer) {
 }
 
 AnimatedTexture::AnimatedTexture(SDL_Renderer *renderer,
-                                         const char *tile_sheet_path,
-                                         unsigned int tile_count) {
+                                 const char *tile_sheet_path,
+                                 unsigned int tile_count) {
   setRenderer(renderer);
   loadTileSheet(tile_sheet_path, tile_count);
 }
 
 AnimatedTexture::AnimatedTexture(SDL_Renderer *renderer,
-                                         const char *tile_sheet_path,
-                                         unsigned int tile_count,
-                                         unsigned int tile_duration) {
+                                 const char *tile_sheet_path,
+                                 unsigned int tile_count,
+                                 unsigned int tile_duration) {
   setRenderer(renderer);
   loadTileSheet(tile_sheet_path, tile_count);
   setTileDuration(tile_duration);
+}
+
+AnimatedTexture::AnimatedTexture(AnimatedTexture *texture) {
+  setRenderer(texture->renderer);
+  loadTileSheet(texture->tile_sheet_path, texture->tile_count);
+  setTileDuration(texture->tile_duration);
+
+  current_tile = texture->current_tile;
+  is_playing = texture->is_playing;
+  last_tile_tick = texture->last_tile_tick;
 }
 
 void AnimatedTexture::flagDrawEvent() {
@@ -48,7 +58,7 @@ void AnimatedTexture::setTile(unsigned int tile_index) {
 }
 
 void AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
-                                        unsigned int tile_count) {
+                                    unsigned int tile_count) {
   if (tile_count < 1) {
     printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
                      " Failed creating tiles - tile count is less than 1\n");

@@ -8,9 +8,7 @@ Texture::Texture(SDL_Renderer *renderer) { setRenderer(renderer); }
 
 void Texture::flagDrawEvent() {}
 
-void Texture::setRenderer(SDL_Renderer *renderer) {
-  this->renderer = renderer;
-}
+void Texture::setRenderer(SDL_Renderer *renderer) { this->renderer = renderer; }
 
 const bool Texture::isLoaded() noexcept {
   if (sdl_texture == nullptr) {

@@ -19,6 +19,8 @@ public:
 
   Sound(const char *audio_file_path, unsigned int volume = 100);
 
+  Sound(Sound *sound);
+
   /**
    * @brief Set sound file to be played
    * @param audio_file_path Relative or absolute file path to the audio file.

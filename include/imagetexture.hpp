@@ -27,6 +27,8 @@ public:
    */
   ImageTexture(SDL_Renderer *renderer, const char *file_path);
 
+  ImageTexture(ImageTexture *texture);
+
   /**
    * @brief Generates a texture from image file. All file types supported by
    * SDL_Texture are compatible with this function. Renderer must be set with

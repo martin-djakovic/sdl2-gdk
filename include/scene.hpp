@@ -1,10 +1,10 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+#include <algorithm>
 #include <collidesprite.hpp>
 #include <errorcolors.hpp>
 #include <vector>
-#include <algorithm>
 
 namespace gdk {
 class Scene {
@@ -42,6 +42,8 @@ public:
    * the scene must have the same renderer as the scene
    */
   Scene(SDL_Renderer *renderer) noexcept;
+
+  Scene(Scene *scene);
 
   /**
    * @brief Frees scene from memory. Doesn't destroy scene sprites

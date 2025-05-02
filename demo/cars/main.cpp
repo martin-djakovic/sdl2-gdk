@@ -64,8 +64,8 @@ int main(int argc, char *argv[]) {
   gdk::Camera camera({&s_background, &s_fps});
 
   gdk::Scene sc_game(renderer);
-
   camera.attachScene(&sc_game);
+
   sc_game.addSprite(
       {&s_background, &s_fps, &s_car_1, &s_car_3, &s_car_4, &s_car_2});
   sc_game.addCollideSprite({&cs_player, &cs_car_left, &cs_car_right,

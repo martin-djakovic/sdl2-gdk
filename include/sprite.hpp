@@ -39,6 +39,8 @@ public:
   Sprite(FontTexture *texture, double x, double y, int zindex = 0);
   Sprite(FontTexture *texture, double x, double y, int width, int height,
          int zindex = 0);
+  Sprite(Sprite *sprite);
+  Sprite(Sprite *sprite, double x, double y);
 
   /**
    * @brief Set the position of sprite
