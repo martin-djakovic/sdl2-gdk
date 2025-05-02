@@ -24,9 +24,9 @@ void Scene::drawSprites() {
     // Print error if scene renderer and sprite renderer do not match
     if (sprites.at(i)->texture != nullptr &&
         sprites.at(i)->texture->renderer != renderer) {
-      printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                       " Failed drawing scene, sprite renderer and scene "
-                       "renderer do not match\n");
+      printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR
+                             " Failed drawing scene, sprite renderer and scene "
+                             "renderer do not match\n");
       SDL_RenderClear(renderer);
       return;
     }

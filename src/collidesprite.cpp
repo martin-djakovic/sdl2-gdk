@@ -140,14 +140,14 @@ void CollideSprite::setHitboxProperties(double x_offset, double y_offset,
   // Print warning if hitbox width/height is 0, because then collisions can't
   // be checked
   if (width == 0 || height == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
                       " Hitbox width/height of CollideSprite set to 0 "
                       "- will be unable to perform collisions");
   }
 
   // Print error if hitbox width/height is set to less than 0
   if (width < 0 || height < 0) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR
                      " Failed setting CollideSprite hitbox "
                      "width/height - values may not be less than 0");
     return;
@@ -167,7 +167,7 @@ const bool CollideSprite::collided(CollideSprite *collide_sprite) {
   // Print warning if the function is checking whether the sprite collides
   // with itself.
   if (collide_sprite == this) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
                       " Checking if GDK_CollideSprite collided with itself "
                       "- returning true");
     return true;
@@ -179,7 +179,7 @@ const bool CollideSprite::collided(CollideSprite *collide_sprite) {
   int collider_hbh = collide_sprite->getHitbox()->h;
 
   if (collider_hbw == 0 || collider_hbh == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
                       " Checking collisions with hitbox which has width/height "
                       "values equal to 0. Are you sure the "
                       "hitbox is correctly initialized?");

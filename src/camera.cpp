@@ -23,7 +23,7 @@ void Camera::detachScene() noexcept { scene = nullptr; }
 
 void Camera::move(double x, double y) {
   if (scene == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR " No scene attached to camera\n");
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR " No scene attached to camera\n");
     return;
   }
 

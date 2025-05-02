@@ -4,17 +4,14 @@
 namespace gdk {
 ImageTexture::ImageTexture() {}
 
-ImageTexture::ImageTexture(SDL_Renderer *renderer) {
-  setRenderer(renderer);
-}
+ImageTexture::ImageTexture(SDL_Renderer *renderer) { setRenderer(renderer); }
 
-ImageTexture::ImageTexture(SDL_Renderer *renderer,
-                                   const char *file_path) {
+ImageTexture::ImageTexture(SDL_Renderer *renderer, const char *file_path) {
   setRenderer(renderer);
   loadImageFile(file_path);
 }
 
-ImageTexture::ImageTexture(ImageTexture *texture){
+ImageTexture::ImageTexture(ImageTexture *texture) {
   setRenderer(texture->renderer);
   loadImageFile(texture->file_path);
 }
@@ -24,9 +21,10 @@ void ImageTexture::loadImageFile(const char *file_path) {
 
   // Check if given image is valid
   if (surface == NULL) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed loading image with file path" FPATH_COLOR
-                     " %s\n" DEF_COLOR,
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed loading image with file path" GDK_FILE_PATH_COLOR
+           " %s\n" GDK_DEFAULT_COLOR,
            file_path);
     return;
   }
@@ -39,9 +37,10 @@ void ImageTexture::loadImageFile(const char *file_path) {
     sdl_texture = SDL_CreateTextureFromSurface(renderer, surface);
     this->file_path = file_path;
   } else {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed creating texture with file path" FPATH_COLOR
-                     " %s" DEF_COLOR " (renderer not set)\n",
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed creating texture with file path" GDK_FILE_PATH_COLOR
+           " %s" GDK_DEFAULT_COLOR " (renderer not set)\n",
            file_path);
   }
 

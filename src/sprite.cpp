@@ -118,7 +118,8 @@ void Sprite::move(double x, double y) noexcept {
 
 void Sprite::setWidth(unsigned int width) noexcept {
   if (width == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Sprite width is set to 0\n");
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
+                             " Sprite width is set to 0\n");
   }
 
   this->width = width;
@@ -128,7 +129,8 @@ const unsigned int Sprite::getWidth() noexcept { return width; }
 
 void Sprite::setHeight(unsigned int height) noexcept {
   if (height == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Sprite height is set to 0\n");
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
+                             " Sprite height is set to 0\n");
   }
 
   this->height = height;
@@ -139,16 +141,17 @@ const unsigned int Sprite::getHeight() noexcept { return height; }
 void Sprite::setTexture(ImageTexture *texture) {
   // Print error if renderer is null
   if (texture->renderer == nullptr) {
-    printf(ERR_COLOR
-           "GDK ERROR:" DEF_COLOR
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
            " Failed setting sprite texture - texture renderer not set\n");
     return;
   }
 
   // Print error if texture is null
   if (texture->sdl_texture == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed setting sprite texture - texture not loaded\n");
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed setting sprite texture - texture not loaded\n");
     return;
   }
 
@@ -158,16 +161,17 @@ void Sprite::setTexture(ImageTexture *texture) {
 void Sprite::setTexture(AnimatedTexture *texture) {
   // Print error if renderer is null
   if (texture->renderer == nullptr) {
-    printf(ERR_COLOR
-           "GDK ERROR:" DEF_COLOR
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
            " Failed setting sprite texture - texture renderer not set\n");
     return;
   }
 
   // Print error if texture is null
   if (texture->sdl_texture == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed setting sprite texture - texture not loaded\n");
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed setting sprite texture - texture not loaded\n");
     return;
   }
 
@@ -177,8 +181,8 @@ void Sprite::setTexture(AnimatedTexture *texture) {
 void Sprite::setTexture(FontTexture *texture, const bool auto_set_size) {
   // Print error if texture renderer is null
   if (texture->renderer == nullptr) {
-    printf(ERR_COLOR
-           "GDK ERROR:" DEF_COLOR
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
            " Failed setting sprite texture - texture renderer not set\n");
     return;
   }
@@ -186,15 +190,17 @@ void Sprite::setTexture(FontTexture *texture, const bool auto_set_size) {
   // Print error if texture is null and we're trying to automatically fit sprite
   // size to texture size
   if (texture->sdl_texture == nullptr && auto_set_size) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed setting sprite size - texture not loaded\n");
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed setting sprite size - texture not loaded\n");
     return;
   }
 
   // Print warning if texture is null
   if (texture->sdl_texture == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed setting sprite texture - texture not loaded\n");
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed setting sprite texture - texture not loaded\n");
     return;
   }
 
@@ -227,34 +233,36 @@ void Sprite::draw() {
 
   // Check if texture was set
   if (texture == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed drawing sprite - texture not set\n");
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR
+                           " Failed drawing sprite - texture not set\n");
     return;
   }
 
   // Check if texture was loaded
   if (texture->sdl_texture == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed drawing sprite - texture not loaded\n");
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR
+                           " Failed drawing sprite - texture not loaded\n");
     return;
   }
 
   // Check if renderer is set properly
   if (texture->renderer == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed drawing sprite - texture renderer not set\n");
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed drawing sprite - texture renderer not set\n");
     return;
   }
 
   // Print warning if sprite texture is not visible (width/height is 0)
   if (width == 0 || height == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Sprite drawn but not visible - width/height is 0\n");
+    printf(GDK_WARNING_COLOR
+           "GDK WARNING:" GDK_DEFAULT_COLOR
+           " Sprite drawn but not visible - width/height is 0\n");
   }
   // Print warning if sprite texture is not visible (out of bounds)
   if (!isInBounds()) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Sprite drawn but not visible - out of bounds\n");
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
+                             " Sprite drawn but not visible - out of bounds\n");
   }
 
   texture->flagDrawEvent();
@@ -267,8 +275,8 @@ const bool Sprite::isInBounds() {
   int win_w, win_h;
 
   if (texture == nullptr) {
-    printf(ERR_COLOR
-           "GDK ERROR:" DEF_COLOR
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
            " Cannot check if sprite is in bounds - texture not set\n");
     return false;
   }

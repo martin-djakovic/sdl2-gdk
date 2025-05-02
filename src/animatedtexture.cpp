@@ -35,8 +35,8 @@ AnimatedTexture::AnimatedTexture(AnimatedTexture *texture) {
 
 void AnimatedTexture::flagDrawEvent() {
   if (tile_duration == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Tile duration of animated texture is 0\n");
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
+                             " Tile duration of animated texture is 0\n");
   }
 
   if (SDL_GetTicks() - last_tile_tick < tile_duration || !isPlaying()) {
@@ -60,15 +60,17 @@ void AnimatedTexture::setTile(unsigned int tile_index) {
 void AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
                                     unsigned int tile_count) {
   if (tile_count < 1) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed creating tiles - tile count is less than 1\n");
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed creating tiles - tile count is less than 1\n");
     return;
   }
 
   if (renderer == nullptr) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed creating tile sheet with file path" FPATH_COLOR
-                     " %s" DEF_COLOR " (renderer not set)\n",
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed creating tile sheet with file path" GDK_FILE_PATH_COLOR
+           " %s" GDK_DEFAULT_COLOR " (renderer not set)\n",
            tile_sheet_path);
     return;
   }
@@ -82,9 +84,10 @@ void AnimatedTexture::loadTileSheet(const char *tile_sheet_path,
   surface = IMG_Load(tile_sheet_path);
 
   if (surface == NULL) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     " Failed loading tile sheet with file path" FPATH_COLOR
-                     " %s\n",
+    printf(GDK_ERROR_COLOR
+           "GDK ERROR:" GDK_DEFAULT_COLOR
+           " Failed loading tile sheet with file path" GDK_FILE_PATH_COLOR
+           " %s\n",
            tile_sheet_path);
     return;
   }

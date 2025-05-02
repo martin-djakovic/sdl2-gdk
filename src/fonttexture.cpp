@@ -57,8 +57,8 @@ FontTexture::FontTexture(FontTexture *texture, const char *text) {
 
 void FontTexture::setText(const char *text) noexcept {
   if (text == "") {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR
-                      " Set FontTexture text to empty value\n");
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
+                             " Set FontTexture text to empty value\n");
   }
 
   this->text = text;
@@ -75,8 +75,9 @@ void FontTexture::setFont(const char *font_path, unsigned int font_size) {
 
   // Print error if font file path is invalid
   if (font == NULL) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR " Font with file path" FPATH_COLOR
-                     " %s" DEF_COLOR " failed to load\n",
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR
+                           " Font with file path" GDK_FILE_PATH_COLOR
+                           " %s" GDK_DEFAULT_COLOR " failed to load\n",
            font_path);
     // Need to set font to nullptr if it is invalid, otherwise TTF_CloseFont()
     // will result in segfault
@@ -86,7 +87,8 @@ void FontTexture::setFont(const char *font_path, unsigned int font_size) {
 
   // Print warning if font size is 0
   if (font_size == 0) {
-    printf(WARN_COLOR "GDK WARNING:" DEF_COLOR " Font size is 0\n");
+    printf(GDK_WARNING_COLOR "GDK WARNING:" GDK_DEFAULT_COLOR
+                             " Font size is 0\n");
   }
 
   updateTexture();

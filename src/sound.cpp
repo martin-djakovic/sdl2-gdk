@@ -24,8 +24,8 @@ void Sound::loadChunk() {
   chunk = Mix_LoadWAV(file_path);
 
   if (chunk == NULL) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR
-                     "Failed loading audio file:" FPATH_COLOR " %s\n",
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR
+                     "Failed loading audio file:" GDK_FILE_PATH_COLOR " %s\n",
            file_path);
   }
 }
@@ -43,7 +43,7 @@ const int Sound::getVolume() noexcept { return volume; }
 
 void Sound::setChannel(int channel) noexcept {
   if (channel < -1) {
-    printf(ERR_COLOR "GDK ERROR:" DEF_COLOR " Invalid channel value %i\n",
+    printf(GDK_ERROR_COLOR "GDK ERROR:" GDK_DEFAULT_COLOR " Invalid channel value %i\n",
            channel);
     return;
   }
