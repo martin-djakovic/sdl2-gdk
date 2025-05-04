@@ -14,9 +14,15 @@ Scene::Scene(Scene *scene) {
 }
 
 void Scene::drawHitboxOutlines() {
+  SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
+                         hitbox_outline_color.g, hitbox_outline_color.b,
+                         hitbox_outline_color.a);
+
   for (int i = 0; i < collide_sprites.size(); i++) {
     SDL_RenderDrawRect(renderer, collide_sprites.at(i)->getHitbox());
   }
+
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 }
 
 void Scene::drawSprites() {
@@ -140,8 +146,5 @@ void Scene::setShowHitboxOutlines(bool show_hitbox_outlines) {
 
 void Scene::setHitboxOutlineColor(SDL_Color color) {
   hitbox_outline_color = color;
-  SDL_SetRenderDrawColor(renderer, hitbox_outline_color.r,
-                         hitbox_outline_color.g, hitbox_outline_color.b,
-                         hitbox_outline_color.a);
 }
 } // namespace gdk
