@@ -32,14 +32,14 @@ protected:
 public:
   AnimatedTexture();
 
-  /**
-   * @param renderer renderer on which texture will be created and drawn on
-   */
   AnimatedTexture(SDL_Renderer *renderer);
 
   AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
                   unsigned int tile_count);
 
+  /**
+   * @param tile_duration Time between switching tiles in milliseconds
+   */
   AnimatedTexture(SDL_Renderer *renderer, const char *tile_sheet_path,
                   unsigned int tile_count, unsigned int tile_duration);
 
@@ -58,10 +58,14 @@ public:
   const unsigned int getTileCount() noexcept;
 
   /**
-   * @brief Determines how long each tile will be displayed
+   * @brief Set time between switching tiles
+   * @param time_ms Tile duration in milliseconds
    */
   void setTileDuration(unsigned int time_ms) noexcept;
-
+  
+  /**
+   * @return Tile duration in milliseconds
+   */
   const unsigned int getTileDuration() noexcept;
 
   void play() noexcept;

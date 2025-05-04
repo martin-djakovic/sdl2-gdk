@@ -33,6 +33,7 @@ CollideSprite::CollideSprite(CollideSprite *sprite) : Sprite(sprite) {
   hitbox_xoffset = sprite->hitbox_xoffset;
   hitbox_yoffset = sprite->hitbox_yoffset;
   enable_movement_collision = sprite->enable_movement_collision;
+  updateHitboxCoords();
 }
 
 CollideSprite::CollideSprite(CollideSprite *sprite, double x, double y)
@@ -41,6 +42,7 @@ CollideSprite::CollideSprite(CollideSprite *sprite, double x, double y)
   hitbox_xoffset = sprite->hitbox_xoffset;
   hitbox_yoffset = sprite->hitbox_yoffset;
   enable_movement_collision = sprite->enable_movement_collision;
+  updateHitboxCoords();
 }
 
 const bool CollideSprite::movementCollided(CollideSprite *collide_sprite) {
