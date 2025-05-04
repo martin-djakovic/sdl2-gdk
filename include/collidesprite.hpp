@@ -16,7 +16,7 @@ protected:
   double hitbox_xoffset;
   double hitbox_yoffset;
   bool enable_movement_collision = true;
-  std::vector<CollideSprite *> *colliders;
+  std::vector<CollideSprite *> *colliders = nullptr;
   std::vector<CollideSprite *> collided_sprites;
 
   /**

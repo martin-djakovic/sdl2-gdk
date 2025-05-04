@@ -79,6 +79,12 @@ const bool CollideSprite::getEnableMovementCollision() noexcept {
 }
 
 void CollideSprite::setPosition(double x, double y) noexcept {
+  if (colliders == nullptr) {
+    this-> x = x;
+    this-> y = y;
+    return;
+  }
+
   // TODO:
   // Make this function less abysmal when you have time
   bool collision_detected = false;
