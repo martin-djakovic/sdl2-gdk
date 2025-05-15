@@ -9,7 +9,6 @@
 
 namespace gdk {
 class Camera {
-  friend class Scene;
 
 private:
   std::vector<Sprite *> focused_sprites;
