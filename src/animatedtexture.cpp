@@ -1,4 +1,5 @@
 #include <sdl2-gdk/animatedtexture.hpp>
+#include <cstdio>
 
 namespace gdk {
 AnimatedTexture::AnimatedTexture() {};

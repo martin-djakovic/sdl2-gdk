@@ -1,4 +1,5 @@
 #include <sdl2-gdk/init.hpp>
+#include <cstdio>
 
 namespace gdk {
 void initAll() {
@@ -11,7 +12,7 @@ void initAll() {
   }
 
   if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-    printf("Fatal error initializing Mixer %s\n", Mix_GetError());
+    printf("Fatal error initializing Mixer: %s\n", Mix_GetError());
   }
 }
 

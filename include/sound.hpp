@@ -1,8 +1,18 @@
 #ifndef SOUND_HPP
 #define SOUND_HPP
 
+#ifdef __linux__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+
+#elif _WIN32
+#include <SDL.h>
+#include <SDL_mixer.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
 
 namespace gdk {
 class Sound {

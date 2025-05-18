@@ -1,10 +1,20 @@
 #ifndef SPRITE_HPP
 #define SPRITE_HPP
 
-#include "fonttexture.hpp"
+#ifdef __linux__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_render.h>
+
+#elif _WIN32
+#include <SDL.h>
+#include <SDL_image.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
+#include <sdl2-gdk/fonttexture.hpp>
 #include <sdl2-gdk/animatedtexture.hpp>
 #include <sdl2-gdk/errorcolors.hpp>
 #include <sdl2-gdk/imagetexture.hpp>

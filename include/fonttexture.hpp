@@ -1,10 +1,21 @@
 #ifndef FONT_TEXTURE_HPP
 #define FONT_TEXTURE_HPP
 
+#ifdef __linux__
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
+
+#elif _WIN32
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
 #include <sdl2-gdk/errorcolors.hpp>
 #include <sdl2-gdk/texture.hpp>
 

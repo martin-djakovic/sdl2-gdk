@@ -1,5 +1,6 @@
 #include <sdl2-gdk/errorcolors.hpp>
 #include <sdl2-gdk/sound.hpp>
+#include <cstdio>
 
 namespace gdk {
 Sound::Sound() {

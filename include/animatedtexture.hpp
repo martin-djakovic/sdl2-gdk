@@ -1,8 +1,19 @@
 #ifndef ANIMATED_TEXTURE_HPP
 #define ANIMATED_TEXTURE_HPP
 
+#ifdef __linux__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+#elif _WIN32
+#include <SDL.h>
+#include <SDL_image.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
 #include <sdl2-gdk/errorcolors.hpp>
 #include <sdl2-gdk/texture.hpp>
 #include <vector>

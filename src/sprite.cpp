@@ -1,5 +1,3 @@
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_render.h>
 #include <cstdio>
 #include <sdl2-gdk/fonttexture.hpp>
 #include <sdl2-gdk/sprite.hpp>
