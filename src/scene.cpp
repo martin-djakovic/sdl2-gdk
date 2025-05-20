@@ -44,7 +44,7 @@ void Scene::drawSprites() {
   }
 }
 
-void Scene::destroy() {
+void Scene::clear() {
   basic_sprites.clear();
   collide_sprites.clear();
   sprites.clear();

@@ -46,9 +46,9 @@ public:
   Scene(Scene *scene);
 
   /**
-   * @brief Frees scene from memory. Doesn't destroy scene sprites
+   * @brief Clears all sprites from the scene. Doesn't destroy the sprites
    */
-  void destroy();
+  void clear();
 
   /**
    * @brief Adds collide sprite to scene. Sets colliders of collide sprite to
