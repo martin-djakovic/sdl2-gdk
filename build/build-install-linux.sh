@@ -9,15 +9,12 @@ if [ "$EUID" -ne 0 ]
 fi
 
 script_dir=$(dirname $(realpath $0))
-cd $script_dir
+cd $script_dir/../
 
-mkdir /usr/local/include/sdl2-gdk
-rm -r /usr/local/include/sdl2-gdk/*
+mkdir -p /usr/local/include/sdl2-gdk
 cp -r include/* /usr/local/include/sdl2-gdk/
 
-g++ -I./include -fPIC -O2 -c src/*.cpp
-g++ -shared -o libgdk.so *.o
-rm -r *.o
+g++ -I./include -fPIC -shared -O2 -o libgdk.so src/*.cpp -lGL -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 mv libgdk.so /usr/local/lib/
 ldconfig

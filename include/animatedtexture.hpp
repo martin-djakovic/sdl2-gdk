@@ -9,13 +9,17 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#elif __APPLE__
+#include <SDL.h>
+#include <SDL_image.h>
+
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
 
-#include <sdl2-gdk/errorcolors.hpp>
-#include <sdl2-gdk/texture.hpp>
+#include <errorcolors.hpp>
+#include <texture.hpp>
 #include <vector>
 
 namespace gdk {

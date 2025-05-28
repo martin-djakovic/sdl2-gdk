@@ -1,5 +1,5 @@
 #include <cstdio>
-#include <sdl2-gdk/fonttexture.hpp>
+#include <fonttexture.hpp>
 
 namespace gdk {
 void FontTexture::updateTexture() {

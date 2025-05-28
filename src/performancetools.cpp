@@ -1,4 +1,4 @@
-#include <sdl2-gdk/performancetools.hpp>
+#include <performancetools.hpp>
 
 namespace gdk {
 static Uint64 last_time;

@@ -1,4 +1,4 @@
-#include <sdl2-gdk/camera.hpp>
+#include <camera.hpp>
 #include <cstdio>
 
 namespace gdk {

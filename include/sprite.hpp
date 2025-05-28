@@ -9,15 +9,19 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#elif __APPLE__
+#include <SDL.h>
+#include <SDL_image.h>
+
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
 
-#include <sdl2-gdk/fonttexture.hpp>
-#include <sdl2-gdk/animatedtexture.hpp>
-#include <sdl2-gdk/errorcolors.hpp>
-#include <sdl2-gdk/imagetexture.hpp>
+#include <fonttexture.hpp>
+#include <animatedtexture.hpp>
+#include <errorcolors.hpp>
+#include <imagetexture.hpp>
 
 namespace gdk {
 class Sprite {

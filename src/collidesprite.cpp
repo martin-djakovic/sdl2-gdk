@@ -1,7 +1,7 @@
 #include <algorithm>
-#include <sdl2-gdk/collidesprite.hpp>
+#include <collidesprite.hpp>
 #include <cstdio>
-#include <sdl2-gdk/texture.hpp>
+#include <texture.hpp>
 
 namespace gdk {
 CollideSprite::CollideSprite() : Sprite() { setHitboxProperties(0, 0, 0, 0); }

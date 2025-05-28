@@ -2,9 +2,9 @@
 #define CAMERA_HPP
 
 #include <algorithm>
-#include <sdl2-gdk/collidesprite.hpp>
-#include <sdl2-gdk/scene.hpp>
-#include <sdl2-gdk/sprite.hpp>
+#include <collidesprite.hpp>
+#include <scene.hpp>
+#include <sprite.hpp>
 #include <vector>
 
 namespace gdk {

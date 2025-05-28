@@ -11,13 +11,18 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+#elif __APPLE__
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
 
-#include <sdl2-gdk/errorcolors.hpp>
-#include <sdl2-gdk/texture.hpp>
+#include <errorcolors.hpp>
+#include <texture.hpp>
 
 namespace gdk {
 class FontTexture : public Texture {

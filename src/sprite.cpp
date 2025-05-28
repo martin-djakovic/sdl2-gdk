@@ -1,6 +1,6 @@
 #include <cstdio>
-#include <sdl2-gdk/fonttexture.hpp>
-#include <sdl2-gdk/sprite.hpp>
+#include <fonttexture.hpp>
+#include <sprite.hpp>
 
 namespace gdk {
 Sprite::Sprite() {

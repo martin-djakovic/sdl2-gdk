@@ -2,8 +2,8 @@
 #define SCENE_HPP
 
 #include <algorithm>
-#include <sdl2-gdk/collidesprite.hpp>
-#include <sdl2-gdk/errorcolors.hpp>
+#include <collidesprite.hpp>
+#include <errorcolors.hpp>
 #include <vector>
 
 namespace gdk {

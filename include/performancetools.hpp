@@ -4,6 +4,9 @@
 #elif _WIN32
 #include <SDL.h>
 
+#elif __APPLE__
+#include <SDL.h>
+
 #else
 #error "FATAL ERROR: Operating system not supported"
 
