@@ -18,7 +18,7 @@
 
 #endif
 
-#include <sprite.hpp>
+#include <sdl2-gdk/sprite.hpp>
 #include <vector>
 
 namespace gdk {

@@ -8,13 +8,12 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-script_dir=$(dirname $(realpath $0))
-cd $script_dir/../
+cd "$(dirname $(realpath "$0"))"/../
 
 mkdir -p /usr/local/include/sdl2-gdk
 cp -r include/* /usr/local/include/sdl2-gdk/
 
-g++ -I./include -fPIC -shared -O2 -o libgdk.so src/*.cpp -lGL -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+g++ -fPIC -shared -O2 -o libgdk.so src/*.cpp -lGL -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 mv libgdk.so /usr/local/lib/
 ldconfig

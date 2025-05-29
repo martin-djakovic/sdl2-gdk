@@ -1,4 +1,4 @@
-#include <scene.hpp>
+#include <sdl2-gdk/scene.hpp>
 #include <cstdio>
 
 namespace gdk {

@@ -18,7 +18,7 @@
 
 #endif
 
-#include <texture.hpp>
+#include <sdl2-gdk/texture.hpp>
 
 namespace gdk {
 class ImageTexture : public Texture {

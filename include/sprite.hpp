@@ -18,10 +18,10 @@
 
 #endif
 
-#include <fonttexture.hpp>
-#include <animatedtexture.hpp>
-#include <errorcolors.hpp>
-#include <imagetexture.hpp>
+#include <sdl2-gdk/fonttexture.hpp>
+#include <sdl2-gdk/animatedtexture.hpp>
+#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/imagetexture.hpp>
 
 namespace gdk {
 class Sprite {
