@@ -21,11 +21,12 @@
 
 #endif
 
-#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/texture.hpp>
+#include <sdl2-gdk/apiprefix.h>
 
 namespace gdk {
-class FontTexture : public Texture {
+class API_PREFIX FontTexture : public Texture {
 private:
   const char *text;
   const char *font_path;

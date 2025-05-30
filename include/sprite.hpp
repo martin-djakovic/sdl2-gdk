@@ -20,11 +20,12 @@
 
 #include <sdl2-gdk/fonttexture.hpp>
 #include <sdl2-gdk/animatedtexture.hpp>
-#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/imagetexture.hpp>
+#include <sdl2-gdk/apiprefix.h>
 
 namespace gdk {
-class Sprite {
+class API_PREFIX Sprite {
   friend class Scene;
 
 protected:

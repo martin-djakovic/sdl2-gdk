@@ -18,8 +18,10 @@
 
 #endif
 
+#include <sdl2-gdk/apiprefix.h>
+
 namespace gdk {
-class Texture {
+class API_PREFIX Texture {
   friend class Sprite;
   friend class Scene;
 

@@ -5,10 +5,11 @@
 #include <sdl2-gdk/collidesprite.hpp>
 #include <sdl2-gdk/scene.hpp>
 #include <sdl2-gdk/sprite.hpp>
+#include <sdl2-gdk/apiprefix.h>
 #include <vector>
 
 namespace gdk {
-class Camera {
+class API_PREFIX Camera {
 
 private:
   std::vector<Sprite *> focused_sprites;

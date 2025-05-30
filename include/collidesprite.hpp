@@ -19,10 +19,11 @@
 #endif
 
 #include <sdl2-gdk/sprite.hpp>
+#include <sdl2-gdk/apiprefix.h>
 #include <vector>
 
 namespace gdk {
-class CollideSprite : public Sprite {
+class API_PREFIX CollideSprite : public Sprite {
   friend class Scene;
   friend class Camera;
 

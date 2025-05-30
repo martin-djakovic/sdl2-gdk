@@ -3,11 +3,12 @@
 
 #include <algorithm>
 #include <sdl2-gdk/collidesprite.hpp>
-#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/errorcolors.h>
+#include <sdl2-gdk/apiprefix.h>
 #include <vector>
 
 namespace gdk {
-class Scene {
+class API_PREFIX Scene {
 private:
   std::vector<CollideSprite *> collide_sprites;
   std::vector<Sprite *> basic_sprites;

@@ -24,16 +24,18 @@
 
 #endif
 
+#include <sdl2-gdk/apiprefix.h>
+
 namespace gdk {
 /**
  * @brief Initialize all sdl2-gdk dependencies
  */
-void initAll();
+void API_PREFIX initAll();
 
 /**
  * @brief Quit all sdl2-gdk dependencies
  */
-void quitAll();
+void API_PREFIX quitAll();
 } // namespace gdk
 
 #endif

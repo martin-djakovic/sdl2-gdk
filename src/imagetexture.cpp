@@ -1,4 +1,4 @@
-#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/imagetexture.hpp>
 #include <cstdio>
 

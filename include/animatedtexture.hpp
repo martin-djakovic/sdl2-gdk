@@ -18,12 +18,13 @@
 
 #endif
 
-#include <sdl2-gdk/errorcolors.hpp>
+#include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/texture.hpp>
+#include <sdl2-gdk/apiprefix.h>
 #include <vector>
 
 namespace gdk {
-class AnimatedTexture : public Texture {
+class API_PREFIX AnimatedTexture : public Texture {
 private:
   SDL_Rect tile_box = {0, 0, 0, 0};
   int tile_count = 0;

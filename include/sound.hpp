@@ -18,8 +18,10 @@
 
 #endif
 
+#include <sdl2-gdk/apiprefix.h>
+
 namespace gdk {
-class Sound {
+class API_PREFIX Sound {
 private:
   Mix_Chunk *chunk = nullptr;
   const char *file_path;

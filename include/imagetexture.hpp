@@ -19,9 +19,10 @@
 #endif
 
 #include <sdl2-gdk/texture.hpp>
+#include <sdl2-gdk/apiprefix.h>
 
 namespace gdk {
-class ImageTexture : public Texture {
+class API_PREFIX ImageTexture : public Texture {
 private:
   const char *file_path;
   SDL_Surface *surface;
