@@ -1,5 +1,20 @@
+#ifdef __linux__
 #include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/sound.hpp>
+
+#elif _WIN32
+#include <errorcolors.h>
+#include <sound.hpp>
+
+#elif __APPLE__
+#include <errorcolors.h>
+#include <sound.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
 #include <cstdio>
 
 namespace gdk {

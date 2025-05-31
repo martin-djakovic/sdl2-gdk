@@ -1,10 +1,27 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <algorithm>
+#ifdef __linux__
 #include <sdl2-gdk/collidesprite.hpp>
 #include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/apiprefix.h>
+
+#elif _WIN32
+#include <collidesprite.hpp>
+#include <errorcolors.h>
+#include <apiprefix.h>
+
+#elif __APPLE__
+#include <collidesprite.hpp>
+#include <errorcolors.h>
+#include <apiprefix.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
+#include <algorithm>
 #include <vector>
 
 namespace gdk {

@@ -4,21 +4,22 @@
 #ifdef __linux__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <sdl2-gdk/apiprefix.h>
 
 #elif _WIN32
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <apiprefix.h>
 
 #elif __APPLE__
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <apiprefix.h>
 
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
-
-#include <sdl2-gdk/apiprefix.h>
 
 namespace gdk {
 class API_PREFIX Sound {

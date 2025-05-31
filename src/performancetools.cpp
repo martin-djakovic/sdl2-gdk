@@ -1,4 +1,16 @@
+#ifdef __linux__
 #include <sdl2-gdk/performancetools.hpp>
+
+#elif _WIN32
+#include <performancetools.hpp>
+
+#elif __APPLE__
+#include <performancetools.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
 
 namespace gdk {
 static Uint64 last_time;

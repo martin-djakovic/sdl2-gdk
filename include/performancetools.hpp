@@ -1,18 +1,19 @@
 #ifdef __linux__
 #include <SDL2/SDL.h>
+#include <sdl2-gdk/apiprefix.h>
 
 #elif _WIN32
 #include <SDL.h>
+#include <apiprefix.h>
 
 #elif __APPLE__
 #include <SDL.h>
+#include <apiprefix.h>
 
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
-
-#include <sdl2-gdk/apiprefix.h>
 
 namespace gdk {
 /**

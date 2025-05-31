@@ -1,5 +1,18 @@
-#include <cstdio>
+#ifdef __linux__
 #include <sdl2-gdk/fonttexture.hpp>
+
+#elif _WIN32
+#include <fonttexture.hpp>
+
+#elif __APPLE__
+#include <fonttexture.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
+#include <cstdio>
 
 namespace gdk {
 void FontTexture::updateTexture() {

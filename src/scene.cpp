@@ -1,4 +1,17 @@
+#ifdef __linux__
 #include <sdl2-gdk/scene.hpp>
+
+#elif _WIN32
+#include <scene.hpp>
+
+#elif __APPLE__
+#include <scene.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
 #include <cstdio>
 
 namespace gdk {

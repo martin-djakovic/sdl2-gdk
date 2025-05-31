@@ -1,4 +1,17 @@
+#ifdef __linux__
 #include <sdl2-gdk/animatedtexture.hpp>
+
+#elif _WIN32
+#include <animatedtexture.hpp>
+
+#elif __APPLE__
+#include <animatedtexture.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
 #include <cstdio>
 
 namespace gdk {

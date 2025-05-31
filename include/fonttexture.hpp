@@ -5,25 +5,30 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <sdl2-gdk/errorcolors.h>
+#include <sdl2-gdk/texture.hpp>
+#include <sdl2-gdk/apiprefix.h>
 
 #elif _WIN32
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <errorcolors.h>
+#include <texture.hpp>
+#include <apiprefix.h>
 
 #elif __APPLE__
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <errorcolors.h>
+#include <texture.hpp>
+#include <apiprefix.h>
 
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
-
-#include <sdl2-gdk/errorcolors.h>
-#include <sdl2-gdk/texture.hpp>
-#include <sdl2-gdk/apiprefix.h>
 
 namespace gdk {
 class API_PREFIX FontTexture : public Texture {

@@ -4,22 +4,26 @@
 #ifdef __linux__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <sdl2-gdk/sprite.hpp>
+#include <sdl2-gdk/apiprefix.h>
 
 #elif _WIN32
 #include <SDL.h>
 #include <SDL_image.h>
+#include <sprite.hpp>
+#include <apiprefix.h>
 
 #elif __APPLE__
 #include <SDL.h>
 #include <SDL_image.h>
+#include <sprite.hpp>
+#include <apiprefix.h>
 
 #else
 #error "FATAL ERROR: Operating system not supported"
 
 #endif
 
-#include <sdl2-gdk/sprite.hpp>
-#include <sdl2-gdk/apiprefix.h>
 #include <vector>
 
 namespace gdk {

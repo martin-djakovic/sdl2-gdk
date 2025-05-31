@@ -4,25 +4,34 @@
 #ifdef __linux__
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
-#elif _WIN32
-#include <SDL.h>
-#include <SDL_image.h>
-
-#elif __APPLE__
-#include <SDL.h>
-#include <SDL_image.h>
-
-#else
-#error "FATAL ERROR: Operating system not supported"
-
-#endif
-
 #include <sdl2-gdk/fonttexture.hpp>
 #include <sdl2-gdk/animatedtexture.hpp>
 #include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/imagetexture.hpp>
 #include <sdl2-gdk/apiprefix.h>
+
+#elif _WIN32
+#include <SDL.h>
+#include <SDL_image.h>
+#include <fonttexture.hpp>
+#include <animatedtexture.hpp>
+#include <errorcolors.h>
+#include <imagetexture.hpp>
+#include <apiprefix.h>
+
+#elif __APPLE__
+#include <SDL.h>
+#include <SDL_image.h>
+#include <fonttexture.hpp>
+#include <animatedtexture.hpp>
+#include <errorcolors.h>
+#include <imagetexture.hpp>
+#include <apiprefix.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
 
 namespace gdk {
 class API_PREFIX Sprite {

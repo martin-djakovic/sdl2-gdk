@@ -1,5 +1,20 @@
+#ifdef __linux__
 #include <sdl2-gdk/errorcolors.h>
 #include <sdl2-gdk/imagetexture.hpp>
+
+#elif _WIN32
+#include <errorcolors.h>
+#include <imagetexture.hpp>
+
+#elif __APPLE__
+#include <errorcolors.h>
+#include <imagetexture.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
 #include <cstdio>
 
 namespace gdk {

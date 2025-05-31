@@ -1,7 +1,22 @@
-#include <algorithm>
+#ifdef __linux__
 #include <sdl2-gdk/collidesprite.hpp>
-#include <cstdio>
 #include <sdl2-gdk/texture.hpp>
+
+#elif _WIN32
+#include <collidesprite.hpp>
+#include <texture.hpp>
+
+#elif __APPLE__
+#include <collidesprite.hpp>
+#include <texture.hpp>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
+#include <algorithm>
+#include <cstdio>
 
 namespace gdk {
 CollideSprite::CollideSprite() : Sprite() { setHitboxProperties(0, 0, 0, 0); }

@@ -1,11 +1,30 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <algorithm>
+#ifdef __linux__
 #include <sdl2-gdk/collidesprite.hpp>
 #include <sdl2-gdk/scene.hpp>
 #include <sdl2-gdk/sprite.hpp>
 #include <sdl2-gdk/apiprefix.h>
+
+#elif _WIN32
+#include <collidesprite.hpp>
+#include <scene.hpp>
+#include <sprite.hpp>
+#include <apiprefix.h>
+
+#elif __APPLE__
+#include <collidesprite.hpp>
+#include <scene.hpp>
+#include <sprite.hpp>
+#include <apiprefix.h>
+
+#else
+#error "FATAL ERROR: Operating system not supported"
+
+#endif
+
+#include <algorithm>
 #include <vector>
 
 namespace gdk {
